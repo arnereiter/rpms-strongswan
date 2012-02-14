@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        4.6.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -10,7 +10,7 @@ Patch0:         %{name}-programname.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
-%if 0%{?fedora}
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -56,7 +56,7 @@ chmod 700 %{buildroot}%{_sysconfdir}/%{name}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/ipsec.conf
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
-%if 0%{?fedora}
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %endif
 %dir %{_libdir}/%{name}
@@ -133,14 +133,14 @@ chmod 700 %{buildroot}%{_sysconfdir}/%{name}
 
 %post
 /sbin/ldconfig
-%if 0%{?fedora}
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 if [ $1 -eq 1 ] ; then
     # Initial installation
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 %endif
 
-%if 0%{?fedora}
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %preun
 if [ $1 -eq 0 ] ; then
     # Package removal, not upgrade
@@ -151,7 +151,7 @@ fi
 
 %postun
 /sbin/ldconfig
-%if 0%{?fedora}
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ] ; then
     # Package upgrade, not uninstall
@@ -162,6 +162,9 @@ fi
 #TODO manpages
 
 %changelog
+* Tue Feb 14 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-5
+- Improve fedora/epel conditionals
+
 * Sat Jan 21 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-4
 - Protect configuration directory from ordinary users
 - Add still missing directory /etc/strongswan
