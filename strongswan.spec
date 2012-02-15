@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        4.6.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -181,6 +181,9 @@ fi
 #TODO manpages
 
 %changelog
+* Wed Feb 15 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-8
+- Fix initscript's status function
+
 * Wed Feb 15 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-7
 - Expand tabs in config files for better readability
 - Add sysvinit script for epel6

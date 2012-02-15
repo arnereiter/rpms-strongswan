@@ -15,7 +15,7 @@ Index: strongswan-4.6.1/init/sysvinit/strongswan
 ===================================================================
 --- /dev/null
 +++ strongswan-4.6.1/init/sysvinit/strongswan
-@@ -0,0 +1,101 @@
+@@ -0,0 +1,102 @@
 +#!/bin/sh
 +#
 +# strongswan   An implementation of key management system for IPsec
@@ -37,6 +37,7 @@ Index: strongswan-4.6.1/init/sysvinit/strongswan
 +
 +exec="/usr/sbin/strongswan"
 +prog="strongswan"
++prog1="starter"
 +config="/etc/racoon2/racoon2.conf"
 +
 +[ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
@@ -78,7 +79,7 @@ Index: strongswan-4.6.1/init/sysvinit/strongswan
 +
 +rh_status() {
 +    # run checks to determine if the service is running or use generic status
-+    status $prog
++    status $prog1
 +}
 +
 +rh_status_q() {
