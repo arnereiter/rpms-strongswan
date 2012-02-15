@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        4.6.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -31,6 +31,7 @@ kernel.
     --with-ipsecdir=%{_libexecdir}/%{name} \
     --with-ipseclibdir=%{_libdir}/%{name}
 make %{?_smp_mflags}
+sed -i 's/\t/    /' strongswan.conf starter/ipsec.conf
 
 %install
 make install DESTDIR=%{buildroot}
@@ -162,6 +163,9 @@ fi
 #TODO manpages
 
 %changelog
+* Wed Feb 15 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-7
+- Expand tabs in config files for better readability
+
 * Wed Feb 15 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-6
 - Fix program name in systemd unit file
 
