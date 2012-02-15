@@ -35,7 +35,7 @@ kernel.
     --with-ipsecdir=%{_libexecdir}/%{name} \
     --with-ipseclibdir=%{_libdir}/%{name}
 make %{?_smp_mflags}
-sed -i 's/\t/    /' strongswan.conf starter/ipsec.conf
+sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
 
 %install
 make install DESTDIR=%{buildroot}
