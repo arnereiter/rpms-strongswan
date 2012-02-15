@@ -6,7 +6,7 @@ Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}.tar.gz
-Patch0:         %{name}-programname.patch
+Patch0:         %{name}-init.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -15,6 +15,10 @@ BuildRequires:  systemd-units
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
+%else
+Requires(post): chkconfig
+Requires(preun): chkconfig
+Requires(preun): initscripts
 %endif
 %description
 The strongSwan 4.6 branch supports both the IKEv1 and IKEv2 key exchange
@@ -51,6 +55,13 @@ find %{buildroot} -type f -name '*.la' -delete
 chmod 644 %{buildroot}%{_sysconfdir}/%{name}/%{name}.conf
 # protect configuration from ordinary user's eyes
 chmod 700 %{buildroot}%{_sysconfdir}/%{name}
+# setup systemd unit or initscript
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%else
+rm %{buildroot}%{_unitdir}/%{name}.service
+install -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
+%endif
+
 
 %files
 %doc README COPYING NEWS CREDITS TODO
@@ -59,6 +70,8 @@ chmod 700 %{buildroot}%{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
+%else
+%{_initddir}/%{name}
 %endif
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/libcharon.so.0
@@ -139,6 +152,8 @@ if [ $1 -eq 1 ] ; then
     # Initial installation
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
+%else
+/sbin/chkconfig --add %{name}
 %endif
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
@@ -149,7 +164,10 @@ if [ $1 -eq 0 ] ; then
     /bin/systemctl stop %{name}.service > /dev/null 2>&1 || :
 fi
 %endif
-
+if [ $1 -eq 0 ] ; then
+    /sbin/service %{name} stop >/dev/null 2>&1
+    /sbin/chkconfig --del %{name}
+fi
 %postun
 /sbin/ldconfig
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
@@ -158,6 +176,7 @@ if [ $1 -ge 1 ] ; then
     # Package upgrade, not uninstall
     /bin/systemctl try-restart %{name}.service >/dev/null 2>&1 || :
 fi
+%else
 %endif
 
 #TODO manpages
@@ -165,6 +184,7 @@ fi
 %changelog
 * Wed Feb 15 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-7
 - Expand tabs in config files for better readability
+- Add sysvinit script for epel6
 
 * Wed Feb 15 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-6
 - Fix program name in systemd unit file
