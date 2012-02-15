@@ -58,7 +58,7 @@ chmod 700 %{buildroot}%{_sysconfdir}/%{name}
 # setup systemd unit or initscript
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %else
-install -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
+install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %endif
 
 
