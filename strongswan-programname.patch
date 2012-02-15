@@ -7,7 +7,7 @@ Index: strongswan-4.6.0/init/systemd/strongswan.service.in
  
  [Service]
 -ExecStart=@SBINDIR@/ipsec start --nofork
-+ExecStart=@SBINDIR@/@PROGRAM@ start --nofork
++ExecStart=@SBINDIR@/strongswan start --nofork
  StandardOutput=syslog
  
  [Install]

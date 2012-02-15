@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        4.6.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -162,6 +162,9 @@ fi
 #TODO manpages
 
 %changelog
+* Wed Feb 15 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-6
+- Fix program name in systemd unit file
+
 * Tue Feb 14 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-5
 - Improve fedora/epel conditionals
 
