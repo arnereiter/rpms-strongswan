@@ -93,6 +93,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-pem.so
 %{_libdir}/%{name}/plugins/lib%{name}-pgp.so
 %{_libdir}/%{name}/plugins/lib%{name}-pkcs1.so
+%{_libdir}/%{name}/plugins/lib%{name}-pkcs8.so
 %{_libdir}/%{name}/plugins/lib%{name}-pubkey.so
 %{_libdir}/%{name}/plugins/lib%{name}-random.so
 %{_libdir}/%{name}/plugins/lib%{name}-resolve.so
@@ -184,6 +185,7 @@ fi
 * Sun Feb 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.2-1
 - New upstream version
 - Changed from .tar.gz to .tar.bz2
+- Added libstrongswan-pkcs8.so
 
 * Wed Feb 15 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.1-8
 - Fix initscript's status function
