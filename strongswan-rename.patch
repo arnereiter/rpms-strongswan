@@ -1,0 +1,13 @@
+Index: strongswan-4.6.1/src/pluto/kernel.c
+===================================================================
+--- strongswan-4.6.1.orig/src/pluto/kernel.c
++++ strongswan-4.6.1/src/pluto/kernel.c
+@@ -247,7 +247,7 @@ static void escape_metachar(const char *
+  */
+ 
+ #ifndef DEFAULT_UPDOWN
+-# define DEFAULT_UPDOWN "ipsec _updown"
++# define DEFAULT_UPDOWN "strongswan _updown"
+ #endif
+ 
+ static bool do_command(connection_t *c, struct spd_route *sr, struct state *st,

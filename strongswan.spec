@@ -1,12 +1,13 @@
 Name:           strongswan
 Version:        4.6.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
 Patch0:         %{name}-init.patch
+Patch1:         %{name}-rename.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -28,6 +29,7 @@ kernel.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %configure --disable-static \
@@ -182,6 +184,9 @@ fi
 #TODO manpages
 
 %changelog
+* Fri Mar 30 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.2-2
+- #808612 - strongswan binary renaming side-effect
+
 * Sun Feb 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.2-1
 - New upstream version
 - Changed from .tar.gz to .tar.bz2
