@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        4.6.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -35,7 +35,8 @@ kernel.
 %configure --disable-static \
     --sysconfdir=%{_sysconfdir}/%{name} \
     --with-ipsecdir=%{_libexecdir}/%{name} \
-    --with-ipseclibdir=%{_libdir}/%{name}
+    --with-ipseclibdir=%{_libdir}/%{name} \
+    --enable-nm
 make %{?_smp_mflags}
 sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
 
@@ -188,6 +189,9 @@ fi
 #TODO manpages
 
 %changelog
+* Sat May 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.3-2
+- Add --enable-nm to configure
+
 * Sat May 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.3-1
 - New version of Strongswan
 - Support for RFC 3110 DNSKEY (see upstream changelog)
