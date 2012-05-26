@@ -85,6 +85,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-aes.so
 %{_libdir}/%{name}/plugins/lib%{name}-attr.so
 %{_libdir}/%{name}/plugins/lib%{name}-constraints.so
+%{_libdir}/%{name}/plugins/lib%{name}-cmac.so
 %{_libdir}/%{name}/plugins/lib%{name}-des.so
 %{_libdir}/%{name}/plugins/lib%{name}-dnskey.so
 %{_libdir}/%{name}/plugins/lib%{name}-fips-prf.so
