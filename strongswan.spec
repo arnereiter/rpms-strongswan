@@ -1,6 +1,6 @@
 Name:           strongswan
-Version:        4.6.2
-Release:        2%{?dist}
+Version:        4.6.3
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -158,18 +158,21 @@ fi
 /sbin/chkconfig --add %{name}
 %endif
 
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %preun
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 if [ $1 -eq 0 ] ; then
     # Package removal, not upgrade
     /bin/systemctl --no-reload disable %{name}.service > /dev/null 2>&1 || :
     /bin/systemctl stop %{name}.service > /dev/null 2>&1 || :
 fi
-%endif
+%else
 if [ $1 -eq 0 ] ; then
+    # Package removal, not upgrade
     /sbin/service %{name} stop >/dev/null 2>&1
     /sbin/chkconfig --del %{name}
 fi
+%endif
+
 %postun
 /sbin/ldconfig
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
@@ -184,6 +187,11 @@ fi
 #TODO manpages
 
 %changelog
+* Sat May 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.3-1
+- New version of Strongswan
+- Support for RFC 3110 DNSKEY (see upstream changelog)
+- Fix corrupt scriptlets
+
 * Fri Mar 30 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.2-2
 - #808612 - strongswan binary renaming side-effect
 
