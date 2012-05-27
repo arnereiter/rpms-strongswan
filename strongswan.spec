@@ -11,6 +11,7 @@ Patch1:         %{name}-rename.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
+BuildRequires:  NetworkManager-devel
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
 Requires(post): systemd-units
@@ -191,6 +192,7 @@ fi
 %changelog
 * Sat May 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.3-2
 - Add --enable-nm to configure
+- Add NetworkManager-devel to BuildRequires
 
 * Sat May 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.3-1
 - New version of Strongswan
