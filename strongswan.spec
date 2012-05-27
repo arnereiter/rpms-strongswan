@@ -12,6 +12,7 @@ BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
 BuildRequires:  NetworkManager-devel
+BuildRequires:  NetworkManager-glib-devel
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
 Requires(post): systemd-units
@@ -193,6 +194,7 @@ fi
 * Sat May 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.3-2
 - Add --enable-nm to configure
 - Add NetworkManager-devel to BuildRequires
+- Add NetworkManager-glib-devel to BuildRequires
 
 * Sat May 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.3-1
 - New version of Strongswan
