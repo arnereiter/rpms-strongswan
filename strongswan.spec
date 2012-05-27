@@ -28,6 +28,12 @@ The strongSwan 4.6 branch supports both the IKEv1 and IKEv2 key exchange
 protocols in conjunction with the native NETKEY IPsec stack of the Linux
 kernel.
 
+%package NetworkManager
+Summary:        NetworkManager plugin for Strongswan
+%description
+NetworkManager plugin integrates a subset of Strongswan capabilities
+to NetworkManager.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -151,6 +157,9 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_mandir}/man8/%{name}_pluto.8.gz
 %{_mandir}/man8/%{name}_scepclient.8.gz
 
+%files NetworkManager
+%{_libdir}/%{name}/plugins/lib%{name}-nm.so
+
 %post
 /sbin/ldconfig
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
@@ -195,6 +204,7 @@ fi
 - Add --enable-nm to configure
 - Add NetworkManager-devel to BuildRequires
 - Add NetworkManager-glib-devel to BuildRequires
+- Add strongswan-NetworkManager package
 
 * Sat May 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.3-1
 - New version of Strongswan
