@@ -30,7 +30,8 @@ kernel.
 
 %package NetworkManager
 Summary:        NetworkManager plugin for Strongswan
-%description
+Group:          System Environment/Daemons
+%description NetworkManager
 NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
 
