@@ -1,6 +1,6 @@
 Name:           strongswan
-Version:        4.6.3
-Release:        2%{?dist}
+Version:        4.6.4
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -201,6 +201,9 @@ fi
 #TODO manpages
 
 %changelog
+* Fri Jun 01 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.4-1
+- New upstream version (CVE-2012-2388)
+
 * Sat May 26 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.3-2
 - Add --enable-nm to configure
 - Add NetworkManager-devel to BuildRequires
