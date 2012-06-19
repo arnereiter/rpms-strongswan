@@ -20,7 +20,7 @@ BuildRequires:  flex
 BuildRequires:  bison
 BuildRequires:  automake
 BuildRequires:  autoconf
-BuildRequires:  libtoolize
+BuildRequires:  libtool
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
 Requires(post): systemd-units
