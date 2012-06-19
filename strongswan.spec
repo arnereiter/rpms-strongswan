@@ -1,20 +1,25 @@
+%define snapshot .git20120619
+%define commit  0bb3c98
+
 Name:           strongswan
-Version:        4.6.4
-Release:        2%{?dist}
+Version:        5.0.0
+Release:        0.1%{snapshot}%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
-Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
-# http://wiki.strongswan.org/issues/195
-Patch0:         %{name}-init.patch
-# http://wiki.strongswan.org/issues/194
-Patch1:         %{name}-rename.patch
+Source0:        %{name}-%{commit}.tar.gz
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
+# when building from git
+BuildRequires:  gperf
+BuildRequires:  flex
+BuildRequires:  bison
+BuildRequires:  automake
+BuildRequires:  autoconf
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
 Requires(post): systemd-units
@@ -26,7 +31,7 @@ Requires(preun): chkconfig
 Requires(preun): initscripts
 %endif
 %description
-The strongSwan 4.6 branch supports both the IKEv1 and IKEv2 key exchange
+The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key exchange
 protocols in conjunction with the native NETKEY IPsec stack of the Linux
 kernel.
 
@@ -38,12 +43,12 @@ NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
 
 %prep
-%setup -q
-%patch0 -p1
-%patch1 -p1
+%setup -q -n %{name}-%{commit}
 
 %build
+./autogen.sh
 %configure --disable-static \
+    --with-ipsec-script=%{name} \
     --sysconfdir=%{_sysconfdir}/%{name} \
     --with-ipsecdir=%{_libexecdir}/%{name} \
     --with-ipseclibdir=%{_libdir}/%{name} \
@@ -53,9 +58,6 @@ sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
 
 %install
 make install DESTDIR=%{buildroot}
-# rename ipsec to strongswan
-mv %{buildroot}%{_sbindir}/{ipsec,%{name}}
-mv %{buildroot}%{_mandir}/man8/{ipsec,strongswan}.8
 # prefix man pages
 for i in %{buildroot}%{_mandir}/*/*; do
     if echo "$i" | grep -vq '/strongswan[^\/]*$'; then
@@ -96,8 +98,8 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %dir %{_libdir}/%{name}/plugins
 %{_libdir}/%{name}/plugins/lib%{name}-aes.so
 %{_libdir}/%{name}/plugins/lib%{name}-attr.so
-%{_libdir}/%{name}/plugins/lib%{name}-constraints.so
 %{_libdir}/%{name}/plugins/lib%{name}-cmac.so
+%{_libdir}/%{name}/plugins/lib%{name}-constraints.so
 %{_libdir}/%{name}/plugins/lib%{name}-des.so
 %{_libdir}/%{name}/plugins/lib%{name}-dnskey.so
 %{_libdir}/%{name}/plugins/lib%{name}-fips-prf.so
@@ -105,6 +107,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-hmac.so
 %{_libdir}/%{name}/plugins/lib%{name}-kernel-netlink.so
 %{_libdir}/%{name}/plugins/lib%{name}-md5.so
+%{_libdir}/%{name}/plugins/lib%{name}-nonce.so
 %{_libdir}/%{name}/plugins/lib%{name}-pem.so
 %{_libdir}/%{name}/plugins/lib%{name}-pgp.so
 %{_libdir}/%{name}/plugins/lib%{name}-pkcs1.so
@@ -115,53 +118,34 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-revocation.so
 %{_libdir}/%{name}/plugins/lib%{name}-sha1.so
 %{_libdir}/%{name}/plugins/lib%{name}-sha2.so
-%{_libdir}/%{name}/plugins/lib%{name}-socket-raw.so
+%{_libdir}/%{name}/plugins/lib%{name}-socket-default.so
 %{_libdir}/%{name}/plugins/lib%{name}-stroke.so
 %{_libdir}/%{name}/plugins/lib%{name}-updown.so
 %{_libdir}/%{name}/plugins/lib%{name}-x509.so
-%{_libdir}/%{name}/plugins/lib%{name}-xauth.so
 %{_libdir}/%{name}/plugins/lib%{name}-xcbc.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/_copyright
-%{_libexecdir}/%{name}/_pluto_adns
 %{_libexecdir}/%{name}/_updown
 %{_libexecdir}/%{name}/_updown_espmark
 %{_libexecdir}/%{name}/charon
 %{_libexecdir}/%{name}/openac
 %{_libexecdir}/%{name}/pki
-%{_libexecdir}/%{name}/pluto
 %{_libexecdir}/%{name}/scepclient
 %{_libexecdir}/%{name}/starter
 %{_libexecdir}/%{name}/stroke
-%{_libexecdir}/%{name}/whack
 %{_sbindir}/%{name}
-%{_mandir}/man3/%{name}_anyaddr.3.gz
-%{_mandir}/man3/%{name}_atoaddr.3.gz
-%{_mandir}/man3/%{name}_atoasr.3.gz
-%{_mandir}/man3/%{name}_atoul.3.gz
-%{_mandir}/man3/%{name}_goodmask.3.gz
-%{_mandir}/man3/%{name}_initaddr.3.gz
-%{_mandir}/man3/%{name}_initsubnet.3.gz
-%{_mandir}/man3/%{name}_portof.3.gz
-%{_mandir}/man3/%{name}_rangetosubnet.3.gz
-%{_mandir}/man3/%{name}_sameaddr.3.gz
-%{_mandir}/man3/%{name}_subnetof.3.gz
-%{_mandir}/man3/%{name}_ttoaddr.3.gz
-%{_mandir}/man3/%{name}_ttodata.3.gz
-%{_mandir}/man3/%{name}_ttosa.3.gz
-%{_mandir}/man3/%{name}_ttoul.3.gz
+%{_mandir}/man5/%{name}.conf.5.gz
 %{_mandir}/man5/%{name}_ipsec.conf.5.gz
 %{_mandir}/man5/%{name}_ipsec.secrets.5.gz
-%{_mandir}/man5/%{name}.conf.5.gz
+%{_mandir}/man8/%{name}.8.gz
 %{_mandir}/man8/%{name}__updown.8.gz
 %{_mandir}/man8/%{name}__updown_espmark.8.gz
-%{_mandir}/man8/%{name}.8.gz
 %{_mandir}/man8/%{name}_openac.8.gz
-%{_mandir}/man8/%{name}_pluto.8.gz
 %{_mandir}/man8/%{name}_scepclient.8.gz
 
 %files NetworkManager
-%{_libdir}/%{name}/plugins/lib%{name}-nm.so
+%{_libexecdir}/%{name}/charon-nm
+
 
 %post
 /sbin/ldconfig
@@ -200,9 +184,14 @@ fi
 %else
 %endif
 
-#TODO manpages
-
 %changelog
+* Tue Jun 19 2012 Pavel Šimerda - 5.0.0-0.1.git20120619
+- Snapshot of upcoming major release
+- Move patches and renaming upstream
+  http://wiki.strongswan.org/issues/194
+  http://wiki.strongswan.org/issues/195
+- Notified upstream about manpage issues
+
 * Tue Jun 19 2012 Pavel Šimerda - 4.6.4-2
 - Make initscript patch more distro-neutral
 - Add links to bugreports for patches
