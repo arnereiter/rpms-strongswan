@@ -1,12 +1,14 @@
 Name:           strongswan
 Version:        4.6.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
+# http://wiki.strongswan.org/issues/195
 Patch0:         %{name}-init.patch
+# http://wiki.strongswan.org/issues/194
 Patch1:         %{name}-rename.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
@@ -201,6 +203,10 @@ fi
 #TODO manpages
 
 %changelog
+* Tue Jun 19 2012 Pavel Šimerda - 4.6.4-2
+- Make initscript patch more distro-neutral
+- Add links to bugreports for patches
+
 * Fri Jun 01 2012 Pavel Šimerda <pavlix@pavlix.net> - 4.6.4-1
 - New upstream version (CVE-2012-2388)
 

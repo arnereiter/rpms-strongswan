@@ -1,7 +1,7 @@
-Index: strongswan-4.6.0/init/systemd/strongswan.service.in
+Index: strongswan-4.6.4/init/systemd/strongswan.service.in
 ===================================================================
---- strongswan-4.6.0.orig/init/systemd/strongswan.service.in
-+++ strongswan-4.6.0/init/systemd/strongswan.service.in
+--- strongswan-4.6.4.orig/init/systemd/strongswan.service.in
++++ strongswan-4.6.4/init/systemd/strongswan.service.in
 @@ -3,7 +3,7 @@ Description=strongSwan IPsec
  After=syslog.target
  
@@ -11,11 +11,11 @@ Index: strongswan-4.6.0/init/systemd/strongswan.service.in
  StandardOutput=syslog
  
  [Install]
-Index: strongswan-4.6.1/init/sysvinit/strongswan
+Index: strongswan-4.6.4/init/sysvinit/strongswan
 ===================================================================
 --- /dev/null
-+++ strongswan-4.6.1/init/sysvinit/strongswan
-@@ -0,0 +1,102 @@
++++ strongswan-4.6.4/init/sysvinit/strongswan
+@@ -0,0 +1,100 @@
 +#!/bin/sh
 +#
 +# strongswan   An implementation of key management system for IPsec
@@ -37,10 +37,8 @@ Index: strongswan-4.6.1/init/sysvinit/strongswan
 +
 +exec="/usr/sbin/strongswan"
 +prog="strongswan"
-+prog1="starter"
-+config="/etc/racoon2/racoon2.conf"
-+
-+[ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
++status_prog="starter"
++config="/etc/strongswan/strongswan.conf"
 +
 +lockfile=/var/lock/subsys/$prog
 +
@@ -77,40 +75,40 @@ Index: strongswan-4.6.1/init/sysvinit/strongswan
 +    restart
 +}
 +
-+rh_status() {
++_status() {
 +    # run checks to determine if the service is running or use generic status
-+    status $prog1
++    status $status_prog
 +}
 +
-+rh_status_q() {
-+    rh_status >/dev/null 2>&1
++_status_q() {
++    _status >/dev/null 2>&1
 +}
 +
 +
 +case "$1" in
 +    start)
-+        rh_status_q && exit 0
++        _status_q && exit 0
 +        $1
 +        ;;
 +    stop)
-+        rh_status_q || exit 0
++        _status_q || exit 0
 +        $1
 +        ;;
 +    restart)
 +        $1
 +        ;;
 +    reload)
-+        rh_status_q || exit 7
++        _status_q || exit 7
 +        $1
 +        ;;
 +    force-reload)
 +        force_reload
 +        ;;
 +    status)
-+        rh_status
++        _status
 +        ;;
 +    condrestart|try-restart)
-+        rh_status_q || exit 0
++        _status_q || exit 0
 +        restart
 +        ;;
 +    *)
