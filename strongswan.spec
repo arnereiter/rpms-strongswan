@@ -21,6 +21,7 @@ BuildRequires:  bison
 BuildRequires:  automake
 BuildRequires:  autoconf
 BuildRequires:  libtool
+BuildRequires:  gettext-devel
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
 Requires(post): systemd-units
