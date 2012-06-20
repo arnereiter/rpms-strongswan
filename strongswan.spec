@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.0.0
-Release:        0.1%{snapshot}%{?dist}
+Release:        0.2%{snapshot}%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -46,6 +46,7 @@ to NetworkManager.
 
 %prep
 %setup -q -n %{name}-%{commit}
+echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
 %build
 ./autogen.sh
@@ -81,7 +82,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 
 
 %files
-%doc README COPYING NEWS CREDITS TODO
+%doc README README.Fedora COPYING NEWS CREDITS TODO
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/ipsec.conf
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
@@ -187,6 +188,9 @@ fi
 %endif
 
 %changelog
+* Wed Jun 20 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.0-0.2.git20120619
+- Add README.Fedora with link to 4.6 to 5.0 migration information
+
 * Tue Jun 19 2012 Pavel Šimerda - 5.0.0-0.1.git20120619
 - Snapshot of upcoming major release
 - Move patches and renaming upstream
