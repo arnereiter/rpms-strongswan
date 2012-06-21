@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.0.0
-Release:        0.2%{snapshot}%{?dist}
+Release:        0.3%{snapshot}%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -12,6 +12,7 @@ Source0:        %{name}-%{commit}.tar.gz
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
+BuildRequires:	openssl-devel
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
 # when building from git
@@ -55,6 +56,7 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --sysconfdir=%{_sysconfdir}/%{name} \
     --with-ipsecdir=%{_libexecdir}/%{name} \
     --with-ipseclibdir=%{_libdir}/%{name} \
+    --enable-openssl \
     --enable-nm
 make %{?_smp_mflags}
 sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
@@ -111,6 +113,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-kernel-netlink.so
 %{_libdir}/%{name}/plugins/lib%{name}-md5.so
 %{_libdir}/%{name}/plugins/lib%{name}-nonce.so
+%{_libdir}/%{name}/plugins/lib%{name}-openssl.so
 %{_libdir}/%{name}/plugins/lib%{name}-pem.so
 %{_libdir}/%{name}/plugins/lib%{name}-pgp.so
 %{_libdir}/%{name}/plugins/lib%{name}-pkcs1.so
@@ -188,6 +191,9 @@ fi
 %endif
 
 %changelog
+* Thu Jun 21 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.0-0.3.git20120619
+- Build with openssl plugin enabled
+
 * Wed Jun 20 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.0-0.2.git20120619
 - Add README.Fedora with link to 4.6 to 5.0 migration information
 
