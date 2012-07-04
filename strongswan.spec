@@ -1,14 +1,15 @@
-%define snapshot .git20120619
-%define commit  0bb3c98
+#%define snapshot .git20120619
+#%define commit  0bb3c98
 
 Name:           strongswan
 Version:        5.0.0
-Release:        0.3%{snapshot}%{?dist}
+Release:        1%{snapshot}%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
-Source0:        %{name}-%{commit}.tar.gz
+Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
+Patch0:         strongswan-init.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -16,13 +17,14 @@ BuildRequires:	openssl-devel
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
 # when building from git
-BuildRequires:  gperf
-BuildRequires:  flex
-BuildRequires:  bison
+#BuildRequires:  gperf
+#BuildRequires:  flex
+#BuildRequires:  bison
 BuildRequires:  automake
-BuildRequires:  autoconf
-BuildRequires:  libtool
-BuildRequires:  gettext-devel
+#BuildRequires:  autoconf
+#BuildRequires:  libtool
+#BuildRequires:  gettext-devel
+#
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
 Requires(post): systemd-units
@@ -46,11 +48,15 @@ NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
 
 %prep
-%setup -q -n %{name}-%{commit}
+%setup -q
+# when building from git
+#%setup -q -n %{name}-%{commit}
+%patch0 -p1
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
 %build
-./autogen.sh
+# for initscript patch to work
+autoreconf
 %configure --disable-static \
     --with-ipsec-script=%{name} \
     --sysconfdir=%{_sysconfdir}/%{name} \
@@ -84,7 +90,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 
 
 %files
-%doc README README.Fedora COPYING NEWS CREDITS TODO
+%doc README README.Fedora COPYING NEWS TODO
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/ipsec.conf
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
@@ -128,6 +134,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-stroke.so
 %{_libdir}/%{name}/plugins/lib%{name}-updown.so
 %{_libdir}/%{name}/plugins/lib%{name}-x509.so
+%{_libdir}/%{name}/plugins/lib%{name}-xauth-generic.so
 %{_libdir}/%{name}/plugins/lib%{name}-xcbc.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/_copyright
@@ -191,6 +198,12 @@ fi
 %endif
 
 %changelog
+* Wed Jul 04 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.0-1.git20120619
+- Update to current upstream release
+- Comment out all stuff that is only needed for git builds
+- Remove renaming patch from git
+- Improve init patch used for EPEL
+
 * Thu Jun 21 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.0-0.3.git20120619
 - Build with openssl plugin enabled
 

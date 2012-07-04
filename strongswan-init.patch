@@ -1,33 +1,37 @@
-Index: strongswan-4.6.4/init/systemd/strongswan.service.in
+Index: strongswan-5.0.0/init/Makefile.am
 ===================================================================
---- strongswan-4.6.4.orig/init/systemd/strongswan.service.in
-+++ strongswan-4.6.4/init/systemd/strongswan.service.in
-@@ -3,7 +3,7 @@ Description=strongSwan IPsec
- After=syslog.target
+--- strongswan-5.0.0.orig/init/Makefile.am
++++ strongswan-5.0.0/init/Makefile.am
+@@ -1,5 +1,5 @@
  
- [Service]
--ExecStart=@SBINDIR@/ipsec start --nofork
-+ExecStart=@SBINDIR@/strongswan start --nofork
- StandardOutput=syslog
+-SUBDIRS =
++SUBDIRS = sysvinit
  
- [Install]
-Index: strongswan-4.6.4/init/sysvinit/strongswan
+ if HAVE_SYSTEMD
+   SUBDIRS += systemd
+Index: strongswan-5.0.0/init/sysvinit/Makefile.am
 ===================================================================
 --- /dev/null
-+++ strongswan-4.6.4/init/sysvinit/strongswan
++++ strongswan-5.0.0/init/sysvinit/Makefile.am
+@@ -0,0 +1 @@
++noinst_DATA = strongswan
+Index: strongswan-5.0.0/init/sysvinit/strongswan.in
+===================================================================
+--- /dev/null
++++ strongswan-5.0.0/init/sysvinit/strongswan.in
 @@ -0,0 +1,100 @@
 +#!/bin/sh
 +#
 +# strongswan   An implementation of key management system for IPsec
 +#
 +# chkconfig:   - 48 52
-+# description: Starts or stops the Strongswan daemons.
++# description: Starts or stops the Strongswan daemon.
 +
 +### BEGIN INIT INFO
 +# Provides: ipsec
 +# Required-Start: $network $remote_fs $syslog $named
 +# Required-Stop: $syslog $remote_fs
-+# Default-Start: 
++# Default-Start:
 +# Default-Stop: 0 1 6
 +# Short-Description: Start Strongswan daemons at boot time
 +### END INIT INFO
@@ -35,7 +39,142 @@ Index: strongswan-4.6.4/init/sysvinit/strongswan
 +# Source function library.
 +. /etc/rc.d/init.d/functions
 +
-+exec="/usr/sbin/strongswan"
++exec="@SBINDIR@/@IPSEC_SCRIPT@"
++prog="strongswan"
++status_prog="starter"
++config="/etc/strongswan/strongswan.conf"
++
++lockfile=/var/lock/subsys/$prog
++
++start() {
++    [ -x $exec ] || exit 5
++    [ -f $config ] || exit 6
++    echo -n $"Starting $prog: "
++    daemon $exec start
++    retval=$?
++    echo
++    [ $retval -eq 0 ] && touch $lockfile
++    return $retval
++}
++
++stop() {
++    echo -n $"Stopping $prog: "
++    $exec stop
++    retval=$?
++    echo
++    [ $retval -eq 0 ] && rm -f $lockfile
++    return $retval
++}
++
++restart() {
++    stop
++    start
++}
++
++reload() {
++    restart
++}
++
++force_reload() {
++    restart
++}
++
++_status() {
++    # run checks to determine if the service is running or use generic status
++    status $status_prog
++}
++
++_status_q() {
++    _status >/dev/null 2>&1
++}
++
++
++case "$1" in
++    start)
++        _status_q && exit 0
++        $1
++        ;;
++    stop)
++        _status_q || exit 0
++        $1
++        ;;
++    restart)
++        $1
++        ;;
++    reload)
++        _status_q || exit 7
++        $1
++        ;;
++    force-reload)
++        force_reload
++        ;;
++    status)
++        _status
++        ;;
++    condrestart|try-restart)
++        _status_q || exit 0
++        restart
++        ;;
++    *)
++        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
++        exit 2
++esac
++exit $?
+Index: strongswan-5.0.0/configure.in
+===================================================================
+--- strongswan-5.0.0.orig/configure.in
++++ strongswan-5.0.0/configure.in
+@@ -1082,6 +1082,9 @@ AC_OUTPUT(
+ 	man/Makefile
+ 	init/Makefile
+ 	init/systemd/Makefile
++	init/systemd/strongswan.service
++	init/sysvinit/Makefile
++	init/sysvinit/strongswan
+ 	src/Makefile
+ 	src/include/Makefile
+ 	src/libstrongswan/Makefile
+Index: strongswan-5.0.0/init/systemd/Makefile.am
+===================================================================
+--- strongswan-5.0.0.orig/init/systemd/Makefile.am
++++ strongswan-5.0.0/init/systemd/Makefile.am
+@@ -1,11 +1 @@
+-
+-EXTRA_DIST = strongswan.service.in
+-CLEANFILES = strongswan.service
+-
+ systemdsystemunit_DATA = strongswan.service
+-
+-strongswan.service : strongswan.service.in
+-	sed \
+-	-e "s:@SBINDIR@:$(sbindir):" \
+-	-e "s:@IPSEC_SCRIPT@:$(ipsec_script):" \
+-	$(srcdir)/$@.in > $@
+Index: strongswan-5.0.0/init/sysvinit/strongswan
+===================================================================
+--- /dev/null
++++ strongswan-5.0.0/init/sysvinit/strongswan
+@@ -0,0 +1,100 @@
++#!/bin/sh
++#
++# strongswan   An implementation of key management system for IPsec
++#
++# chkconfig:   - 48 52
++# description: Starts or stops the Strongswan daemon.
++
++### BEGIN INIT INFO
++# Provides: ipsec
++# Required-Start: $network $remote_fs $syslog $named
++# Required-Stop: $syslog $remote_fs
++# Default-Start:
++# Default-Stop: 0 1 6
++# Short-Description: Start Strongswan daemons at boot time
++### END INIT INFO
++
++# Source function library.
++. /etc/rc.d/init.d/functions
++
++exec="@SBINDIR@/@IPSEC_SCRIPT@"
 +prog="strongswan"
 +status_prog="starter"
 +config="/etc/strongswan/strongswan.conf"
