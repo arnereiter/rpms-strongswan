@@ -16,14 +16,14 @@ BuildRequires:  openldap-devel
 BuildRequires:	openssl-devel
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
-# when building from git
-#BuildRequires:  gperf
-#BuildRequires:  flex
-#BuildRequires:  bison
+# when using autoreconf
+BuildRequires:  gperf
+BuildRequires:  flex
+BuildRequires:  bison
 BuildRequires:  automake
-#BuildRequires:  autoconf
-#BuildRequires:  libtool
-#BuildRequires:  gettext-devel
+BuildRequires:  autoconf
+BuildRequires:  libtool
+BuildRequires:  gettext-devel
 #
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
