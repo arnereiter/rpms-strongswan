@@ -39,7 +39,7 @@ Index: strongswan-5.0.0/init/sysvinit/strongswan.in
 +# Source function library.
 +. /etc/rc.d/init.d/functions
 +
-+exec="@SBINDIR@/@IPSEC_SCRIPT@"
++exec="@sbindir@/@ipsec_script@"
 +prog="strongswan"
 +status_prog="starter"
 +config="/etc/strongswan/strongswan.conf"
@@ -255,3 +255,16 @@ Index: strongswan-5.0.0/init/sysvinit/strongswan
 +        exit 2
 +esac
 +exit $?
+Index: strongswan-5.0.0/init/systemd/strongswan.service.in
+===================================================================
+--- strongswan-5.0.0.orig/init/systemd/strongswan.service.in
++++ strongswan-5.0.0/init/systemd/strongswan.service.in
+@@ -3,7 +3,7 @@ Description=strongSwan IPsec
+ After=syslog.target
+ 
+ [Service]
+-ExecStart=@SBINDIR@/@IPSEC_SCRIPT@ start --nofork
++ExecStart=@sbindir@/@ipsec_script@ start --nofork
+ StandardOutput=syslog
+ 
+ [Install]

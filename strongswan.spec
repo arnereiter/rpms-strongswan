@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.0.0
-Release:        1%{snapshot}%{?dist}
+Release:        2%{snapshot}%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -198,6 +198,9 @@ fi
 %endif
 
 %changelog
+* Sun Jul 08 2012 Pavel Šimerda <pavlix@pavlix.net> - 5.0.0-2.git20120619
+- Fix configure substitutions in initscripts
+
 * Wed Jul 04 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.0-1.git20120619
 - Update to current upstream release
 - Comment out all stuff that is only needed for git builds
