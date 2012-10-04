@@ -1,9 +1,6 @@
-#%define snapshot .git20120619
-#%define commit  0bb3c98
-
 Name:           strongswan
-Version:        5.0.0
-Release:        4%{snapshot}%{?dist}
+Version:        5.0.1
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -13,18 +10,18 @@ Patch0:         strongswan-init.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
-BuildRequires:	openssl-devel
+BuildRequires:  openssl-devel
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
 # when using autoreconf
-BuildRequires:  gperf
-BuildRequires:  flex
-BuildRequires:  bison
-BuildRequires:  automake
-BuildRequires:  autoconf
-BuildRequires:  libtool
-BuildRequires:  gettext-devel
-BuildRequires:  pam-devel
+#BuildRequires:  gperf
+#BuildRequires:  flex
+#BuildRequires:  bison
+#BuildRequires:  automake
+#BuildRequires:  autoconf
+#BuildRequires:  libtool
+#BuildRequires:  gettext-devel
+#BuildRequires:  pam-devel
 #
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
@@ -50,8 +47,6 @@ to NetworkManager.
 
 %prep
 %setup -q
-# when building from git
-#%setup -q -n %{name}-%{commit}
 %patch0 -p1
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -221,6 +216,9 @@ fi
 %endif
 
 %changelog
+* Thu Oct 04 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.1-1
+- Update to release 5.0.1
+
 * Thu Oct 04 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.0-4.git20120619
 - Add plugins to interoperate with Windows 7 and Android (#862472)
   (contributed by Haim Gelfenbeyn)
