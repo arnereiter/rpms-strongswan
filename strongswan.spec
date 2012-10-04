@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.0.0
-Release:        3%{snapshot}%{?dist}
+Release:        4%{snapshot}%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -24,6 +24,7 @@ BuildRequires:  automake
 BuildRequires:  autoconf
 BuildRequires:  libtool
 BuildRequires:  gettext-devel
+BuildRequires:  pam-devel
 #
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
@@ -63,6 +64,16 @@ autoreconf
     --with-ipsecdir=%{_libexecdir}/%{name} \
     --with-ipseclibdir=%{_libdir}/%{name} \
     --enable-openssl \
+    --enable-md4 \
+    --enable-xauth-eap \
+    --enable-eap-md5 \
+    --enable-eap-gtc \
+    --enable-eap-tls \
+    --enable-eap-ttls \
+    --enable-eap-peap \
+    --enable-eap-mschapv2 \
+    --enable-farp \
+    --enable-dhcp \
     --enable-nm
 make %{?_smp_mflags}
 sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
@@ -104,6 +115,8 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/libcharon.so.0.0.0
 %{_libdir}/%{name}/libhydra.so.0
 %{_libdir}/%{name}/libhydra.so.0.0.0
+%{_libdir}/%{name}/libtls.so.0
+%{_libdir}/%{name}/libtls.so.0.0.0
 %{_libdir}/%{name}/lib%{name}.so.0
 %{_libdir}/%{name}/lib%{name}.so.0.0.0
 %dir %{_libdir}/%{name}/plugins
@@ -135,7 +148,17 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-updown.so
 %{_libdir}/%{name}/plugins/lib%{name}-x509.so
 %{_libdir}/%{name}/plugins/lib%{name}-xauth-generic.so
+%{_libdir}/%{name}/plugins/lib%{name}-xauth-eap.so
 %{_libdir}/%{name}/plugins/lib%{name}-xcbc.so
+%{_libdir}/%{name}/plugins/lib%{name}-md4.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-md5.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-gtc.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-tls.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-ttls.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-peap.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-mschapv2.so
+%{_libdir}/%{name}/plugins/lib%{name}-farp.so
+%{_libdir}/%{name}/plugins/lib%{name}-dhcp.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/_copyright
 %{_libexecdir}/%{name}/_updown
@@ -198,6 +221,10 @@ fi
 %endif
 
 %changelog
+* Thu Oct 04 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.0-4.git20120619
+- Add plugins to interoperate with Windows 7 and Android (#862472)
+  (contributed by Haim Gelfenbeyn)
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0.0-3.git20120619
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
