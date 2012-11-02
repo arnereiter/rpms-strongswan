@@ -52,7 +52,7 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
 
 %build
 # for initscript patch to work
-autoreconf
+#autoreconf
 %configure --disable-static \
     --with-ipsec-script=%{name} \
     --sysconfdir=%{_sysconfdir}/%{name} \
