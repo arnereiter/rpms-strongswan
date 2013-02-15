@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        5.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -216,6 +216,9 @@ fi
 %endif
 
 %changelog
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Oct 04 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.1-1
 - Update to release 5.0.1
 
