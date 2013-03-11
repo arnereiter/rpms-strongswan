@@ -1,5 +1,5 @@
 Name:           strongswan
-Version:        5.0.1
+Version:        5.0.2
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
@@ -13,6 +13,7 @@ BuildRequires:  openldap-devel
 BuildRequires:  openssl-devel
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
+BuildRequires:  sqlite-devel
 # when using autoreconf
 #BuildRequires:  gperf
 #BuildRequires:  flex
@@ -45,6 +46,18 @@ Group:          System Environment/Daemons
 NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
 
+%package tnc-imcvs
+Summary: Trusted network connect (TNC)'s IMC/IMV fuctionality
+Group: Applications/System
+Requires: %{name} = %{version}
+%description tnc-imcvs
+This package provides Trusted Network Connect's (TNC) IMC and IMV functionality.
+Specifically it includes PTS based IMC/IMV for TPM based remote attestation and 
+scanner and test IMCs and IMVs. The Strongswan's IMC/IMV dynamic libraries can be
+used by any third party TNC Client/Server implementation possessing a standard 
+IF-IMC/IMV interface.
+
+
 %prep
 %setup -q
 %patch0 -p1
@@ -69,7 +82,20 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-eap-mschapv2 \
     --enable-farp \
     --enable-dhcp \
-    --enable-nm
+    --enable-nm \
+    --enable-sqlite \
+    --enable-imc-test \
+    --enable-imv-test \
+    --enable-imc-scanner \
+    --enable-imv-scanner  \
+    --enable-imc-attestation \
+    --enable-imv-attestation \
+    --enable-eap-tnc \
+    --enable-tnccs-20 \
+    --enable-tnc-imc \
+    --enable-tnc-imv
+
+
 make %{?_smp_mflags}
 sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
 
@@ -174,6 +200,33 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_mandir}/man8/%{name}_openac.8.gz
 %{_mandir}/man8/%{name}_scepclient.8.gz
 
+%files tnc-imcvs
+%dir %{_libdir}/%{name}
+%{_libdir}/%{name}/libimcv.so.0
+%{_libdir}/%{name}/libimcv.so.0.0.0
+%{_libdir}/%{name}/libpts.so.0
+%{_libdir}/%{name}/libpts.so.0.0.0
+%{_libdir}/%{name}/libtnccs.so.0
+%{_libdir}/%{name}/libtnccs.so.0.0.0
+%dir %{_libdir}/%{name}/imcvs
+%dir %{_libdir}/%{name}/imcvs/imc-attestation.so
+%dir %{_libdir}/%{name}/imcvs/imc-scanner.so
+%dir %{_libdir}/%{name}/imcvs/imc-test.so
+%dir %{_libdir}/%{name}/imcvs/imv-attestation.so
+%dir %{_libdir}/%{name}/imcvs/imv-scanner.so
+%dir %{_libdir}/%{name}/imcvs/imv-test.so
+%dir %{_libdir}/%{name}/plugins
+%{_libdir}/%{name}/plugins/lib%{name}-pkcs7.so
+%{_libdir}/%{name}/plugins/lib%{name}-sqlite.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-tnc.so
+%{_libdir}/%{name}/plugins/lib%{name}-tnc-imc.so
+%{_libdir}/%{name}/plugins/lib%{name}-tnc-imv.so
+%{_libdir}/%{name}/plugins/lib%{name}-tnc-tnccs.so
+%{_libdir}/%{name}/plugins/lib%{name}-tnccs-20.so
+%dir %{_libexecdir}/%{name}
+%{_libexecdir}/%{name}/attest
+
+
 %files NetworkManager
 %{_libexecdir}/%{name}/charon-nm
 
@@ -216,6 +269,15 @@ fi
 %endif
 
 %changelog
+* Mon Mar 11 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-1
+- Update to upstream release 5.0.2
+- Created sub package strongswan-tnc-imcvs that provides trusted network
+  connect's IMC and IMV funtionality. Specifically it includes PTS 
+  based IMC/IMV for TPM based remote attestation and scanner and test 
+  IMCs and IMVs. The Strongswan's IMC/IMV dynamic libraries can be used 
+  by any third party TNC Client/Server implementation possessing a 
+  standard IF-IMC/IMV interface.
+
 * Thu Oct 04 2012 Pavel Šimerda <psimerda@redhat.com> - 5.0.1-1
 - Update to release 5.0.1
 
