@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        5.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -93,7 +93,8 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-eap-tnc \
     --enable-tnccs-20 \
     --enable-tnc-imc \
-    --enable-tnc-imv
+    --enable-tnc-imv \
+    --enable-eap-radius
 
 
 make %{?_smp_mflags}
@@ -208,6 +209,8 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/libpts.so.0.0.0
 %{_libdir}/%{name}/libtnccs.so.0
 %{_libdir}/%{name}/libtnccs.so.0.0.0
+%{_libdir}/%{name}/libradius.so.0
+%{_libdir}/%{name}/libradius.so.0.0.0
 %dir %{_libdir}/%{name}/imcvs
 %dir %{_libdir}/%{name}/imcvs/imc-attestation.so
 %dir %{_libdir}/%{name}/imcvs/imc-scanner.so
@@ -223,6 +226,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-tnc-imv.so
 %{_libdir}/%{name}/plugins/lib%{name}-tnc-tnccs.so
 %{_libdir}/%{name}/plugins/lib%{name}-tnccs-20.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-radius.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/attest
 
@@ -269,6 +273,9 @@ fi
 %endif
 
 %changelog
+* Tue Mar 19 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-2
+- Enabled support for eap-radius plugin.
+
 * Tue Mar 5 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-1
 - New upstream release 
 - Created sub package strongswan-tnc-imcvs that provides trusted network
