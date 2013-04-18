@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        5.0.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -14,16 +14,8 @@ BuildRequires:  openssl-devel
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
 BuildRequires:  sqlite-devel
-# when using autoreconf
-#BuildRequires:  gperf
-#BuildRequires:  flex
-#BuildRequires:  bison
-#BuildRequires:  automake
-#BuildRequires:  autoconf
-#BuildRequires:  libtool
-#BuildRequires:  gettext-devel
-#BuildRequires:  pam-devel
-#
+BuildRequires:  gettext-devel
+
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
 Requires(post): systemd-units
@@ -273,6 +265,10 @@ fi
 %endif
 
 %changelog
+* Thu Apr 18 2013 Pavel Šimerda <psimerda@redhat.com> - 5.0.2-3
+- Add gettext-devel to BuildRequires because of epel6
+- Remove unnecessary comments
+
 * Tue Mar 19 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-2
 - Enabled support for eap-radius plugin.
 
