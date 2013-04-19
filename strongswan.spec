@@ -1,5 +1,5 @@
 Name:           strongswan
-Version:        5.0.2
+Version:        5.0.3
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
@@ -93,7 +93,10 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-eap-tnc \
     --enable-tnccs-20 \
     --enable-tnc-imc \
-    --enable-tnc-imv
+    --enable-tnc-imv \
+    --enable-eap-radius \
+    --enable-curl \
+    --enable-eap-identity 
 
 
 make %{?_smp_mflags}
@@ -138,6 +141,8 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/libhydra.so.0.0.0
 %{_libdir}/%{name}/libtls.so.0
 %{_libdir}/%{name}/libtls.so.0.0.0
+%{_libdir}/%{name}/libpttls.so.0
+%{_libdir}/%{name}/libpttls.so.0.0.0
 %{_libdir}/%{name}/lib%{name}.so.0
 %{_libdir}/%{name}/lib%{name}.so.0.0.0
 %dir %{_libdir}/%{name}/plugins
@@ -180,6 +185,8 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-eap-mschapv2.so
 %{_libdir}/%{name}/plugins/lib%{name}-farp.so
 %{_libdir}/%{name}/plugins/lib%{name}-dhcp.so
+%{_libdir}/%{name}/plugins/lib%{name}-curl.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-identity.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/_copyright
 %{_libexecdir}/%{name}/_updown
@@ -208,6 +215,8 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/libpts.so.0.0.0
 %{_libdir}/%{name}/libtnccs.so.0
 %{_libdir}/%{name}/libtnccs.so.0.0.0
+%{_libdir}/%{name}/libradius.so.0
+%{_libdir}/%{name}/libradius.so.0.0.0
 %dir %{_libdir}/%{name}/imcvs
 %dir %{_libdir}/%{name}/imcvs/imc-attestation.so
 %dir %{_libdir}/%{name}/imcvs/imc-scanner.so
@@ -223,6 +232,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-tnc-imv.so
 %{_libdir}/%{name}/plugins/lib%{name}-tnc-tnccs.so
 %{_libdir}/%{name}/plugins/lib%{name}-tnccs-20.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-radius.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/attest
 
@@ -269,6 +279,11 @@ fi
 %endif
 
 %changelog
+* Fri Apr 19 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.3-1
+- New upstream release
+- Enabled curl and eap-identity plugins
+- Enabled support for eap-radius plugin.
+
 * Mon Mar 11 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-1
 - Update to upstream release 5.0.2
 - Created sub package strongswan-tnc-imcvs that provides trusted network
