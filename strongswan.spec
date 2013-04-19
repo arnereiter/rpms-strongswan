@@ -1,6 +1,6 @@
 Name:           strongswan
-Version:        5.0.2
-Release:        2%{?dist}
+Version:        5.0.3
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -94,7 +94,9 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-tnccs-20 \
     --enable-tnc-imc \
     --enable-tnc-imv \
-    --enable-eap-radius
+    --enable-eap-radius \
+    --enable-curl \
+    --enable-eap-identity 
 
 
 make %{?_smp_mflags}
@@ -139,6 +141,8 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/libhydra.so.0.0.0
 %{_libdir}/%{name}/libtls.so.0
 %{_libdir}/%{name}/libtls.so.0.0.0
+%{_libdir}/%{name}/libpttls.so.0
+%{_libdir}/%{name}/libpttls.so.0.0.0
 %{_libdir}/%{name}/lib%{name}.so.0
 %{_libdir}/%{name}/lib%{name}.so.0.0.0
 %dir %{_libdir}/%{name}/plugins
@@ -181,6 +185,8 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-eap-mschapv2.so
 %{_libdir}/%{name}/plugins/lib%{name}-farp.so
 %{_libdir}/%{name}/plugins/lib%{name}-dhcp.so
+%{_libdir}/%{name}/plugins/lib%{name}-curl.so
+%{_libdir}/%{name}/plugins/lib%{name}-eap-identity.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/_copyright
 %{_libexecdir}/%{name}/_updown
@@ -273,6 +279,10 @@ fi
 %endif
 
 %changelog
+* Fri Apr 19 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.3-1
+- New upstream release
+- Enabled curl and eap-identity plugins
+
 * Tue Mar 19 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-2
 - Enabled support for eap-radius plugin.
 
