@@ -277,6 +277,7 @@ fi
 * Fri Apr 19 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.3-1
 - New upstream release
 - Enabled curl and eap-identity plugins
+- Enabled support for eap-radius plugin.
 
 * Thu Apr 18 2013 Pavel Šimerda <psimerda@redhat.com> - 5.0.2-3
 - Add gettext-devel to BuildRequires because of epel6
@@ -285,15 +286,15 @@ fi
 * Tue Mar 19 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-2
 - Enabled support for eap-radius plugin.
 
-* Tue Mar 5 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-1
-- New upstream release 
+* Mon Mar 11 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-1
+- Update to upstream release 5.0.2
 - Created sub package strongswan-tnc-imcvs that provides trusted network
   connect's IMC and IMV funtionality. Specifically it includes PTS 
   based IMC/IMV for TPM based remote attestation and scanner and test 
   IMCs and IMVs. The Strongswan's IMC/IMV dynamic libraries can be used 
   by any third party TNC Client/Server implementation possessing a 
   standard IF-IMC/IMV interface.
-  
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
