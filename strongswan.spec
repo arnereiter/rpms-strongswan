@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        5.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -271,6 +271,9 @@ fi
 %endif
 
 %changelog
+* Sat Apr 20 2013 Pavel Šimerda <psimerda@redhat.com> - 5.0.3-2
+- Rebuilt for a single specfile for rawhide/f19/f18/el6
+
 * Fri Apr 19 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.3-1
 - New upstream release
 - Enabled curl and eap-identity plugins
