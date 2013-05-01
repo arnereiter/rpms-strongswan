@@ -1,12 +1,13 @@
 Name:           strongswan
-Version:        5.0.3
-Release:        2%{?dist}
+Version:        5.0.4
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
 Patch0:         strongswan-init.patch
+Patch1:         strongswan-pts-ecp-disable.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -15,6 +16,7 @@ BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
 BuildRequires:  sqlite-devel
 BuildRequires:  gettext-devel
+BuildRequires:  trousers-devel
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
@@ -53,6 +55,7 @@ IF-IMC/IMV interface.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
 %build
@@ -63,6 +66,7 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --sysconfdir=%{_sysconfdir}/%{name} \
     --with-ipsecdir=%{_libexecdir}/%{name} \
     --with-ipseclibdir=%{_libdir}/%{name} \
+    --with-tss=trousers \
     --enable-openssl \
     --enable-md4 \
     --enable-xauth-eap \
@@ -82,6 +86,8 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-imv-scanner  \
     --enable-imc-attestation \
     --enable-imv-attestation \
+    --enable-imv-os \
+    --enable-imc-os \
     --enable-eap-tnc \
     --enable-tnccs-20 \
     --enable-tnc-imc \
@@ -213,9 +219,11 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %dir %{_libdir}/%{name}/imcvs/imc-attestation.so
 %dir %{_libdir}/%{name}/imcvs/imc-scanner.so
 %dir %{_libdir}/%{name}/imcvs/imc-test.so
+%dir %{_libdir}/%{name}/imcvs/imc-os.so
 %dir %{_libdir}/%{name}/imcvs/imv-attestation.so
 %dir %{_libdir}/%{name}/imcvs/imv-scanner.so
 %dir %{_libdir}/%{name}/imcvs/imv-test.so
+%dir %{_libdir}/%{name}/imcvs/imv-os.so
 %dir %{_libdir}/%{name}/plugins
 %{_libdir}/%{name}/plugins/lib%{name}-pkcs7.so
 %{_libdir}/%{name}/plugins/lib%{name}-sqlite.so
@@ -227,6 +235,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-eap-radius.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/attest
+%{_libexecdir}/%{name}/pacman
 
 
 %files NetworkManager
@@ -271,6 +280,16 @@ fi
 %endif
 
 %changelog
+* Wed May 1 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-1
+- New upstream release
+- Fixes fo CVE-2013-2944
+- Enabled support for OS IMV/IMC
+- Created and applied a patch to disable ECP in fedora, because
+  Openssl in Fedora does not allow ECP_256 and ECP_384. It makes
+  it non-compliant to TCG's PTS standard, but there is no choice
+  right now. see redhat bz # 319901.
+- Enabled Trousers support for TPM based operations.
+
 * Sat Apr 20 2013 Pavel Šimerda <psimerda@redhat.com> - 5.0.3-2
 - Rebuilt for a single specfile for rawhide/f19/f18/el6
 
