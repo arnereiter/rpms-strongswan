@@ -1,0 +1,12 @@
+diff -urNp strongswan-5.0.4-patched/src/libstrongswan/plugins/plugin_loader.c strongswan-5.0.4-current/src/libstrongswan/plugins/plugin_loader.c
+--- strongswan-5.0.4-patched/src/libstrongswan/plugins/plugin_loader.c	2013-05-01 15:50:51.375560719 -0400
++++ strongswan-5.0.4-current/src/libstrongswan/plugins/plugin_loader.c	2013-05-22 16:30:24.121091911 -0400
+@@ -267,7 +267,7 @@ static bool load_plugin(private_plugin_l
+ 			return FALSE;
+ 		}
+ 	}
+-	handle = dlopen(file, RTLD_LAZY);
++	handle = dlopen(file, RTLD_NOW|RTLD_GLOBAL);
+ 	if (handle == NULL)
+ 	{
+ 		DBG1(DBG_LIB, "plugin '%s' failed to load: %s", name, dlerror());
