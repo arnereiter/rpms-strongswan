@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        5.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -8,6 +8,7 @@ URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
 Patch0:         strongswan-init.patch
 Patch1:         strongswan-pts-ecp-disable.patch
+Patch2:         libstrongswan-plugin.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -17,6 +18,7 @@ BuildRequires:  NetworkManager-glib-devel
 BuildRequires:  sqlite-devel
 BuildRequires:  gettext-devel
 BuildRequires:  trousers-devel
+BuildRequires:  libxml2-devel
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
@@ -56,6 +58,8 @@ IF-IMC/IMV interface.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
 %build
@@ -90,6 +94,8 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-imc-os \
     --enable-eap-tnc \
     --enable-tnccs-20 \
+    --enable-tnccs-11 \
+    --enable-tnccs-dynamic \
     --enable-tnc-imc \
     --enable-tnc-imv \
     --enable-eap-radius \
@@ -97,6 +103,7 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-eap-identity 
 
 
+#make %{?_smp_mflags} IPSEC_CONFDIR=%{_sysconfdir}/%{name}
 make %{?_smp_mflags}
 sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
 
@@ -232,6 +239,8 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/plugins/lib%{name}-tnc-imv.so
 %{_libdir}/%{name}/plugins/lib%{name}-tnc-tnccs.so
 %{_libdir}/%{name}/plugins/lib%{name}-tnccs-20.so
+%{_libdir}/%{name}/plugins/lib%{name}-tnccs-11.so
+%{_libdir}/%{name}/plugins/lib%{name}-tnccs-dynamic.so
 %{_libdir}/%{name}/plugins/lib%{name}-eap-radius.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/attest
@@ -280,9 +289,14 @@ fi
 %endif
 
 %changelog
+* Tue Jun 11 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-2
+- Enabled TNCCS 1.1 protocol
+- Fixed libxm2-devel build dependency
+- Patch to fix the issue with loading of plugins
+
 * Wed May 1 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-1
 - New upstream release
-- Fixes fo CVE-2013-2944
+- Fixes for CVE-2013-2944
 - Enabled support for OS IMV/IMC
 - Created and applied a patch to disable ECP in fedora, because
   Openssl in Fedora does not allow ECP_256 and ECP_384. It makes
