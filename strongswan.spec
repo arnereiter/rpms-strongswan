@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        5.0.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -9,6 +9,9 @@ Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
 Patch0:         strongswan-init.patch
 Patch1:         strongswan-pts-ecp-disable.patch
 Patch2:         libstrongswan-plugin.patch
+Patch3:         libstrongswan-settings-debug.patch
+Patch4:         strongswan.git-71d740cac68f83c77d981368a4c041eb620310ed.patch
+Patch5:         libimcv-attestatiom-imv-crash.patch
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -59,6 +62,9 @@ IF-IMC/IMV interface.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -289,6 +295,19 @@ fi
 %endif
 
 %changelog
+* Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
+- Patch to fix a major crash issue when Freeradius loads
+  attestatiom-imv and does not initialize libstrongswan which
+  causes crash due to calls to PTS algorithms probing APIs.
+  So this patch fixes the order of initialization. This issues
+  does not occur with charon because libstrongswan gets
+  initialized earlier.
+- Patch that allows to outputs errors when there are permission
+  issues when accessing strongswan.conf.
+- Patch to make loading of modules configurable when libimcv
+  is used in stand alone mode without charon with freeradius
+  and wpa_supplicant.
+
 * Tue Jun 11 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-2
 - Enabled TNCCS 1.1 protocol
 - Fixed libxm2-devel build dependency
