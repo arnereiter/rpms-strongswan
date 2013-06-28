@@ -1,0 +1,26 @@
+From 71d740cac68f83c77d981368a4c041eb620310ed Mon Sep 17 00:00:00 2001
+From: Andreas Steffen <andreas.steffen@strongswan.org>
+Date: Fri, 24 May 2013 12:56:21 +0200
+Subject: [PATCH] Make plugins in standalone libimcv configurable
+
+---
+ src/libimcv/imcv.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/src/libimcv/imcv.c b/src/libimcv/imcv.c
+index 6cee0ad..f9ecf79 100644
+--- a/src/libimcv/imcv.c
++++ b/src/libimcv/imcv.c
+@@ -118,7 +118,8 @@ bool libimcv_init(void)
+ 		openlog("imcv", 0, LOG_DAEMON);
+ 
+ 		if (!lib->plugins->load(lib->plugins, NULL,
+-							"sha1 sha2 random nonce gmp pubkey x509"))
++				lib->settings->get_str(lib->settings, "libimcv.load",
++					"random nonce gmp pubkey x509")))
+ 		{
+ 			library_deinit();
+ 			return FALSE;
+-- 
+1.7.4.1
+
