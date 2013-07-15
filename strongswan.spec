@@ -254,6 +254,7 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 
 
 %files NetworkManager
+%doc COPYING
 %{_libexecdir}/%{name}/charon-nm
 
 
@@ -292,6 +293,7 @@ fi
 - fix rpmlint error: spelling-error Summary(en_US) fuctionality
 - depend on 'systemd' instead of 'systemd-units'
 - use new systemd scriptlet macros
+- NetworkManager subpackage should have a copy of the license (#984490)
 
 * Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
 - Patch to fix a major crash issue when Freeradius loads
