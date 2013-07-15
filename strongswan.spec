@@ -141,10 +141,17 @@ chmod 700 %{buildroot}%{_sysconfdir}/%{name}
 install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %endif
 
+# Create ipsec.d directory tree.
+install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
+for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
+    install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d/${i}
+done
+
 
 %files
 %doc README README.Fedora COPYING NEWS TODO
 %dir %{_sysconfdir}/%{name}
+%{_sysconfdir}/%{name}/ipsec.d/
 %config(noreplace) %{_sysconfdir}/%{name}/ipsec.conf
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
@@ -306,6 +313,7 @@ fi
   to strongswan in this package (#948306)
 - invocation of "ipsec scepclient" is broken as ipsec is renamed
   to strongswan in this package
+- add /etc/strongswan/ipsec.d and missing subdirectories
 
 * Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
 - Patch to fix a major crash issue when Freeradius loads
