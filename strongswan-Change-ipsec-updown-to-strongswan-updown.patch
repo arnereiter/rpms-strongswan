@@ -1,0 +1,25 @@
+From daa81c04068956ff34fb0efb72956401969a8d9b Mon Sep 17 00:00:00 2001
+From: Jamie Nguyen <j@jamielinux.com>
+Date: Mon, 15 Jul 2013 13:42:14 +0100
+Subject: [PATCH] Change 'ipsec _updown' to 'strongswan _updown'
+
+---
+ src/starter/confread.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/starter/confread.c b/src/starter/confread.c
+index f0f05b0..ffd44c0 100644
+--- a/src/starter/confread.c
++++ b/src/starter/confread.c
+@@ -38,7 +38,7 @@
+ static const char ike_defaults[] = "aes128-sha1-modp2048,3des-sha1-modp1536";
+ static const char esp_defaults[] = "aes128-sha1,3des-sha1";
+ 
+-static const char firewall_defaults[] = "ipsec _updown iptables";
++static const char firewall_defaults[] = "strongswan _updown iptables";
+ 
+ static bool daemon_exists(char *daemon, char *path)
+ {
+-- 
+1.8.3.1
+
