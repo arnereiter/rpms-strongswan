@@ -1,5 +1,11 @@
 %global hardened_build 1
 
+%if 0%{?rhel} <= 6
+%global enable_nm 0
+%else
+%global _enable_nm --enable-nm
+%endif
+
 Name:           strongswan
 Version:        5.0.4
 Release:        4%{?dist}
@@ -21,12 +27,16 @@ BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
 BuildRequires:  openssl-devel
-BuildRequires:  NetworkManager-devel
-BuildRequires:  NetworkManager-glib-devel
 BuildRequires:  sqlite-devel
 BuildRequires:  gettext-devel
 BuildRequires:  trousers-devel
 BuildRequires:  libxml2-devel
+%if 0%{?enable_nm}
+BuildRequires:  NetworkManager-devel
+BuildRequires:  NetworkManager-glib-devel
+%else
+Obsoletes:      %{name}-NetworkManager < 5.0.0-3.git20120619
+%endif
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd
@@ -43,12 +53,14 @@ The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key
 exchange protocols in conjunction with the native NETKEY IPsec stack of the
 Linux kernel.
 
+%if 0%{enable_nm}
 %package NetworkManager
 Summary:        NetworkManager plugin for Strongswan
 Group:          System Environment/Daemons
 %description NetworkManager
 NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
+%endif
 
 %package tnc-imcvs
 Summary: Trusted network connect (TNC)'s IMC/IMV functionality
@@ -95,7 +107,6 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-eap-mschapv2 \
     --enable-farp \
     --enable-dhcp \
-    --enable-nm \
     --enable-sqlite \
     --enable-imc-test \
     --enable-imv-test \
@@ -113,7 +124,8 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-tnc-imv \
     --enable-eap-radius \
     --enable-curl \
-    --enable-eap-identity
+    --enable-eap-identity \
+    %{?_enable_nm}
 
 
 #make %%{?_smp_mflags} IPSEC_CONFDIR=%%{_sysconfdir}/%%{name}
@@ -267,9 +279,11 @@ done
 %{_libexecdir}/%{name}/pacman
 
 
+%if 0%{?enable_nm}
 %files NetworkManager
 %doc COPYING
 %{_libexecdir}/%{name}/charon-nm
+%endif
 
 
 %post
@@ -314,6 +328,8 @@ fi
 - invocation of "ipsec scepclient" is broken as ipsec is renamed
   to strongswan in this package
 - add /etc/strongswan/ipsec.d and missing subdirectories
+- conditionalize building of strongswan-NetworkManager subpackage as the
+  version of NetworkManager in EL6 is too old (#984497)
 
 * Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
 - Patch to fix a major crash issue when Freeradius loads
