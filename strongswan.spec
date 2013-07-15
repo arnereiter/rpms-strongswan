@@ -297,6 +297,7 @@ fi
 %changelog
 * Mon Jul 15 2013 Jamie Nguyen <jamielinux@fedoraproject.org> - 5.0.4-4
 - %%files tries to package some of the shared objects as directories (#984437)
+- fix broken systemd unit file (#984300)
 
 * Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
 - Patch to fix a major crash issue when Freeradius loads
