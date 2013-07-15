@@ -1,3 +1,5 @@
+%global hardened_build 1
+
 Name:           strongswan
 Version:        5.0.4
 Release:        4%{?dist}
@@ -294,6 +296,7 @@ fi
 - depend on 'systemd' instead of 'systemd-units'
 - use new systemd scriptlet macros
 - NetworkManager subpackage should have a copy of the license (#984490)
+- enable hardened_build as this package meets the PIE criteria (#984429)
 
 * Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
 - Patch to fix a major crash issue when Freeradius loads
