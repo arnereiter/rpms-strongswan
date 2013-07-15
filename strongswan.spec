@@ -1,6 +1,6 @@
 Name:           strongswan
 Version:        5.0.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -229,14 +229,14 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %{_libdir}/%{name}/libradius.so.0
 %{_libdir}/%{name}/libradius.so.0.0.0
 %dir %{_libdir}/%{name}/imcvs
-%dir %{_libdir}/%{name}/imcvs/imc-attestation.so
-%dir %{_libdir}/%{name}/imcvs/imc-scanner.so
-%dir %{_libdir}/%{name}/imcvs/imc-test.so
-%dir %{_libdir}/%{name}/imcvs/imc-os.so
-%dir %{_libdir}/%{name}/imcvs/imv-attestation.so
-%dir %{_libdir}/%{name}/imcvs/imv-scanner.so
-%dir %{_libdir}/%{name}/imcvs/imv-test.so
-%dir %{_libdir}/%{name}/imcvs/imv-os.so
+%{_libdir}/%{name}/imcvs/imc-attestation.so
+%{_libdir}/%{name}/imcvs/imc-scanner.so
+%{_libdir}/%{name}/imcvs/imc-test.so
+%{_libdir}/%{name}/imcvs/imc-os.so
+%{_libdir}/%{name}/imcvs/imv-attestation.so
+%{_libdir}/%{name}/imcvs/imv-scanner.so
+%{_libdir}/%{name}/imcvs/imv-test.so
+%{_libdir}/%{name}/imcvs/imv-os.so
 %dir %{_libdir}/%{name}/plugins
 %{_libdir}/%{name}/plugins/lib%{name}-pkcs7.so
 %{_libdir}/%{name}/plugins/lib%{name}-sqlite.so
@@ -295,6 +295,9 @@ fi
 %endif
 
 %changelog
+* Mon Jul 15 2013 Jamie Nguyen <jamielinux@fedoraproject.org> - 5.0.4-4
+- %%files tries to package some of the shared objects as directories (#984437)
+
 * Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
 - Patch to fix a major crash issue when Freeradius loads
   attestatiom-imv and does not initialize libstrongswan which
