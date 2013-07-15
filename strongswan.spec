@@ -24,10 +24,10 @@ BuildRequires:  trousers-devel
 BuildRequires:  libxml2-devel
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
-BuildRequires:  systemd-units
-Requires(post): systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units
+BuildRequires:  systemd
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 %else
 Requires(post): chkconfig
 Requires(preun): chkconfig
@@ -260,21 +260,14 @@ install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %post
 /sbin/ldconfig
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
-if [ $1 -eq 1 ] ; then
-    # Initial installation
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
+%systemd_post %{name}.service
 %else
 /sbin/chkconfig --add %{name}
 %endif
 
 %preun
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /bin/systemctl --no-reload disable %{name}.service > /dev/null 2>&1 || :
-    /bin/systemctl stop %{name}.service > /dev/null 2>&1 || :
-fi
+%systemd_preun %{name}.service
 %else
 if [ $1 -eq 0 ] ; then
     # Package removal, not upgrade
@@ -286,11 +279,7 @@ fi
 %postun
 /sbin/ldconfig
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart %{name}.service >/dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart %{name}.service
 %else
 %endif
 
@@ -301,6 +290,8 @@ fi
 - fix rpmlint error: description-line-too-long
 - fix rpmlint error: macro-in-comment
 - fix rpmlint error: spelling-error Summary(en_US) fuctionality
+- depend on 'systemd' instead of 'systemd-units'
+- use new systemd scriptlet macros
 
 * Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
 - Patch to fix a major crash issue when Freeradius loads
