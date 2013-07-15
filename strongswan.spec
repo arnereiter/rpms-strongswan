@@ -15,6 +15,7 @@ Patch3:         libstrongswan-settings-debug.patch
 Patch4:         strongswan.git-71d740cac68f83c77d981368a4c041eb620310ed.patch
 Patch5:         libimcv-attestatiom-imv-crash.patch
 Patch6:         strongswan-Change-ipsec-updown-to-strongswan-updown.patch
+Patch7:         strongswan-Change-ipsec-scepclient-to-strongswan-scepclient.patch
 
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
@@ -70,6 +71,7 @@ implementation possessing a standard IF-IMC/IMV interface.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -302,6 +304,8 @@ fi
 - enable hardened_build as this package meets the PIE criteria (#984429)
 - invocation of "ipsec _updown iptables" is broken as ipsec is renamed
   to strongswan in this package (#948306)
+- invocation of "ipsec scepclient" is broken as ipsec is renamed
+  to strongswan in this package
 
 * Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
 - Patch to fix a major crash issue when Freeradius loads
