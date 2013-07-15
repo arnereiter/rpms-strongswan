@@ -34,9 +34,9 @@ Requires(preun): chkconfig
 Requires(preun): initscripts
 %endif
 %description
-The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key exchange
-protocols in conjunction with the native NETKEY IPsec stack of the Linux
-kernel.
+The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key
+exchange protocols in conjunction with the native NETKEY IPsec stack of the
+Linux kernel.
 
 %package NetworkManager
 Summary:        NetworkManager plugin for Strongswan
@@ -46,15 +46,15 @@ NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
 
 %package tnc-imcvs
-Summary: Trusted network connect (TNC)'s IMC/IMV fuctionality
+Summary: Trusted network connect (TNC)'s IMC/IMV functionality
 Group: Applications/System
 Requires: %{name} = %{version}
 %description tnc-imcvs
-This package provides Trusted Network Connect's (TNC) IMC and IMV functionality.
-Specifically it includes PTS based IMC/IMV for TPM based remote attestation and 
-scanner and test IMCs and IMVs. The Strongswan's IMC/IMV dynamic libraries can be
-used by any third party TNC Client/Server implementation possessing a standard 
-IF-IMC/IMV interface.
+This package provides Trusted Network Connect's (TNC) IMC and IMV
+functionality. Specifically it includes PTS based IMC/IMV for TPM based
+remote attestation and scanner and test IMCs and IMVs. The Strongswan's
+IMC/IMV dynamic libraries can be used by any third party TNC Client/Server
+implementation possessing a standard IF-IMC/IMV interface.
 
 
 %prep
@@ -106,10 +106,10 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-tnc-imv \
     --enable-eap-radius \
     --enable-curl \
-    --enable-eap-identity 
+    --enable-eap-identity
 
 
-#make %{?_smp_mflags} IPSEC_CONFDIR=%{_sysconfdir}/%{name}
+#make %%{?_smp_mflags} IPSEC_CONFDIR=%%{_sysconfdir}/%%{name}
 make %{?_smp_mflags}
 sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
 
@@ -298,6 +298,9 @@ fi
 * Mon Jul 15 2013 Jamie Nguyen <jamielinux@fedoraproject.org> - 5.0.4-4
 - %%files tries to package some of the shared objects as directories (#984437)
 - fix broken systemd unit file (#984300)
+- fix rpmlint error: description-line-too-long
+- fix rpmlint error: macro-in-comment
+- fix rpmlint error: spelling-error Summary(en_US) fuctionality
 
 * Fri Jun 28 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.4-3
 - Patch to fix a major crash issue when Freeradius loads
