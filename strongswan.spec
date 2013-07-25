@@ -1,14 +1,15 @@
 %global hardened_build 1
 
-%if 0%{?rhel} <= 6
-%global enable_nm 0
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%global enable_nm 1
+%global _enable_nm '--enable-nm'
 %else
-%global _enable_nm --enable-nm
+%global enable_nm 0
 %endif
 
 Name:           strongswan
 Version:        5.0.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -34,8 +35,10 @@ BuildRequires:  libxml2-devel
 %if 0%{?enable_nm}
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
+Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
+Provides:       %{name}-NetworkManager = 0:%{version}-%{release}
 %else
-Obsoletes:      %{name}-NetworkManager < 5.0.0-3.git20120619
+Obsoletes:      %{name}-NetworkManager < 0:5.0.0-3.git20120619
 %endif
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
@@ -53,11 +56,11 @@ The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key
 exchange protocols in conjunction with the native NETKEY IPsec stack of the
 Linux kernel.
 
-%if 0%{enable_nm}
-%package NetworkManager
+%if 0%{?enable_nm}
+%package charon-nm
 Summary:        NetworkManager plugin for Strongswan
 Group:          System Environment/Daemons
-%description NetworkManager
+%description charon-nm
 NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
 %endif
@@ -128,7 +131,6 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     %{?_enable_nm}
 
 
-#make %%{?_smp_mflags} IPSEC_CONFDIR=%%{_sysconfdir}/%%{name}
 make %{?_smp_mflags}
 sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
 
@@ -158,6 +160,33 @@ install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
 for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d/${i}
 done
+
+
+%post
+/sbin/ldconfig
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%systemd_post %{name}.service
+%else
+/sbin/chkconfig --add %{name}
+%endif
+
+%preun
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%systemd_preun %{name}.service
+%else
+if [ $1 -eq 0 ] ; then
+    # Package removal, not upgrade
+    /sbin/service %{name} stop >/dev/null 2>&1
+    /sbin/chkconfig --del %{name}
+fi
+%endif
+
+%postun
+/sbin/ldconfig
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%systemd_postun_with_restart %{name}.service
+%else
+%endif
 
 
 %files
@@ -278,41 +307,18 @@ done
 %{_libexecdir}/%{name}/attest
 %{_libexecdir}/%{name}/pacman
 
-
 %if 0%{?enable_nm}
-%files NetworkManager
+%files charon-nm
 %doc COPYING
 %{_libexecdir}/%{name}/charon-nm
 %endif
 
 
-%post
-/sbin/ldconfig
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
-%systemd_post %{name}.service
-%else
-/sbin/chkconfig --add %{name}
-%endif
-
-%preun
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
-%systemd_preun %{name}.service
-%else
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /sbin/service %{name} stop >/dev/null 2>&1
-    /sbin/chkconfig --del %{name}
-fi
-%endif
-
-%postun
-/sbin/ldconfig
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
-%systemd_postun_with_restart %{name}.service
-%else
-%endif
-
 %changelog
+* Thu Jul 25 2013 Jamie Nguyen <jamielinux@fedoraproject.org> - 5.0.4-5
+- rename strongswan-NetworkManager to strongswan-charon-nm
+- fix enable_nm macro
+
 * Mon Jul 15 2013 Jamie Nguyen <jamielinux@fedoraproject.org> - 5.0.4-4
 - %%files tries to package some of the shared objects as directories (#984437)
 - fix broken systemd unit file (#984300)
