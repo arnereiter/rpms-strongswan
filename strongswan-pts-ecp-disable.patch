@@ -1,6 +1,6 @@
-diff -urNp strongswan-5.0.4-patched/src/libpts/pts/pts_dh_group.c strongswan-5.0.4-current/src/libpts/pts/pts_dh_group.c
---- strongswan-5.0.4-patched/src/libpts/pts/pts_dh_group.c	2013-05-01 15:50:51.332560748 -0400
-+++ strongswan-5.0.4-current/src/libpts/pts/pts_dh_group.c	2013-05-01 15:57:53.545271367 -0400
+diff -urNp strongswan-5.1.0-patched/src/libpts/pts/pts_dh_group.c strongswan-5.1.0-current/src/libpts/pts/pts_dh_group.c
+--- strongswan-5.1.0-patched/src/libpts/pts/pts_dh_group.c	2013-08-06 17:16:36.238031476 -0400
++++ strongswan-5.1.0-current/src/libpts/pts/pts_dh_group.c	2013-08-06 17:44:48.005036651 -0400
 @@ -74,6 +74,16 @@ bool pts_dh_group_probe(pts_dh_group_t *
  	{
  		DBG1(DBG_PTS, format2, "mandatory", diffie_hellman_group_names,
