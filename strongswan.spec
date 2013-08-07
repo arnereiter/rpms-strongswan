@@ -8,8 +8,8 @@
 %endif
 
 Name:           strongswan
-Version:        5.0.4
-Release:        5%{?dist}
+Version:        5.1.0
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -19,10 +19,6 @@ Patch0:         strongswan-init.patch
 Patch1:         strongswan-pts-ecp-disable.patch
 Patch2:         libstrongswan-plugin.patch
 Patch3:         libstrongswan-settings-debug.patch
-Patch4:         strongswan.git-71d740cac68f83c77d981368a4c041eb620310ed.patch
-Patch5:         libimcv-attestatiom-imv-crash.patch
-Patch6:         strongswan-Change-ipsec-updown-to-strongswan-updown.patch
-Patch7:         strongswan-Change-ipsec-scepclient-to-strongswan-scepclient.patch
 
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
@@ -36,7 +32,7 @@ BuildRequires:  libxml2-devel
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
 Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
-Provides:       %{name}-NetworkManager = 0:%{version}-%{release}
+Provides:       %{name}-charon-nm = 0:%{version}-%{release}
 %else
 Obsoletes:      %{name}-NetworkManager < 0:5.0.0-3.git20120619
 %endif
@@ -83,10 +79,6 @@ implementation possessing a standard IF-IMC/IMV interface.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -229,6 +221,9 @@ fi
 %{_libdir}/%{name}/plugins/lib%{name}-pgp.so
 %{_libdir}/%{name}/plugins/lib%{name}-pkcs1.so
 %{_libdir}/%{name}/plugins/lib%{name}-pkcs8.so
+%{_libdir}/%{name}/plugins/lib%{name}-pkcs12.so
+%{_libdir}/%{name}/plugins/lib%{name}-rc2.so
+%{_libdir}/%{name}/plugins/lib%{name}-sshkey.so
 %{_libdir}/%{name}/plugins/lib%{name}-pubkey.so
 %{_libdir}/%{name}/plugins/lib%{name}-random.so
 %{_libdir}/%{name}/plugins/lib%{name}-resolve.so
@@ -263,6 +258,8 @@ fi
 %{_libexecdir}/%{name}/scepclient
 %{_libexecdir}/%{name}/starter
 %{_libexecdir}/%{name}/stroke
+%{_libexecdir}/%{name}/_imv_policy
+%{_libexecdir}/%{name}/imv_policy_manager
 %{_sbindir}/%{name}
 %{_mandir}/man5/%{name}.conf.5.gz
 %{_mandir}/man5/%{name}_ipsec.conf.5.gz
@@ -315,6 +312,16 @@ fi
 
 
 %changelog
+* Wed Aug 7 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.0-1
+- rhbz#981429: New upstream release
+- Fixes CVE-2013-5018: rhbz#991216, rhbz#991215
+- Fixes rhbz#991859 failed to build in rawhide
+- Updated local patches and removed which are not needed
+- Fixed errors around charon-nm
+- Added plugins libstrongswan-pkcs12.so, libstrongswan-rc2.so,
+  libstrongswan-sshkey.so
+- Added utility imv_policy_manager
+
 * Thu Jul 25 2013 Jamie Nguyen <jamielinux@fedoraproject.org> - 5.0.4-5
 - rename strongswan-NetworkManager to strongswan-charon-nm
 - fix enable_nm macro

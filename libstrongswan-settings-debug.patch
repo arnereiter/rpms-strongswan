@@ -1,7 +1,7 @@
-diff -urNp strongswan-5.0.4-patched/src/libstrongswan/utils/settings.c strongswan-5.0.4-current/src/libstrongswan/utils/settings.c
---- strongswan-5.0.4-patched/src/libstrongswan/utils/settings.c	2013-05-01 15:50:51.337560745 -0400
-+++ strongswan-5.0.4-current/src/libstrongswan/utils/settings.c	2013-06-18 13:13:27.801428152 -0400
-@@ -940,7 +940,7 @@ static bool parse_file(linked_list_t *co
+diff -urNp strongswan-5.1.0-patched/src/libstrongswan/utils/settings.c strongswan-5.1.0-current/src/libstrongswan/utils/settings.c
+--- strongswan-5.1.0-patched/src/libstrongswan/utils/settings.c	2013-08-06 17:16:36.244031484 -0400
++++ strongswan-5.1.0-current/src/libstrongswan/utils/settings.c	2013-08-06 17:52:43.272606717 -0400
+@@ -960,7 +960,7 @@ static bool parse_file(linked_list_t *co
  	{
  		if (errno == ENOENT)
  		{
@@ -10,7 +10,7 @@ diff -urNp strongswan-5.0.4-patched/src/libstrongswan/utils/settings.c strongswa
  			return TRUE;
  		}
  		DBG1(DBG_LIB, "failed to stat '%s': %s", file, strerror(errno));
-@@ -1003,7 +1003,7 @@ static bool parse_files(linked_list_t *c
+@@ -1023,7 +1023,7 @@ static bool parse_files(linked_list_t *c
  
  	if (!strlen(pattern))
  	{
@@ -19,7 +19,7 @@ diff -urNp strongswan-5.0.4-patched/src/libstrongswan/utils/settings.c strongswa
  		return TRUE;
  	}
  
-@@ -1035,7 +1035,7 @@ static bool parse_files(linked_list_t *c
+@@ -1055,7 +1055,7 @@ static bool parse_files(linked_list_t *c
  		status = glob(pat, GLOB_ERR, NULL, &buf);
  		if (status == GLOB_NOMATCH)
  		{
