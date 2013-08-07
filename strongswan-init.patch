@@ -1,7 +1,18 @@
-Index: strongswan-5.0.0/init/Makefile.am
-===================================================================
---- strongswan-5.0.0.orig/init/Makefile.am
-+++ strongswan-5.0.0/init/Makefile.am
+diff -urNp strongswan-5.1.0-patched/configure.ac strongswan-5.1.0-current/configure.ac
+--- strongswan-5.1.0-patched/configure.ac	2013-08-06 17:16:36.279031528 -0400
++++ strongswan-5.1.0-current/configure.ac	2013-08-06 17:35:01.750380445 -0400
+@@ -1311,6 +1311,8 @@ AC_CONFIG_FILES([
+ 	man/Makefile
+ 	init/Makefile
+ 	init/systemd/Makefile
++	init/sysvinit/Makefile
++	init/sysvinit/strongswan
+ 	src/Makefile
+ 	src/include/Makefile
+ 	src/libstrongswan/Makefile
+diff -urNp strongswan-5.1.0-patched/init/Makefile.am strongswan-5.1.0-current/init/Makefile.am
+--- strongswan-5.1.0-patched/init/Makefile.am	2013-08-06 17:16:36.279031528 -0400
++++ strongswan-5.1.0-current/init/Makefile.am	2013-08-06 17:36:19.905472912 -0400
 @@ -1,5 +1,5 @@
  
 -SUBDIRS =
@@ -9,16 +20,14 @@ Index: strongswan-5.0.0/init/Makefile.am
  
  if HAVE_SYSTEMD
    SUBDIRS += systemd
-Index: strongswan-5.0.0/init/sysvinit/Makefile.am
-===================================================================
---- /dev/null
-+++ strongswan-5.0.0/init/sysvinit/Makefile.am
+diff -urNp strongswan-5.1.0-patched/init/sysvinit/Makefile.am strongswan-5.1.0-current/init/sysvinit/Makefile.am
+--- strongswan-5.1.0-patched/init/sysvinit/Makefile.am	1969-12-31 19:00:00.000000000 -0500
++++ strongswan-5.1.0-current/init/sysvinit/Makefile.am	2013-07-31 15:56:21.919959000 -0400
 @@ -0,0 +1 @@
 +noinst_DATA = strongswan
-Index: strongswan-5.0.0/init/sysvinit/strongswan.in
-===================================================================
---- /dev/null
-+++ strongswan-5.0.0/init/sysvinit/strongswan.in
+diff -urNp strongswan-5.1.0-patched/init/sysvinit/strongswan strongswan-5.1.0-current/init/sysvinit/strongswan
+--- strongswan-5.1.0-patched/init/sysvinit/strongswan	1969-12-31 19:00:00.000000000 -0500
++++ strongswan-5.1.0-current/init/sysvinit/strongswan	2013-07-31 15:56:21.920958000 -0400
 @@ -0,0 +1,100 @@
 +#!/bin/sh
 +#
@@ -39,7 +48,7 @@ Index: strongswan-5.0.0/init/sysvinit/strongswan.in
 +# Source function library.
 +. /etc/rc.d/init.d/functions
 +
-+exec="@sbindir@/@ipsec_script@"
++exec="@SBINDIR@/@IPSEC_SCRIPT@"
 +prog="strongswan"
 +status_prog="starter"
 +config="/etc/strongswan/strongswan.conf"
@@ -120,23 +129,9 @@ Index: strongswan-5.0.0/init/sysvinit/strongswan.in
 +        exit 2
 +esac
 +exit $?
-Index: strongswan-5.0.0/configure.in
-===================================================================
---- strongswan-5.0.0.orig/configure.in
-+++ strongswan-5.0.0/configure.in
-@@ -1082,6 +1082,8 @@ AC_OUTPUT(
- 	man/Makefile
- 	init/Makefile
- 	init/systemd/Makefile
-+	init/sysvinit/Makefile
-+	init/sysvinit/strongswan
- 	src/Makefile
- 	src/include/Makefile
- 	src/libstrongswan/Makefile
-Index: strongswan-5.0.0/init/sysvinit/strongswan
-===================================================================
---- /dev/null
-+++ strongswan-5.0.0/init/sysvinit/strongswan
+diff -urNp strongswan-5.1.0-patched/init/sysvinit/strongswan.in strongswan-5.1.0-current/init/sysvinit/strongswan.in
+--- strongswan-5.1.0-patched/init/sysvinit/strongswan.in	1969-12-31 19:00:00.000000000 -0500
++++ strongswan-5.1.0-current/init/sysvinit/strongswan.in	2013-07-31 15:56:21.919959000 -0400
 @@ -0,0 +1,100 @@
 +#!/bin/sh
 +#
@@ -157,7 +152,7 @@ Index: strongswan-5.0.0/init/sysvinit/strongswan
 +# Source function library.
 +. /etc/rc.d/init.d/functions
 +
-+exec="@SBINDIR@/@IPSEC_SCRIPT@"
++exec="@sbindir@/@ipsec_script@"
 +prog="strongswan"
 +status_prog="starter"
 +config="/etc/strongswan/strongswan.conf"

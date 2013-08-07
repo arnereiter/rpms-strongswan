@@ -1,8 +1,8 @@
-diff -urNp strongswan-5.0.4-patched/src/libstrongswan/plugins/plugin_loader.c strongswan-5.0.4-current/src/libstrongswan/plugins/plugin_loader.c
---- strongswan-5.0.4-patched/src/libstrongswan/plugins/plugin_loader.c	2013-05-01 15:50:51.375560719 -0400
-+++ strongswan-5.0.4-current/src/libstrongswan/plugins/plugin_loader.c	2013-05-22 16:30:24.121091911 -0400
-@@ -267,7 +267,7 @@ static bool load_plugin(private_plugin_l
- 			return FALSE;
+diff -urNp strongswan-5.1.0-patched/src/libstrongswan/plugins/plugin_loader.c strongswan-5.1.0-current/src/libstrongswan/plugins/plugin_loader.c
+--- strongswan-5.1.0-patched/src/libstrongswan/plugins/plugin_loader.c	2013-08-06 17:16:36.266031511 -0400
++++ strongswan-5.1.0-current/src/libstrongswan/plugins/plugin_loader.c	2013-08-06 17:49:15.703354848 -0400
+@@ -353,7 +353,7 @@ static plugin_entry_t *load_plugin(priva
+ 			return NULL;
  		}
  	}
 -	handle = dlopen(file, RTLD_LAZY);
