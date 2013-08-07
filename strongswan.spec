@@ -9,7 +9,7 @@
 
 Name:           strongswan
 Version:        5.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -19,6 +19,7 @@ Patch0:         strongswan-init.patch
 Patch1:         strongswan-pts-ecp-disable.patch
 Patch2:         libstrongswan-plugin.patch
 Patch3:         libstrongswan-settings-debug.patch
+Patch4:         malloc-speed-lrt.patch
 
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
@@ -79,6 +80,7 @@ implementation possessing a standard IF-IMC/IMV interface.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -312,6 +314,10 @@ fi
 
 
 %changelog
+* Wed Aug 7 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.0-2
+- Fixed linker error when compilating malloc-speed that
+  lrt is missing. Did not have this problem on f19 and F20.
+
 * Wed Aug 7 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.0-1
 - rhbz#981429: New upstream release
 - Fixes CVE-2013-5018: rhbz#991216, rhbz#991215

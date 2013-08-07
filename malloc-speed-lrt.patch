@@ -1,0 +1,24 @@
+diff -urNp strongswan-5.1.0-patched/scripts/Makefile.am strongswan-5.1.0-current/scripts/Makefile.am
+--- strongswan-5.1.0-patched/scripts/Makefile.am	2013-08-07 16:46:57.759056262 -0400
++++ strongswan-5.1.0-current/scripts/Makefile.am	2013-08-07 16:47:51.240021382 -0400
+@@ -36,7 +36,7 @@ dh_speed_LDADD = $(top_builddir)/src/lib
+ pubkey_speed_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la -lrt
+ crypt_burn_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
+ hash_burn_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
+-malloc_speed_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
++malloc_speed_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la -lrt
+ fetch_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
+ dnssec_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
+ 
+diff -urNp strongswan-5.1.0-patched/scripts/Makefile.in strongswan-5.1.0-current/scripts/Makefile.in
+--- strongswan-5.1.0-patched/scripts/Makefile.in	2013-08-07 16:46:57.758056263 -0400
++++ strongswan-5.1.0-current/scripts/Makefile.in	2013-08-07 16:59:06.506583680 -0400
+@@ -414,7 +414,7 @@ dh_speed_LDADD = $(top_builddir)/src/lib
+ pubkey_speed_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la -lrt
+ crypt_burn_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
+ hash_burn_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
+-malloc_speed_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
++malloc_speed_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la -lrt
+ fetch_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
+ dnssec_LDADD = $(top_builddir)/src/libstrongswan/libstrongswan.la
+ all: all-am
