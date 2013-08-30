@@ -9,7 +9,7 @@
 
 Name:           strongswan
 Version:        5.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -90,6 +90,7 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --sysconfdir=%{_sysconfdir}/%{name} \
     --with-ipsecdir=%{_libexecdir}/%{name} \
     --with-ipseclibdir=%{_libdir}/%{name} \
+    --with-fips-mode=2 \
     --with-tss=trousers \
     --enable-openssl \
     --enable-md4 \
@@ -103,6 +104,8 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-farp \
     --enable-dhcp \
     --enable-sqlite \
+    --enable-tnc-ifmap \
+    --enable-tnc-pdp \
     --enable-imc-test \
     --enable-imv-test \
     --enable-imc-scanner \
@@ -130,8 +133,8 @@ sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
 make install DESTDIR=%{buildroot}
 # prefix man pages
 for i in %{buildroot}%{_mandir}/*/*; do
-    if echo "$i" | grep -vq '/strongswan[^\/]*$'; then
-        mv "$i" "`echo "$i" | sed -re 's|/([^/]+)$|/strongswan_\1|'`"
+    if echo "$i" | grep -vq '/%{name}[^\/]*$'; then
+        mv "$i" "`echo "$i" | sed -re 's|/([^/]+)$|/%{name}_\1|'`"
     fi
 done
 # delete unwanted library files
@@ -300,6 +303,8 @@ fi
 %{_libdir}/%{name}/plugins/lib%{name}-tnccs-11.so
 %{_libdir}/%{name}/plugins/lib%{name}-tnccs-dynamic.so
 %{_libdir}/%{name}/plugins/lib%{name}-eap-radius.so
+%{_libdir}/%{name}/plugins/lib%{name}-tnc-ifmap.so
+%{_libdir}/%{name}/plugins/lib%{name}-tnc-pdp.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/attest
 %{_libexecdir}/%{name}/pacman
@@ -312,6 +317,12 @@ fi
 
 
 %changelog
+* Fri Aug 30 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.0-2
+- Enabled fips support
+- Enabled TNC's ifmap support
+- Enabled TNC's pdp support
+- Fixed hardocded package name in this spec file
+
 * Wed Aug 7 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.0-1
 - rhbz#981429: New upstream release
 - Fixes CVE-2013-5018: rhbz#991216, rhbz#991215
