@@ -9,7 +9,7 @@
 
 Name:           strongswan
 Version:        5.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -19,6 +19,7 @@ Patch0:         strongswan-init.patch
 Patch1:         strongswan-pts-ecp-disable.patch
 Patch2:         libstrongswan-plugin.patch
 Patch3:         libstrongswan-settings-debug.patch
+Patch4:         imcv-initialization-crash-git-5ec08.patch
 
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
@@ -79,6 +80,7 @@ implementation possessing a standard IF-IMC/IMV interface.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -317,6 +319,11 @@ fi
 
 
 %changelog
+* Thu Sep 12 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.0-3
+- Fixed initialization crash of IMV and IMC particularly
+  attestation imv/imc as libstrongswas was not getting
+  initialized.
+
 * Fri Aug 30 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.0-2
 - Enabled fips support
 - Enabled TNC's ifmap support
