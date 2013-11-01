@@ -8,8 +8,8 @@
 %endif
 
 Name:           strongswan
-Version:        5.1.0
-Release:        3%{?dist}
+Version:        5.1.1
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -19,9 +19,8 @@ Patch0:         strongswan-init.patch
 Patch1:         strongswan-pts-ecp-disable.patch
 Patch2:         libstrongswan-plugin.patch
 Patch3:         libstrongswan-settings-debug.patch
-Patch4:         imcv-initialization-crash-git-5ec08.patch
 
-BuildRequires:  gmp-devel
+BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
 BuildRequires:  openssl-devel
@@ -80,13 +79,12 @@ implementation possessing a standard IF-IMC/IMV interface.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
 %build
 # for initscript patch to work
-#autoreconf
+autoreconf
 %configure --disable-static \
     --with-ipsec-script=%{name} \
     --sysconfdir=%{_sysconfdir}/%{name} \
@@ -116,6 +114,8 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-imv-attestation \
     --enable-imv-os \
     --enable-imc-os \
+    --enable-imc-swid \
+    --enable-imv-swid \
     --enable-eap-tnc \
     --enable-tnccs-20 \
     --enable-tnccs-11 \
@@ -125,6 +125,7 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
     --enable-eap-radius \
     --enable-curl \
     --enable-eap-identity \
+    --enable-cmd \
     %{?_enable_nm}
 
 
@@ -151,6 +152,8 @@ chmod 700 %{buildroot}%{_sysconfdir}/%{name}
 %else
 install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %endif
+#rename /usr/bin/pki to avoid conflict with pki-core/pki-tools
+mv %{buildroot}%{_bindir}/pki %{buildroot}%{_bindir}/%{name}-pki
 
 # Create ipsec.d directory tree.
 install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
@@ -259,13 +262,15 @@ fi
 %{_libexecdir}/%{name}/_updown_espmark
 %{_libexecdir}/%{name}/charon
 %{_libexecdir}/%{name}/openac
-%{_libexecdir}/%{name}/pki
 %{_libexecdir}/%{name}/scepclient
 %{_libexecdir}/%{name}/starter
 %{_libexecdir}/%{name}/stroke
 %{_libexecdir}/%{name}/_imv_policy
 %{_libexecdir}/%{name}/imv_policy_manager
+%{_bindir}/%{name}-pki
+%{_sbindir}/charon-cmd
 %{_sbindir}/%{name}
+%{_mandir}/man1/%{name}_pki*.1.gz
 %{_mandir}/man5/%{name}.conf.5.gz
 %{_mandir}/man5/%{name}_ipsec.conf.5.gz
 %{_mandir}/man5/%{name}_ipsec.secrets.5.gz
@@ -274,6 +279,7 @@ fi
 %{_mandir}/man8/%{name}__updown_espmark.8.gz
 %{_mandir}/man8/%{name}_openac.8.gz
 %{_mandir}/man8/%{name}_scepclient.8.gz
+%{_mandir}/man8/%{name}_charon-cmd.8.gz
 
 %files tnc-imcvs
 %dir %{_libdir}/%{name}
@@ -290,10 +296,12 @@ fi
 %{_libdir}/%{name}/imcvs/imc-scanner.so
 %{_libdir}/%{name}/imcvs/imc-test.so
 %{_libdir}/%{name}/imcvs/imc-os.so
+%{_libdir}/%{name}/imcvs/imc-swid.so
 %{_libdir}/%{name}/imcvs/imv-attestation.so
 %{_libdir}/%{name}/imcvs/imv-scanner.so
 %{_libdir}/%{name}/imcvs/imv-test.so
 %{_libdir}/%{name}/imcvs/imv-os.so
+%{_libdir}/%{name}/imcvs/imv-swid.so
 %dir %{_libdir}/%{name}/plugins
 %{_libdir}/%{name}/plugins/lib%{name}-pkcs7.so
 %{_libdir}/%{name}/plugins/lib%{name}-sqlite.so
@@ -310,6 +318,11 @@ fi
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/attest
 %{_libexecdir}/%{name}/pacman
+%{_libexecdir}/%{name}/pt-tls-client
+#swid files
+%{_libexecdir}/%{name}/*.swidtag
+%dir %{_datadir}/regid.2004-03.org.%{name}
+%{_datadir}/regid.2004-03.org.%{name}/*.swidtag
 
 %if 0%{?enable_nm}
 %files charon-nm
@@ -319,6 +332,22 @@ fi
 
 
 %changelog
+* Fri Nov 1 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-1
+- Support for PT-TLS  (RFC 6876)
+- Support for SWID IMC/IMV
+- Support for command line IKE client charon-cmd
+- Changed location of pki to /usr/bin
+- Added swid tags files
+- Added man pages for pki and charon-cmd
+- Renamed pki to strongswan-pki to avoid conflict with
+  pki-core/pki-tools package.
+- Update local patches
+- Fixes CVE-2013-6075
+- Fixes CVE-2013-6076
+- Fixed autoconf/automake issue as configure.ac got changed
+  and it required running autoreconf during the build process.
+- added strongswan signature file to the sources.
+
 * Thu Sep 12 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.0-3
 - Fixed initialization crash of IMV and IMC particularly
   attestation imv/imc as libstrongswas was not getting
