@@ -1,7 +1,7 @@
-diff -urNp strongswan-5.1.0-patched/configure.ac strongswan-5.1.0-current/configure.ac
---- strongswan-5.1.0-patched/configure.ac	2013-08-06 17:16:36.279031528 -0400
-+++ strongswan-5.1.0-current/configure.ac	2013-08-06 17:35:01.750380445 -0400
-@@ -1311,6 +1311,8 @@ AC_CONFIG_FILES([
+diff -urNp strongswan-5.1.1-patched/configure.ac strongswan-5.1.1-current/configure.ac
+--- strongswan-5.1.1-patched/configure.ac	2013-11-01 13:12:05.964927156 -0400
++++ strongswan-5.1.1-current/configure.ac	2013-11-01 13:12:24.357926499 -0400
+@@ -1330,6 +1330,8 @@ AC_CONFIG_FILES([
  	man/Makefile
  	init/Makefile
  	init/systemd/Makefile
@@ -10,9 +10,9 @@ diff -urNp strongswan-5.1.0-patched/configure.ac strongswan-5.1.0-current/config
  	src/Makefile
  	src/include/Makefile
  	src/libstrongswan/Makefile
-diff -urNp strongswan-5.1.0-patched/init/Makefile.am strongswan-5.1.0-current/init/Makefile.am
---- strongswan-5.1.0-patched/init/Makefile.am	2013-08-06 17:16:36.279031528 -0400
-+++ strongswan-5.1.0-current/init/Makefile.am	2013-08-06 17:36:19.905472912 -0400
+diff -urNp strongswan-5.1.1-patched/init/Makefile.am strongswan-5.1.1-current/init/Makefile.am
+--- strongswan-5.1.1-patched/init/Makefile.am	2013-11-01 13:12:05.966927156 -0400
++++ strongswan-5.1.1-current/init/Makefile.am	2013-11-01 13:12:24.357926499 -0400
 @@ -1,5 +1,5 @@
  
 -SUBDIRS =
@@ -20,14 +20,14 @@ diff -urNp strongswan-5.1.0-patched/init/Makefile.am strongswan-5.1.0-current/in
  
  if HAVE_SYSTEMD
    SUBDIRS += systemd
-diff -urNp strongswan-5.1.0-patched/init/sysvinit/Makefile.am strongswan-5.1.0-current/init/sysvinit/Makefile.am
---- strongswan-5.1.0-patched/init/sysvinit/Makefile.am	1969-12-31 19:00:00.000000000 -0500
-+++ strongswan-5.1.0-current/init/sysvinit/Makefile.am	2013-07-31 15:56:21.919959000 -0400
+diff -urNp strongswan-5.1.1-patched/init/sysvinit/Makefile.am strongswan-5.1.1-current/init/sysvinit/Makefile.am
+--- strongswan-5.1.1-patched/init/sysvinit/Makefile.am	1969-12-31 19:00:00.000000000 -0500
++++ strongswan-5.1.1-current/init/sysvinit/Makefile.am	2013-11-01 13:12:24.358926499 -0400
 @@ -0,0 +1 @@
 +noinst_DATA = strongswan
-diff -urNp strongswan-5.1.0-patched/init/sysvinit/strongswan strongswan-5.1.0-current/init/sysvinit/strongswan
---- strongswan-5.1.0-patched/init/sysvinit/strongswan	1969-12-31 19:00:00.000000000 -0500
-+++ strongswan-5.1.0-current/init/sysvinit/strongswan	2013-07-31 15:56:21.920958000 -0400
+diff -urNp strongswan-5.1.1-patched/init/sysvinit/strongswan strongswan-5.1.1-current/init/sysvinit/strongswan
+--- strongswan-5.1.1-patched/init/sysvinit/strongswan	1969-12-31 19:00:00.000000000 -0500
++++ strongswan-5.1.1-current/init/sysvinit/strongswan	2013-11-01 13:12:24.358926499 -0400
 @@ -0,0 +1,100 @@
 +#!/bin/sh
 +#
@@ -129,9 +129,9 @@ diff -urNp strongswan-5.1.0-patched/init/sysvinit/strongswan strongswan-5.1.0-cu
 +        exit 2
 +esac
 +exit $?
-diff -urNp strongswan-5.1.0-patched/init/sysvinit/strongswan.in strongswan-5.1.0-current/init/sysvinit/strongswan.in
---- strongswan-5.1.0-patched/init/sysvinit/strongswan.in	1969-12-31 19:00:00.000000000 -0500
-+++ strongswan-5.1.0-current/init/sysvinit/strongswan.in	2013-07-31 15:56:21.919959000 -0400
+diff -urNp strongswan-5.1.1-patched/init/sysvinit/strongswan.in strongswan-5.1.1-current/init/sysvinit/strongswan.in
+--- strongswan-5.1.1-patched/init/sysvinit/strongswan.in	1969-12-31 19:00:00.000000000 -0500
++++ strongswan-5.1.1-current/init/sysvinit/strongswan.in	2013-11-01 13:12:24.359926499 -0400
 @@ -0,0 +1,100 @@
 +#!/bin/sh
 +#
