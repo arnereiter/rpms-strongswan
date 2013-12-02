@@ -9,7 +9,7 @@
 
 Name:           strongswan
 Version:        5.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -19,6 +19,8 @@ Patch0:         strongswan-init.patch
 Patch1:         strongswan-pts-ecp-disable.patch
 Patch2:         libstrongswan-plugin.patch
 Patch3:         libstrongswan-settings-debug.patch
+Patch4:         libstrongswan-973315.patch
+Patch5:         strongswan-1036844.patch
 
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
@@ -79,6 +81,8 @@ implementation possessing a standard IF-IMC/IMV interface.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -332,6 +336,10 @@ fi
 
 
 %changelog
+* Mon Dec 2 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-2
+- Resolves: 973315
+- Resolves: 1036844
+
 * Fri Nov 1 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-1
 - Support for PT-TLS  (RFC 6876)
 - Support for SWID IMC/IMV
