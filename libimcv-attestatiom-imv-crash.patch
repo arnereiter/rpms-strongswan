@@ -1,0 +1,27 @@
+diff -urNp strongswan-5.0.4-patched/src/libpts/plugins/imv_attestation/imv_attestation.c strongswan-5.0.4-current/src/libpts/plugins/imv_attestation/imv_attestation.c
+--- strongswan-5.0.4-patched/src/libpts/plugins/imv_attestation/imv_attestation.c	2013-05-01 15:50:51.331560749 -0400
++++ strongswan-5.0.4-current/src/libpts/plugins/imv_attestation/imv_attestation.c	2013-06-28 11:10:30.703893643 -0400
+@@ -90,11 +90,6 @@ TNC_Result TNC_IMV_Initialize(TNC_IMVID
+ 		DBG1(DBG_IMV, "IMV \"%s\" has already been initialized", imv_name);
+ 		return TNC_RESULT_ALREADY_INITIALIZED;
+ 	}
+-	if (!pts_meas_algo_probe(&supported_algorithms) ||
+-		!pts_dh_group_probe(&supported_dh_groups))
+-	{
+-		return TNC_RESULT_FATAL;
+-	}
+ 	imv_attestation = imv_agent_create(imv_name, msg_types, countof(msg_types),
+ 									   imv_id, actual_version);
+ 	if (!imv_attestation)
+@@ -104,6 +99,11 @@ TNC_Result TNC_IMV_Initialize(TNC_IMVID
+ 
+ 	libpts_init();
+ 
++	if (!pts_meas_algo_probe(&supported_algorithms) ||
++		!pts_dh_group_probe(&supported_dh_groups))
++	{
++		return TNC_RESULT_FATAL;
++	}
+ 	if (min_version > TNC_IFIMV_VERSION_1 || max_version < TNC_IFIMV_VERSION_1)
+ 	{
+ 		DBG1(DBG_IMV, "no common IF-IMV version");

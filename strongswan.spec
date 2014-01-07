@@ -192,6 +192,12 @@ fi
 %else
 %endif
 
+# Create ipsec.d directory tree.
+install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
+for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
+    install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d/${i}
+done
+
 
 %files
 %doc README README.Fedora COPYING NEWS TODO
