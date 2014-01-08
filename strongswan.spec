@@ -9,7 +9,7 @@
 
 Name:           strongswan
 Version:        5.1.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -342,6 +342,9 @@ done
 
 
 %changelog
+* Wed Jan 08 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.1-3
+- rebuilt
+
 * Mon Dec 2 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-2
 - Resolves: 973315
 - Resolves: 1036844
