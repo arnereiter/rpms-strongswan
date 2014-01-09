@@ -9,7 +9,7 @@
 
 Name:           strongswan
 Version:        5.1.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -192,12 +192,6 @@ fi
 %else
 %endif
 
-# Create ipsec.d directory tree.
-install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
-for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
-    install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d/${i}
-done
-
 
 %files
 %doc README README.Fedora COPYING NEWS TODO
@@ -342,6 +336,9 @@ done
 
 
 %changelog
+* Thu Jan 09 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.1-4
+- Removed redundant patches and *.spec commands caused by branch merging
+
 * Wed Jan 08 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.1-3
 - rebuilt
 
