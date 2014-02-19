@@ -1,0 +1,26 @@
+diff --git a/src/charon/charon.c b/src/charon/charon.c
+index 089ac45..b644977 100644
+--- a/src/charon/charon.c
++++ b/src/charon/charon.c
+@@ -226,7 +226,7 @@ static bool check_pidfile()
+ 	}
+ 
+ 	/* create new pidfile */
+-	pidfile = fopen(PID_FILE, "w");
++	pidfile = fopen(PID_FILE, "we");
+ 	if (pidfile)
+ 	{
+ 		ignore_result(fchown(fileno(pidfile),
+diff --git a/src/libstrongswan/plugins/random/random_plugin.c b/src/libstrongswan/plugins/random/random_plugin.c
+index 1f10792..c79e87a 100644
+--- a/src/libstrongswan/plugins/random/random_plugin.c
++++ b/src/libstrongswan/plugins/random/random_plugin.c
+@@ -83,7 +83,7 @@ bool random_plugin_get_strong_equals_true()
+  */
+ static bool open_dev(char *file, int *fd)
+ {
+-	*fd = open(file, O_RDONLY);
++	*fd = open(file, O_RDONLY | O_CLOEXEC);
+ 	if (*fd == -1)
+ 	{
+ 		DBG1(DBG_LIB, "opening \"%s\" failed: %s", file, strerror(errno));

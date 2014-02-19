@@ -9,7 +9,7 @@
 
 Name:           strongswan
 Version:        5.1.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -21,6 +21,7 @@ Patch2:         libstrongswan-plugin.patch
 Patch3:         libstrongswan-settings-debug.patch
 Patch4:         libstrongswan-973315.patch
 Patch5:         strongswan-1036844.patch
+Patch6:		strongswan-5.1.1-selinux.patch
 
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
@@ -83,6 +84,7 @@ implementation possessing a standard IF-IMC/IMV interface.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -336,6 +338,9 @@ fi
 
 
 %changelog
+* Wed Feb 19 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.1-5
+- #903638 - SELinux is preventing /usr/sbin/xtables-multi from 'read' accesses on the chr_file /dev/random
+
 * Thu Jan 09 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.1-4
 - Removed redundant patches and *.spec commands caused by branch merging
 
