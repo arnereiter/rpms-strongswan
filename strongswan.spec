@@ -1,4 +1,4 @@
-%global hardened_build 1
+%global _hardened_build 1
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %global enable_nm 1
@@ -9,7 +9,7 @@
 
 Name:           strongswan
 Version:        5.1.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -21,7 +21,7 @@ Patch2:         libstrongswan-plugin.patch
 Patch3:         libstrongswan-settings-debug.patch
 Patch4:         libstrongswan-973315.patch
 Patch5:         strongswan-1036844.patch
-Patch6:		strongswan-5.1.1-selinux.patch
+Patch6:         strongswan-5.1.1-selinux.patch
 
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
@@ -69,11 +69,14 @@ Summary: Trusted network connect (TNC)'s IMC/IMV functionality
 Group: Applications/System
 Requires: %{name} = %{version}
 %description tnc-imcvs
-This package provides Trusted Network Connect's (TNC) IMC and IMV
-functionality. Specifically it includes PTS based IMC/IMV for TPM based
-remote attestation and scanner and test IMCs and IMVs. The Strongswan's
-IMC/IMV dynamic libraries can be used by any third party TNC Client/Server
-implementation possessing a standard IF-IMC/IMV interface.
+This package provides Trusted Network Connect's (TNC) architecture support.
+It includes support for TNC client and server (IF-TNCCS), IMC and IMV message
+exchange (IF-M), interface between IMC/IMV and TNC client/server (IF-IMC
+and IF-IMV). It also includes PTS based IMC/IMV for TPM based remote
+attestation, SWID IMC/IMV, and OS IMC/IMV. It's IMC/IMV dynamic libraries
+modules can be used by any third party TNC Client/Server implementation
+possessing a standard IF-IMC/IMV interface. In addition, it implements
+PT-TLS to support TNC over TLS.
 
 
 %prep
@@ -159,7 +162,9 @@ chmod 700 %{buildroot}%{_sysconfdir}/%{name}
 install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
 %endif
 #rename /usr/bin/pki to avoid conflict with pki-core/pki-tools
-mv %{buildroot}%{_bindir}/pki %{buildroot}%{_bindir}/%{name}-pki
+#mv %{buildroot}%{_bindir}/pki %{buildroot}%{_bindir}/%{name}-pki
+#move /usr/bin/pki to avoid conflict with pki-core/pki-tools
+mv %{buildroot}%{_bindir}/pki %{buildroot}%{_libexecdir}/%{name}/pki
 
 # Create ipsec.d directory tree.
 install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
@@ -273,7 +278,8 @@ fi
 %{_libexecdir}/%{name}/stroke
 %{_libexecdir}/%{name}/_imv_policy
 %{_libexecdir}/%{name}/imv_policy_manager
-%{_bindir}/%{name}-pki
+%{_libexecdir}/%{name}/pki
+#%{_bindir}/%{name}-pki
 %{_sbindir}/charon-cmd
 %{_sbindir}/%{name}
 %{_mandir}/man1/%{name}_pki*.1.gz
@@ -338,6 +344,15 @@ fi
 
 
 %changelog
+* Thu Feb 20 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-6
+- Fixed full hardening for strongswan (full relro and PIE).
+  The previous macros had a typo and did not work
+  (see bz#1067119).
+- Fixed tnc package description to reflect the current state of
+  the package.
+- Fixed pki binary and moved it to /usr/libexece/strongswan as
+  others binaries are there too.
+
 * Wed Feb 19 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.1-5
 - #903638 - SELinux is preventing /usr/sbin/xtables-multi from 'read' accesses on the chr_file /dev/random
 
