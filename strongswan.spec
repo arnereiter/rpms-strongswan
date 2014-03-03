@@ -31,6 +31,7 @@ BuildRequires:  sqlite-devel
 BuildRequires:  gettext-devel
 BuildRequires:  trousers-devel
 BuildRequires:  libxml2-devel
+BuildRequires:  pam-devel
 %if 0%{?enable_nm}
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
@@ -104,6 +105,7 @@ autoreconf
     --enable-openssl \
     --enable-md4 \
     --enable-xauth-eap \
+    --enable-xauth-pam \
     --enable-eap-md5 \
     --enable-eap-gtc \
     --enable-eap-tls \
@@ -255,6 +257,7 @@ fi
 %{_libdir}/%{name}/plugins/lib%{name}-x509.so
 %{_libdir}/%{name}/plugins/lib%{name}-xauth-generic.so
 %{_libdir}/%{name}/plugins/lib%{name}-xauth-eap.so
+%{_libdir}/%{name}/plugins/lib%{name}-xauth-pam.so
 %{_libdir}/%{name}/plugins/lib%{name}-xcbc.so
 %{_libdir}/%{name}/plugins/lib%{name}-md4.so
 %{_libdir}/%{name}/plugins/lib%{name}-eap-md5.so
@@ -346,6 +349,7 @@ fi
 %changelog
 * Mon Mar 03 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-1
 - bump to 5.1.2
+- #1071338 - strongswan is compiled without xauth-pam plugin
 
 * Thu Feb 20 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-6
 - Fixed full hardening for strongswan (full relro and PIE).
