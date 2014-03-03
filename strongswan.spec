@@ -8,8 +8,8 @@
 %endif
 
 Name:           strongswan
-Version:        5.1.1
-Release:        6%{?dist}
+Version:        5.1.2
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -344,6 +344,9 @@ fi
 
 
 %changelog
+* Mon Mar 03 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-1
+- bump to 5.1.2
+
 * Thu Feb 20 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-6
 - Fixed full hardening for strongswan (full relro and PIE).
   The previous macros had a typo and did not work
