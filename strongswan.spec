@@ -20,7 +20,6 @@ Patch1:         strongswan-pts-ecp-disable.patch
 Patch2:         libstrongswan-plugin.patch
 Patch3:         libstrongswan-settings-debug.patch
 Patch4:         libstrongswan-973315.patch
-Patch5:         strongswan-1036844.patch
 Patch6:         strongswan-5.1.1-selinux.patch
 
 BuildRequires:  gmp-devel autoconf automake
@@ -87,7 +86,6 @@ PT-TLS to support TNC over TLS.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 %patch6 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
@@ -348,8 +346,9 @@ fi
 
 %changelog
 * Mon Mar 03 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-1
-- bump to 5.1.2
+- #1071353 - bump to 5.1.2
 - #1071338 - strongswan is compiled without xauth-pam plugin
+- remove obsolete patches
 
 * Thu Feb 20 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-6
 - Fixed full hardening for strongswan (full relro and PIE).
