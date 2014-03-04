@@ -15,11 +15,22 @@ Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
+# Add RHEL6 sysvinit to source and build system
+# http://wiki.strongswan.org/issues/195
 Patch0:         strongswan-init.patch
+# Avoid breakage with Fedora OpenSSL
+# http://wiki.strongswan.org/issues/537
 Patch1:         strongswan-pts-ecp-disable.patch
+# Use dlopen(file, RTLD_NOW|RTLD_GLOBAL) for the plugin loader
+# http://wiki.strongswan.org/issues/538
 Patch2:         libstrongswan-plugin.patch
+# Use DBG1 for settings.c debug messages
+# http://wiki.strongswan.org/issues/539
 Patch3:         libstrongswan-settings-debug.patch
+# See above
 Patch4:         libstrongswan-973315.patch
+# Fix selinux issues caused by leaking file descriptors to xtables-multi
+# http://wiki.strongswan.org/issues/519
 Patch6:         strongswan-5.1.1-selinux.patch
 
 BuildRequires:  gmp-devel autoconf automake
@@ -349,6 +360,8 @@ fi
 - #1071353 - bump to 5.1.2
 - #1071338 - strongswan is compiled without xauth-pam plugin
 - remove obsolete patches
+- sent all patches upstream
+- added comments to all patches
 
 * Thu Feb 20 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-6
 - Fixed full hardening for strongswan (full relro and PIE).
