@@ -150,7 +150,6 @@ autoreconf
 
 
 make %{?_smp_mflags}
-sed -i 's/\t/    /' src/strongswan.conf src/starter/ipsec.conf
 
 %install
 make install DESTDIR=%{buildroot}
@@ -362,6 +361,7 @@ fi
 - remove obsolete patches
 - sent all patches upstream
 - added comments to all patches
+- don't touch the config with sed
 
 * Thu Feb 20 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.1.1-6
 - Fixed full hardening for strongswan (full relro and PIE).
