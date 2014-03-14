@@ -1,0 +1,26 @@
+commit af15c71bfbfab2e732159f06bb024aa77a489246
+Author: Tobias Brunner <tobias@strongswan.org>
+Date:   Mon Mar 3 17:14:26 2014 +0100
+
+    configure: Fix autoreconf with older autotools
+    
+    Older autoconf versions (e.g. on CentOS 6.5) produce an empty else block
+    for the removed empty argument, which the shell then trips over when
+    executing ./configure.
+    
+    Fixes #536.
+
+diff --git a/configure.ac b/configure.ac
+index 8a925c2..ec189c9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -528,8 +528,7 @@ AC_CHECK_FUNC(
+ 			 AC_MSG_FAILURE([qsort_r has unknown semantics])])
+ 		])
+ 		CFLAGS="$save_CFLAGS"
+-	],
+-	[]
++	]
+ )
+ 
+ AC_CHECK_FUNCS(prctl mallinfo getpass closefrom getpwnam_r getgrnam_r getpwuid_r)

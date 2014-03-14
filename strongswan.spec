@@ -1,23 +1,15 @@
 %global _hardened_build 1
 
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
-%global enable_nm 1
-%global _enable_nm '--enable-nm'
-%else
-%global enable_nm 0
-%endif
-
 Name:           strongswan
 Version:        5.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
-# Add RHEL6 sysvinit to source and build system
-# http://wiki.strongswan.org/issues/195
-Patch0:         strongswan-init.patch
+# Initscript for epel6
+Source1:        %{name}.sysvinit
 # Avoid breakage with Fedora OpenSSL
 # http://wiki.strongswan.org/issues/537
 Patch1:         strongswan-pts-ecp-disable.patch
@@ -27,12 +19,15 @@ Patch2:         libstrongswan-plugin.patch
 # Use DBG1 for settings.c debug messages
 # http://wiki.strongswan.org/issues/539
 Patch3:         libstrongswan-settings-debug.patch
-# See above
+# Link plugins to libstrongswan
+# http://wiki.strongswan.org/issues/538 (same as for Patch2)
 Patch4:         libstrongswan-973315.patch
 # Fix selinux issues caused by leaking file descriptors to xtables-multi
 # http://wiki.strongswan.org/issues/519
 Patch6:         strongswan-5.1.1-selinux.patch
-
+# Fix configure.ac to build for epel6
+# http://wiki.strongswan.org/issues/536
+Patch7:         strongswan-5.1.2-autoconf.patch
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -42,31 +37,27 @@ BuildRequires:  gettext-devel
 BuildRequires:  trousers-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  pam-devel
-%if 0%{?enable_nm}
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
 Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
-Provides:       %{name}-charon-nm = 0:%{version}-%{release}
-%else
-Obsoletes:      %{name}-NetworkManager < 0:5.0.0-3.git20120619
-%endif
-
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires:  systemd
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 %else
+Obsoletes:      %{name}-NetworkManager < 0:5.0.0-3.git20120619
 Requires(post): chkconfig
 Requires(preun): chkconfig
 Requires(preun): initscripts
 %endif
+
 %description
 The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key
 exchange protocols in conjunction with the native NETKEY IPsec stack of the
 Linux kernel.
 
-%if 0%{?enable_nm}
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %package charon-nm
 Summary:        NetworkManager plugin for Strongswan
 Group:          System Environment/Daemons
@@ -89,20 +80,18 @@ modules can be used by any third party TNC Client/Server implementation
 possessing a standard IF-IMC/IMV interface. In addition, it implements
 PT-TLS to support TNC over TLS.
 
-
 %prep
 %setup -q
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch6 -p1
+%patch7 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
 %build
-# for initscript patch to work
 autoreconf
 %configure --disable-static \
     --with-ipsec-script=%{name} \
@@ -111,6 +100,9 @@ autoreconf
     --with-ipseclibdir=%{_libdir}/%{name} \
     --with-fips-mode=2 \
     --with-tss=trousers \
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+    --enable-nm \
+%endif
     --enable-openssl \
     --enable-md4 \
     --enable-xauth-eap \
@@ -145,10 +137,7 @@ autoreconf
     --enable-eap-radius \
     --enable-curl \
     --enable-eap-identity \
-    --enable-cmd \
-    %{?_enable_nm}
-
-
+    --enable-cmd
 make %{?_smp_mflags}
 
 %install
@@ -166,33 +155,29 @@ find %{buildroot} -type f -name '*.la' -delete
 chmod 644 %{buildroot}%{_sysconfdir}/%{name}/%{name}.conf
 # protect configuration from ordinary user's eyes
 chmod 700 %{buildroot}%{_sysconfdir}/%{name}
-# setup systemd unit or initscript
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
-%else
-install -D -m 755 init/sysvinit/%{name} %{buildroot}/%{_initddir}/%{name}
-%endif
-#rename /usr/bin/pki to avoid conflict with pki-core/pki-tools
-#mv %{buildroot}%{_bindir}/pki %{buildroot}%{_bindir}/%{name}-pki
-#move /usr/bin/pki to avoid conflict with pki-core/pki-tools
+# move stuff to libexec
 mv %{buildroot}%{_bindir}/pki %{buildroot}%{_libexecdir}/%{name}/pki
-
 # Create ipsec.d directory tree.
 install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
 for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d/${i}
 done
 
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%else
+install -D -m 755 %{name}.sysvinit %{buildroot}/%{_initddir}/%{name}
+%endif
 
 %post
 /sbin/ldconfig
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %systemd_post %{name}.service
 %else
 /sbin/chkconfig --add %{name}
 %endif
 
 %preun
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %systemd_preun %{name}.service
 %else
 if [ $1 -eq 0 ] ; then
@@ -204,11 +189,10 @@ fi
 
 %postun
 /sbin/ldconfig
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %systemd_postun_with_restart %{name}.service
 %else
 %endif
-
 
 %files
 %doc README README.Fedora COPYING NEWS TODO
@@ -216,7 +200,7 @@ fi
 %{_sysconfdir}/%{name}/ipsec.d/
 %config(noreplace) %{_sysconfdir}/%{name}/ipsec.conf
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %else
 %{_initddir}/%{name}
@@ -480,13 +464,18 @@ fi
 %dir %{_datadir}/regid.2004-03.org.%{name}
 %{_datadir}/regid.2004-03.org.%{name}/*.swidtag
 
-%if 0%{?enable_nm}
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %files charon-nm
 %doc COPYING
 %{_libexecdir}/%{name}/charon-nm
 %endif
 
 %changelog
+* Fri Mar 14 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-2
+- clean up the specfile a bit
+- replace the initscript patch with an individual initscript
+- patch to build for epel6
+
 * Mon Mar 03 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-1
 - #1071353 - bump to 5.1.2
 - #1071338 - strongswan is compiled without xauth-pam plugin
