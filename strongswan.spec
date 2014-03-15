@@ -165,7 +165,7 @@ done
 
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %else
-install -D -m 755 %{name}.sysvinit %{buildroot}/%{_initddir}/%{name}
+install -D -m 755 %{SOURCE1} %{buildroot}/%{_initddir}/%{name}
 %endif
 
 %post
