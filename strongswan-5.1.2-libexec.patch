@@ -1,0 +1,25 @@
+Index: strongswan-5.1.2/src/checksum/Makefile.am
+===================================================================
+--- strongswan-5.1.2.orig/src/checksum/Makefile.am
++++ strongswan-5.1.2/src/checksum/Makefile.am
+@@ -102,7 +102,7 @@ endif
+ if USE_TOOLS
+   exes += $(DESTDIR)$(ipsecdir)/openac
+   exes += $(DESTDIR)$(ipsecdir)/scepclient
+-  exes += $(DESTDIR)$(bindir)/pki
++  exes += $(DESTDIR)$(ipsecdir)/pki
+ endif
+ 
+ if USE_ATTR_SQL
+Index: strongswan-5.1.2/src/pki/Makefile.am
+===================================================================
+--- strongswan-5.1.2.orig/src/pki/Makefile.am
++++ strongswan-5.1.2/src/pki/Makefile.am
+@@ -1,6 +1,6 @@
+ SUBDIRS = man
+ 
+-bin_PROGRAMS = pki
++ipsec_PROGRAMS = pki
+ 
+ pki_SOURCES = pki.c pki.h command.c command.h \
+ 	commands/gen.c \

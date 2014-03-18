@@ -2,7 +2,7 @@
 
 Name:           strongswan
 Version:        5.1.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -28,6 +28,9 @@ Patch6:         strongswan-5.1.1-selinux.patch
 # Fix configure.ac to build for epel6
 # http://wiki.strongswan.org/issues/536
 Patch7:         strongswan-5.1.2-autoconf.patch
+# Fix pki utility location
+# TBD
+Patch8:         strongswan-5.1.2-libexec.patch
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -88,6 +91,7 @@ PT-TLS to support TNC over TLS.
 %patch4 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -155,8 +159,6 @@ find %{buildroot} -type f -name '*.la' -delete
 chmod 644 %{buildroot}%{_sysconfdir}/%{name}/%{name}.conf
 # protect configuration from ordinary user's eyes
 chmod 700 %{buildroot}%{_sysconfdir}/%{name}
-# move stuff to libexec
-mv %{buildroot}%{_bindir}/pki %{buildroot}%{_libexecdir}/%{name}/pki
 # Create ipsec.d directory tree.
 install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
 for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
@@ -471,6 +473,10 @@ fi
 %endif
 
 %changelog
+* Tue Mar 18 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-3
+- fixed el6 initscript
+- fixed pki directory location
+
 * Fri Mar 14 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-2
 - clean up the specfile a bit
 - replace the initscript patch with an individual initscript

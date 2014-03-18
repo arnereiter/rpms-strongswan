@@ -17,7 +17,7 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-exec="@SBINDIR@/@IPSEC_SCRIPT@"
+exec="/usr/sbin/strongswan"
 prog="strongswan"
 status_prog="starter"
 config="/etc/strongswan/strongswan.conf"
