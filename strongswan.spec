@@ -2,7 +2,7 @@
 
 Name:           strongswan
 Version:        5.1.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -29,7 +29,7 @@ Patch6:         strongswan-5.1.1-selinux.patch
 # http://wiki.strongswan.org/issues/536
 Patch7:         strongswan-5.1.2-autoconf.patch
 # Fix pki utility location
-# TBD
+# http://wiki.strongswan.org/issues/552
 Patch8:         strongswan-5.1.2-libexec.patch
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
@@ -473,6 +473,9 @@ fi
 %endif
 
 %changelog
+* Mon Mar 24 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-4
+- #1069928 - updated libexec patch.
+
 * Tue Mar 18 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-3
 - fixed el6 initscript
 - fixed pki directory location
