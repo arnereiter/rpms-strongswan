@@ -82,13 +82,13 @@ echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/stro
 %build
 autoreconf
 # --with-ipsecdir moves internal commands to /usr/libexec/strongswan
-# --with-bindir moves 'pki' command to /usr/libexec/strongswan
+# --bindir moves 'pki' command to /usr/libexec/strongswan
 # See: http://wiki.strongswan.org/issues/552
 %configure --disable-static \
     --with-ipsec-script=%{name} \
     --sysconfdir=%{_sysconfdir}/%{name} \
     --with-ipsecdir=%{_libexecdir}/%{name} \
-    --with-bindir=%{_libexecdir}/%{name} \
+    --bindir=%{_libexecdir}/%{name} \
     --with-ipseclibdir=%{_libdir}/%{name} \
     --with-fips-mode=2 \
     --with-tss=trousers \
