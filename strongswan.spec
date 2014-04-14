@@ -1,8 +1,8 @@
 %global _hardened_build 1
 
 Name:           strongswan
-Version:        5.1.2
-Release:        4%{?dist}
+Version:        5.1.3rc1
+Release: 1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -10,27 +10,15 @@ URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
 # Initscript for epel6
 Source1:        %{name}.sysvinit
-# Avoid breakage with Fedora OpenSSL
-# http://wiki.strongswan.org/issues/537
-Patch1:         strongswan-pts-ecp-disable.patch
 # Use dlopen(file, RTLD_NOW|RTLD_GLOBAL) for the plugin loader
 # http://wiki.strongswan.org/issues/538
 Patch2:         libstrongswan-plugin.patch
-# Use DBG1 for settings.c debug messages
-# http://wiki.strongswan.org/issues/539
-Patch3:         libstrongswan-settings-debug.patch
 # Link plugins to libstrongswan
 # http://wiki.strongswan.org/issues/538 (same as for Patch2)
 Patch4:         libstrongswan-973315.patch
 # Fix selinux issues caused by leaking file descriptors to xtables-multi
 # http://wiki.strongswan.org/issues/519
 Patch6:         strongswan-5.1.1-selinux.patch
-# Fix configure.ac to build for epel6
-# http://wiki.strongswan.org/issues/536
-Patch7:         strongswan-5.1.2-autoconf.patch
-# Fix pki utility location
-# http://wiki.strongswan.org/issues/552
-Patch8:         strongswan-5.1.2-libexec.patch
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -85,22 +73,22 @@ PT-TLS to support TNC over TLS.
 
 %prep
 %setup -q
-%patch1 -p1
 %patch2 -p1
-%patch3 -p1
 %patch4 -p1
 %patch6 -p1
-%patch7 -p1
-%patch8 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
 %build
 autoreconf
+# --with-ipsecdir moves internal commands to /usr/libexec/strongswan
+# --with-bindir moves 'pki' command to /usr/libexec/strongswan
+# See: http://wiki.strongswan.org/issues/552
 %configure --disable-static \
     --with-ipsec-script=%{name} \
     --sysconfdir=%{_sysconfdir}/%{name} \
     --with-ipsecdir=%{_libexecdir}/%{name} \
+    --with-bindir=%{_libexecdir}/%{name} \
     --with-ipseclibdir=%{_libdir}/%{name} \
     --with-fips-mode=2 \
     --with-tss=trousers \
@@ -473,6 +461,9 @@ fi
 %endif
 
 %changelog
+* Mon Apr 14 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.3rc1-1
+- new version 5.1.3rc1
+
 * Mon Mar 24 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.2-4
 - #1069928 - updated libexec patch.
 
