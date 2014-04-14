@@ -257,7 +257,6 @@ fi
 %{_libexecdir}/%{name}/_updown
 %{_libexecdir}/%{name}/_updown_espmark
 %{_libexecdir}/%{name}/charon
-%{_libexecdir}/%{name}/openac
 %{_libexecdir}/%{name}/scepclient
 %{_libexecdir}/%{name}/starter
 %{_libexecdir}/%{name}/stroke
@@ -274,7 +273,6 @@ fi
 %{_mandir}/man8/%{name}.8.gz
 %{_mandir}/man8/%{name}__updown.8.gz
 %{_mandir}/man8/%{name}__updown_espmark.8.gz
-%{_mandir}/man8/%{name}_openac.8.gz
 %{_mandir}/man8/%{name}_scepclient.8.gz
 %{_mandir}/man8/%{name}_charon-cmd.8.gz
 %{_sysconfdir}/%{name}/%{name}.d/attest.conf
