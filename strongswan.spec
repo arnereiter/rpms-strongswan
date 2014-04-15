@@ -1,7 +1,7 @@
 %global _hardened_build 1
 
 Name:           strongswan
-Version:        5.1.3rc1
+Version:        5.1.3
 Release: 1%{?dist}
 Summary:        An OpenSource IPsec-based VPN Solution
 Group:          System Environment/Daemons
@@ -459,6 +459,9 @@ fi
 %endif
 
 %changelog
+* Tue Apr 15 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.3-1
+- new version 5.1.3
+
 * Mon Apr 14 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.3rc1-1
 - new version 5.1.3rc1
 
