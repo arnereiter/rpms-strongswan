@@ -1,9 +1,9 @@
 %global _hardened_build 1
 
 Name:           strongswan
-Version:        5.1.3
-Release: 1%{?dist}
-Summary:        An OpenSource IPsec-based VPN Solution
+Version:        5.2.0dr4
+Release:        1%{?dist}
+Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -129,7 +129,9 @@ autoreconf
     --enable-eap-radius \
     --enable-curl \
     --enable-eap-identity \
-    --enable-cmd
+    --enable-cmd \
+    --enable-acert \
+    --enable-aikgen
 make %{?_smp_mflags}
 
 %install
@@ -252,6 +254,7 @@ fi
 %{_libdir}/%{name}/plugins/lib%{name}-dhcp.so
 %{_libdir}/%{name}/plugins/lib%{name}-curl.so
 %{_libdir}/%{name}/plugins/lib%{name}-eap-identity.so
+%{_libdir}/%{name}/plugins/lib%{name}-acert.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/_copyright
 %{_libexecdir}/%{name}/_updown
@@ -263,7 +266,7 @@ fi
 %{_libexecdir}/%{name}/_imv_policy
 %{_libexecdir}/%{name}/imv_policy_manager
 %{_libexecdir}/%{name}/pki
-#%{_bindir}/%{name}-pki
+%{_libexecdir}/%{name}/aikgen
 %{_sbindir}/charon-cmd
 %{_sbindir}/%{name}
 %{_mandir}/man1/%{name}_pki*.1.gz
@@ -275,139 +278,9 @@ fi
 %{_mandir}/man8/%{name}__updown_espmark.8.gz
 %{_mandir}/man8/%{name}_scepclient.8.gz
 %{_mandir}/man8/%{name}_charon-cmd.8.gz
-%{_sysconfdir}/%{name}/%{name}.d/attest.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon-logging.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/aes.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/attr.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/cmac.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/constraints.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/curl.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/des.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/dhcp.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/dnskey.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/eap-gtc.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/eap-identity.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/eap-md5.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/eap-mschapv2.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/eap-peap.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/eap-radius.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/eap-tls.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/eap-tnc.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/eap-ttls.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/farp.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/fips-prf.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/gmp.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/hmac.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/kernel-netlink.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/md4.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/md5.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/nonce.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/openssl.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/pem.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/pgp.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/pkcs1.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/pkcs12.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/pkcs7.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/pkcs8.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/pubkey.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/random.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/rc2.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/resolve.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/revocation.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/sha1.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/sha2.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/socket-default.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/sqlite.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/sshkey.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/stroke.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/tnc-ifmap.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/tnc-imc.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/tnc-imv.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/tnc-pdp.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/tnc-tnccs.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/tnccs-11.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/tnccs-20.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/tnccs-dynamic.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/updown.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/x509.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/xauth-eap.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/xauth-generic.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/xauth-pam.conf
-%{_sysconfdir}/%{name}/%{name}.d/charon/xcbc.conf
-%{_sysconfdir}/%{name}/%{name}.d/imcv.conf
-%{_sysconfdir}/%{name}/%{name}.d/pacman.conf
-%{_sysconfdir}/%{name}/%{name}.d/starter.conf
-%{_sysconfdir}/%{name}/%{name}.d/tnc.conf
-%{_sysconfdir}/%{name}/%{name}.d/tools.conf
-%{_datadir}/%{name}/templates/config/plugins/aes.conf
-%{_datadir}/%{name}/templates/config/plugins/attr.conf
-%{_datadir}/%{name}/templates/config/plugins/cmac.conf
-%{_datadir}/%{name}/templates/config/plugins/constraints.conf
-%{_datadir}/%{name}/templates/config/plugins/curl.conf
-%{_datadir}/%{name}/templates/config/plugins/des.conf
-%{_datadir}/%{name}/templates/config/plugins/dhcp.conf
-%{_datadir}/%{name}/templates/config/plugins/dnskey.conf
-%{_datadir}/%{name}/templates/config/plugins/eap-gtc.conf
-%{_datadir}/%{name}/templates/config/plugins/eap-identity.conf
-%{_datadir}/%{name}/templates/config/plugins/eap-md5.conf
-%{_datadir}/%{name}/templates/config/plugins/eap-mschapv2.conf
-%{_datadir}/%{name}/templates/config/plugins/eap-peap.conf
-%{_datadir}/%{name}/templates/config/plugins/eap-radius.conf
-%{_datadir}/%{name}/templates/config/plugins/eap-tls.conf
-%{_datadir}/%{name}/templates/config/plugins/eap-tnc.conf
-%{_datadir}/%{name}/templates/config/plugins/eap-ttls.conf
-%{_datadir}/%{name}/templates/config/plugins/farp.conf
-%{_datadir}/%{name}/templates/config/plugins/fips-prf.conf
-%{_datadir}/%{name}/templates/config/plugins/gmp.conf
-%{_datadir}/%{name}/templates/config/plugins/hmac.conf
-%{_datadir}/%{name}/templates/config/plugins/kernel-netlink.conf
-%{_datadir}/%{name}/templates/config/plugins/md4.conf
-%{_datadir}/%{name}/templates/config/plugins/md5.conf
-%{_datadir}/%{name}/templates/config/plugins/nonce.conf
-%{_datadir}/%{name}/templates/config/plugins/openssl.conf
-%{_datadir}/%{name}/templates/config/plugins/pem.conf
-%{_datadir}/%{name}/templates/config/plugins/pgp.conf
-%{_datadir}/%{name}/templates/config/plugins/pkcs1.conf
-%{_datadir}/%{name}/templates/config/plugins/pkcs12.conf
-%{_datadir}/%{name}/templates/config/plugins/pkcs7.conf
-%{_datadir}/%{name}/templates/config/plugins/pkcs8.conf
-%{_datadir}/%{name}/templates/config/plugins/pubkey.conf
-%{_datadir}/%{name}/templates/config/plugins/random.conf
-%{_datadir}/%{name}/templates/config/plugins/rc2.conf
-%{_datadir}/%{name}/templates/config/plugins/resolve.conf
-%{_datadir}/%{name}/templates/config/plugins/revocation.conf
-%{_datadir}/%{name}/templates/config/plugins/sha1.conf
-%{_datadir}/%{name}/templates/config/plugins/sha2.conf
-%{_datadir}/%{name}/templates/config/plugins/socket-default.conf
-%{_datadir}/%{name}/templates/config/plugins/sqlite.conf
-%{_datadir}/%{name}/templates/config/plugins/sshkey.conf
-%{_datadir}/%{name}/templates/config/plugins/stroke.conf
-%{_datadir}/%{name}/templates/config/plugins/tnc-ifmap.conf
-%{_datadir}/%{name}/templates/config/plugins/tnc-imc.conf
-%{_datadir}/%{name}/templates/config/plugins/tnc-imv.conf
-%{_datadir}/%{name}/templates/config/plugins/tnc-pdp.conf
-%{_datadir}/%{name}/templates/config/plugins/tnc-tnccs.conf
-%{_datadir}/%{name}/templates/config/plugins/tnccs-11.conf
-%{_datadir}/%{name}/templates/config/plugins/tnccs-20.conf
-%{_datadir}/%{name}/templates/config/plugins/tnccs-dynamic.conf
-%{_datadir}/%{name}/templates/config/plugins/updown.conf
-%{_datadir}/%{name}/templates/config/plugins/x509.conf
-%{_datadir}/%{name}/templates/config/plugins/xauth-eap.conf
-%{_datadir}/%{name}/templates/config/plugins/xauth-generic.conf
-%{_datadir}/%{name}/templates/config/plugins/xauth-pam.conf
-%{_datadir}/%{name}/templates/config/plugins/xcbc.conf
-%{_datadir}/%{name}/templates/config/%{name}.conf
-%{_datadir}/%{name}/templates/config/%{name}.d/attest.conf
-%{_datadir}/%{name}/templates/config/%{name}.d/charon-logging.conf
-%{_datadir}/%{name}/templates/config/%{name}.d/charon.conf
-%{_datadir}/%{name}/templates/config/%{name}.d/imcv.conf
-%{_datadir}/%{name}/templates/config/%{name}.d/pacman.conf
-%{_datadir}/%{name}/templates/config/%{name}.d/starter.conf
-%{_datadir}/%{name}/templates/config/%{name}.d/tnc.conf
-%{_datadir}/%{name}/templates/config/%{name}.d/tools.conf
-%{_datadir}/%{name}/templates/database/imv/data.sql
-%{_datadir}/%{name}/templates/database/imv/tables.sql
+%{_sysconfdir}/%{name}/%{name}.d/
+%{_datadir}/%{name}/templates/config/
+%{_datadir}/%{name}/templates/database/
 
 %files tnc-imcvs
 %dir %{_libdir}/%{name}
@@ -459,6 +332,17 @@ fi
 %endif
 
 %changelog
+* Thu May 22 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.0dr4-1
+- New upstream developer release 5.2.0dr4
+- Attestation IMV/IMC supports IMA-NG measurement format now
+- Aikgen tool to generate an Attestation Identity Key bound
+  to a TPM
+- PT-EAP transport protocol (RFC 7171) for TNC
+- vici plugin provides IKE Configuration Interface for charon
+- Enabled support for acert for checking X509 attribute certificate
+- Updated patches
+- Updated spec file with minor cleanups
+
 * Tue Apr 15 2014 Pavel Šimerda <psimerda@redhat.com> - 5.1.3-1
 - new version 5.1.3
 

@@ -1,8 +1,7 @@
-diff --git a/src/charon/charon.c b/src/charon/charon.c
-index 089ac45..b644977 100644
---- a/src/charon/charon.c
-+++ b/src/charon/charon.c
-@@ -226,7 +226,7 @@ static bool check_pidfile()
+diff -urNp strongswan-5.2.0dr4-patched/src/charon/charon.c strongswan-5.2.0dr4-current/src/charon/charon.c
+--- strongswan-5.2.0dr4-patched/src/charon/charon.c	2014-05-22 16:14:28.761324384 -0400
++++ strongswan-5.2.0dr4-current/src/charon/charon.c	2014-05-22 16:19:00.239224819 -0400
+@@ -229,7 +229,7 @@ static bool check_pidfile()
  	}
  
  	/* create new pidfile */
@@ -11,11 +10,10 @@ index 089ac45..b644977 100644
  	if (pidfile)
  	{
  		ignore_result(fchown(fileno(pidfile),
-diff --git a/src/libstrongswan/plugins/random/random_plugin.c b/src/libstrongswan/plugins/random/random_plugin.c
-index 1f10792..c79e87a 100644
---- a/src/libstrongswan/plugins/random/random_plugin.c
-+++ b/src/libstrongswan/plugins/random/random_plugin.c
-@@ -83,7 +83,7 @@ bool random_plugin_get_strong_equals_true()
+diff -urNp strongswan-5.2.0dr4-patched/src/libstrongswan/plugins/random/random_plugin.c strongswan-5.2.0dr4-current/src/libstrongswan/plugins/random/random_plugin.c
+--- strongswan-5.2.0dr4-patched/src/libstrongswan/plugins/random/random_plugin.c	2014-05-22 16:14:28.738324392 -0400
++++ strongswan-5.2.0dr4-current/src/libstrongswan/plugins/random/random_plugin.c	2014-05-22 16:19:00.239224819 -0400
+@@ -83,7 +83,7 @@ bool random_plugin_get_strong_equals_tru
   */
  static bool open_dev(char *file, int *fd)
  {
