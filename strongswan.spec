@@ -2,7 +2,7 @@
 
 Name:           strongswan
 Version:        5.2.0dr4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -20,14 +20,13 @@ Source1:        %{name}.sysvinit
 Patch0:         strongswan-5.1.1-selinux.patch
 # Use RTLD_GLOBAL when loading plugins and link them to libstrongswan
 #
-# The patchset hasn't been accepted upstream because of insufficient
+# The patch hasn't been accepted upstream because of insufficient
 # information from the author. This situation needs to be fixed or
 # the patch needs to be removed to avoid diverging from upstream
 # permanently.
 #
 # http://wiki.strongswan.org/issues/538
-Patch1:         libstrongswan-plugin.patch
-Patch2:         libstrongswan-973315.patch
+Patch1:         strongswan-5.1.1-plugins.patch
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -84,7 +83,6 @@ PT-TLS to support TNC over TLS.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -341,6 +339,9 @@ fi
 %endif
 
 %changelog
+* Mon May 26 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0dr4-3
+- merge two related patches
+
 * Mon May 26 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0dr4-2
 - clean up the patches a bit
 
