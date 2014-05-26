@@ -2,7 +2,7 @@
 
 Name:           strongswan
 Version:        5.2.0dr4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -10,15 +10,24 @@ URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
 # Initscript for epel6
 Source1:        %{name}.sysvinit
-# Use dlopen(file, RTLD_NOW|RTLD_GLOBAL) for the plugin loader
-# http://wiki.strongswan.org/issues/538
-Patch2:         libstrongswan-plugin.patch
-# Link plugins to libstrongswan
-# http://wiki.strongswan.org/issues/538 (same as for Patch2)
-Patch4:         libstrongswan-973315.patch
 # Fix selinux issues caused by leaking file descriptors to xtables-multi
+#
+# Upstream doesn't like the patch because of lack of portability. We're
+# working with upstream to prepare an acceptable fix. When it's ready,
+# we'll switch to the new version and remove the patch.
+#
 # http://wiki.strongswan.org/issues/519
-Patch6:         strongswan-5.1.1-selinux.patch
+Patch0:         strongswan-5.1.1-selinux.patch
+# Use RTLD_GLOBAL when loading plugins and link them to libstrongswan
+#
+# The patchset hasn't been accepted upstream because of insufficient
+# information from the author. This situation needs to be fixed or
+# the patch needs to be removed to avoid diverging from upstream
+# permanently.
+#
+# http://wiki.strongswan.org/issues/538
+Patch1:         libstrongswan-plugin.patch
+Patch2:         libstrongswan-973315.patch
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -73,9 +82,9 @@ PT-TLS to support TNC over TLS.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
 %patch2 -p1
-%patch4 -p1
-%patch6 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -332,6 +341,9 @@ fi
 %endif
 
 %changelog
+* Mon May 26 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0dr4-2
+- clean up the patches a bit
+
 * Thu May 22 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.0dr4-1
 - New upstream developer release 5.2.0dr4
 - Attestation IMV/IMC supports IMA-NG measurement format now
