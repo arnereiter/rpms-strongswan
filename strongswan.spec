@@ -1,8 +1,8 @@
 %global _hardened_build 1
 
 Name:           strongswan
-Version:        5.2.0dr4
-Release:        3%{?dist}
+Version:        5.2.0dr5
+Release: 1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -339,6 +339,9 @@ fi
 %endif
 
 %changelog
+* Fri Jun 06 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0dr5-1
+- new version 5.2.0dr5
+
 * Mon May 26 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0dr4-3
 - merge two related patches
 
