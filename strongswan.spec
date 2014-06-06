@@ -36,6 +36,7 @@ BuildRequires:  gettext-devel
 BuildRequires:  trousers-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  pam-devel
+BuildRequires:  json-c-devel
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
@@ -341,6 +342,7 @@ fi
 %changelog
 * Fri Jun 06 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0dr5-1
 - new version 5.2.0dr5
+- add json-c-devel to build deps
 
 * Mon May 26 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0dr4-3
 - merge two related patches
