@@ -4,7 +4,7 @@
 
 Name:           strongswan
 Version:        5.2.0
-Release:        0.1%{suffix}%{?dist}
+Release:        0.2%{suffix}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -28,7 +28,24 @@ Patch0:         strongswan-5.1.1-selinux.patch
 # permanently.
 #
 # http://wiki.strongswan.org/issues/538
-Patch1:         strongswan-5.1.1-plugins.patch
+#
+# Removing the patch from the build as I repeatedly requested that it should be
+# upstreamed. No comment has been added to the upstream bug report. Nothing
+# has been done towards the goal of upstreaming the patch.
+#
+# See also:
+#
+#  * https://bugzilla.redhat.com/show_bug.cgi?id=1087437
+#  * http://fedoraproject.org/wiki/Packaging:Guidelines#All_patches_should_have_an_upstream_bug_link_or_comment
+#  * https://fedoraproject.org/wiki/Staying_close_to_upstream_projects
+#
+# The patches violated the packaging guidelines from the beginning so I took
+# the initiative to merge them and submit them upstream. But I couldn't work
+# with the upstream developers on the fix as I didn't have enough information
+# about the use cases. Please cooperate with usptream and get the patch
+# accepted. There's nothing Fedora specific in the patch.
+#
+#Patch1:         strongswan-5.1.1-plugins.patch
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -85,7 +102,7 @@ PT-TLS to support TNC over TLS.
 %prep
 %setup -q -n %{name}-%{version}%{prerelease}
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -342,6 +359,9 @@ fi
 %endif
 
 %changelog
+* Thu Jun 12 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-0.2
+- Related: #1087437 - remove or upstream all patches not specific to fedora/epel
+
 * Thu Jun 12 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-0.1.dr5
 - fix the pre-release version according to guidelines before it gets branched
 
