@@ -1,13 +1,15 @@
 %global _hardened_build 1
+%define prerelease dr5
+%define suffix .dr5
 
 Name:           strongswan
-Version:        5.2.0dr5
-Release: 1%{?dist}
+Version:        5.2.0
+Release:        0.1%{suffix}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
-Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
+Source0:        http://download.strongswan.org/%{name}-%{version}%{prerelease}.tar.bz2
 # Initscript for epel6
 Source1:        %{name}.sysvinit
 # Fix selinux issues caused by leaking file descriptors to xtables-multi
@@ -81,7 +83,7 @@ possessing a standard IF-IMC/IMV interface. In addition, it implements
 PT-TLS to support TNC over TLS.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{prerelease}
 %patch0 -p1
 %patch1 -p1
 
@@ -340,6 +342,9 @@ fi
 %endif
 
 %changelog
+* Thu Jun 12 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-0.1.dr5
+- fix the pre-release version according to guidelines before it gets branched
+
 * Fri Jun 06 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0dr5-1
 - new version 5.2.0dr5
 - add json-c-devel to build deps
