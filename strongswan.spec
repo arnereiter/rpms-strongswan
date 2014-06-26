@@ -1,10 +1,10 @@
 %global _hardened_build 1
-%define prerelease dr5
-%define suffix .dr5
+%define prerelease dr6
+%define suffix .dr6
 
 Name:           strongswan
 Version:        5.2.0
-Release:        0.2%{suffix}%{?dist}
+Release:        0.3%{suffix}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -359,6 +359,9 @@ fi
 %endif
 
 %changelog
+* Thu Jun 26 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-0.3
+- Resolves: #1111895 - bump to 5.2.0dr6
+
 * Thu Jun 12 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-0.2
 - Related: #1087437 - remove or upstream all patches not specific to fedora/epel
 
