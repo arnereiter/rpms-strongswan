@@ -1,15 +1,14 @@
 %global _hardened_build 1
 %define prerelease dr6
-%define suffix .dr6
 
 Name:           strongswan
 Version:        5.2.0
-Release:        0.3%{suffix}%{?dist}
+Release:        0.4%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
-Source0:        http://download.strongswan.org/%{name}-%{version}%{prerelease}.tar.bz2
+Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
 # Initscript for epel6
 Source1:        %{name}.sysvinit
 # Fix selinux issues caused by leaking file descriptors to xtables-multi
@@ -359,6 +358,9 @@ fi
 %endif
 
 %changelog
+* Thu Jun 26 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-0.4.dr6
+- improve prerelease macro
+
 * Thu Jun 26 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-0.3
 - Resolves: #1111895 - bump to 5.2.0dr6
 
