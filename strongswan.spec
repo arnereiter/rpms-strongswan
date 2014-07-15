@@ -1,24 +1,15 @@
 %global _hardened_build 1
-%define prerelease dr6
 
 Name:           strongswan
 Version:        5.2.0
-Release:        0.4%{?prerelease:.%{prerelease}}%{?dist}
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
-Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
+Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
 # Initscript for epel6
 Source1:        %{name}.sysvinit
-# Fix selinux issues caused by leaking file descriptors to xtables-multi
-#
-# Upstream doesn't like the patch because of lack of portability. We're
-# working with upstream to prepare an acceptable fix. When it's ready,
-# we'll switch to the new version and remove the patch.
-#
-# http://wiki.strongswan.org/issues/519
-Patch0:         strongswan-5.1.1-selinux.patch
 # Use RTLD_GLOBAL when loading plugins and link them to libstrongswan
 #
 # The patch hasn't been accepted upstream because of insufficient
@@ -99,8 +90,7 @@ possessing a standard IF-IMC/IMV interface. In addition, it implements
 PT-TLS to support TNC over TLS.
 
 %prep
-%setup -q -n %{name}-%{version}%{prerelease}
-%patch0 -p1
+%setup -q
 #%patch1 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
@@ -157,7 +147,10 @@ autoreconf
     --enable-eap-identity \
     --enable-cmd \
     --enable-acert \
-    --enable-aikgen
+    --enable-aikgen \
+    --enable-vici \
+    --enable-swanctl
+
 make %{?_smp_mflags}
 
 %install
@@ -218,6 +211,8 @@ fi
 %{_sysconfdir}/%{name}/ipsec.d/
 %config(noreplace) %{_sysconfdir}/%{name}/ipsec.conf
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
+%{_sysconfdir}/%{name}/swanctl/
+%config(noreplace) %{_sysconfdir}/%{name}/swanctl/swanctl.conf
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %else
@@ -234,6 +229,8 @@ fi
 %{_libdir}/%{name}/libpttls.so.0.0.0
 %{_libdir}/%{name}/lib%{name}.so.0
 %{_libdir}/%{name}/lib%{name}.so.0.0.0
+%{_libdir}/%{name}/libvici.so.0
+%{_libdir}/%{name}/libvici.so.0.0.0
 %dir %{_libdir}/%{name}/plugins
 %{_libdir}/%{name}/plugins/lib%{name}-aes.so
 %{_libdir}/%{name}/plugins/lib%{name}-attr.so
@@ -281,6 +278,7 @@ fi
 %{_libdir}/%{name}/plugins/lib%{name}-curl.so
 %{_libdir}/%{name}/plugins/lib%{name}-eap-identity.so
 %{_libdir}/%{name}/plugins/lib%{name}-acert.so
+%{_libdir}/%{name}/plugins/lib%{name}-vici.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/_copyright
 %{_libexecdir}/%{name}/_updown
@@ -295,15 +293,18 @@ fi
 %{_libexecdir}/%{name}/aikgen
 %{_sbindir}/charon-cmd
 %{_sbindir}/%{name}
+%{_sbindir}/swanctl
 %{_mandir}/man1/%{name}_pki*.1.gz
 %{_mandir}/man5/%{name}.conf.5.gz
 %{_mandir}/man5/%{name}_ipsec.conf.5.gz
 %{_mandir}/man5/%{name}_ipsec.secrets.5.gz
+%{_mandir}/man5/%{name}_swanctl.conf.5.gz
 %{_mandir}/man8/%{name}.8.gz
 %{_mandir}/man8/%{name}__updown.8.gz
 %{_mandir}/man8/%{name}__updown_espmark.8.gz
 %{_mandir}/man8/%{name}_scepclient.8.gz
 %{_mandir}/man8/%{name}_charon-cmd.8.gz
+%{_mandir}/man8/%{name}_swanctl.8.gz
 %{_sysconfdir}/%{name}/%{name}.d/
 %{_datadir}/%{name}/templates/config/
 %{_datadir}/%{name}/templates/database/
@@ -358,6 +359,21 @@ fi
 %endif
 
 %changelog
+* Tue Jul 15 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.0-1
+- New upstream release 5.2.0
+- The Attestation IMC/IMV pair supports the IMA-NG
+  measurement format
+- Aikgen tool to generate an Attestation Identity Key bound
+  to a TPM
+- Swanctl tool to provide a portable, complete IKE
+  configuration and control interface for the command
+  line using vici interface with libvici library
+- PT-EAP transport protocol (RFC 7171) for TNC
+- Enabled support for acert for checking X509 attribute certificate
+- Updated patches, removed selinux patch as upstream has fixed it
+  in this release.
+- Updated spec file with minor cleanups
+
 * Thu Jun 26 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-0.4.dr6
 - improve prerelease macro
 
