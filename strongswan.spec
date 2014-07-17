@@ -1,13 +1,19 @@
 %global _hardened_build 1
+# When packaging pre-release snapshots:
+# 1) Please use 0.x in the release to maintain the correct package version
+# order.
+# 2) Please use the following define (with a percent sign and the appropriate
+# prerelease tag):
+#     define prerelease dr6
 
 Name:           strongswan
 Version:        5.2.0
-Release:        1%{?dist}
+Release:        1%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
-Source0:        http://download.strongswan.org/%{name}-%{version}.tar.bz2
+Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
 # Initscript for epel6
 Source1:        %{name}.sysvinit
 # Use RTLD_GLOBAL when loading plugins and link them to libstrongswan
@@ -90,7 +96,7 @@ possessing a standard IF-IMC/IMV interface. In addition, it implements
 PT-TLS to support TNC over TLS.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{prerelease}
 #%patch1 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
