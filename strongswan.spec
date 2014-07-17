@@ -96,7 +96,7 @@ possessing a standard IF-IMC/IMV interface. In addition, it implements
 PT-TLS to support TNC over TLS.
 
 %prep
-%setup -q -n %{name}-%{version}%{prerelease}
+%setup -q -n %{name}-%{version}%{?prerelease}
 #%patch1 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
