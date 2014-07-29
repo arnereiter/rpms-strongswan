@@ -1,0 +1,54 @@
+diff --git a/configure.ac b/configure.ac
+index 497240f..13faf8d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -876,8 +876,8 @@ if test x$tss = xtrousers; then
+ fi
+ 
+ if test x$imv_swid = xtrue; then
+-	AC_CHECK_LIB([json],[main],[LIBS="$LIBS"],[AC_MSG_ERROR([JSON library libjson not found])],[])
+-	AC_CHECK_HEADER([json/json.h],,[AC_MSG_ERROR([JSON header json/json.h not found!])])
++	AC_CHECK_LIB([json-c],[main],[LIBS="$LIBS"],[AC_MSG_ERROR([JSON library libjson not found])],[])
++	AC_CHECK_HEADER([json-c/json.h],,[AC_MSG_ERROR([JSON header json/json.h not found!])])
+ fi
+ 
+ if test x$dumm = xtrue; then
+diff --git a/src/libpts/plugins/imv_swid/Makefile.am b/src/libpts/plugins/imv_swid/Makefile.am
+index 77f33e6..547254d 100644
+--- a/src/libpts/plugins/imv_swid/Makefile.am
++++ b/src/libpts/plugins/imv_swid/Makefile.am
+@@ -13,7 +13,7 @@ imv_swid_la_LIBADD = \
+ 	$(top_builddir)/src/libimcv/libimcv.la \
+ 	$(top_builddir)/src/libpts/libpts.la \
+ 	$(top_builddir)/src/libstrongswan/libstrongswan.la \
+-	-ljson
++	-ljson-c
+ 
+ imv_swid_la_SOURCES = \
+ 	imv_swid.c imv_swid_state.h imv_swid_state.c \
+diff --git a/src/libpts/plugins/imv_swid/imv_swid_rest.h b/src/libpts/plugins/imv_swid/imv_swid_rest.h
+index 93e3d6a..7566a93 100644
+--- a/src/libpts/plugins/imv_swid/imv_swid_rest.h
++++ b/src/libpts/plugins/imv_swid/imv_swid_rest.h
+@@ -26,7 +26,7 @@
+ 
+ #include <library.h>
+ 
+-#include <json/json.h>
++#include <json-c/json.h>
+ 
+ typedef struct imv_swid_rest_t imv_swid_rest_t;
+ 
+diff --git a/src/libpts/plugins/imv_swid/imv_swid_state.h b/src/libpts/plugins/imv_swid/imv_swid_state.h
+index 7ffabfd..1ab7942 100644
+--- a/src/libpts/plugins/imv_swid/imv_swid_state.h
++++ b/src/libpts/plugins/imv_swid/imv_swid_state.h
+@@ -28,7 +28,7 @@
+ #include <swid/swid_inventory.h>
+ #include <library.h>
+ 
+-#include <json/json.h>
++#include <json-c/json.h>
+ 
+ typedef struct imv_swid_state_t imv_swid_state_t;
+ typedef enum imv_swid_handshake_state_t imv_swid_handshake_state_t;

@@ -8,7 +8,7 @@
 
 Name:           strongswan
 Version:        5.2.0
-Release:        1%{?prerelease:.%{prerelease}}%{?dist}
+Release:        2%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -16,6 +16,7 @@ URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
 # Initscript for epel6
 Source1:        %{name}.sysvinit
+Patch0:         strongswan-5.2.0-json.patch
 # Use RTLD_GLOBAL when loading plugins and link them to libstrongswan
 #
 # The patch hasn't been accepted upstream because of insufficient
@@ -97,6 +98,7 @@ PT-TLS to support TNC over TLS.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
+%patch0 -p1
 #%patch1 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
@@ -365,6 +367,9 @@ fi
 %endif
 
 %changelog
+* Tue Jul 29 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-2
+- fix json-c dependency
+
 * Tue Jul 15 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.0-1
 - New upstream release 5.2.0
 - The Attestation IMC/IMV pair supports the IMA-NG
