@@ -8,7 +8,7 @@
 
 Name:           strongswan
 Version:        5.2.0
-Release:        3%{?prerelease:.%{prerelease}}%{?dist}
+Release:        4%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -72,6 +72,13 @@ Requires(preun): initscripts
 The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key
 exchange protocols in conjunction with the native NETKEY IPsec stack of the
 Linux kernel.
+
+%package libipsec
+Summary: Strongswan's libipsec backend
+Group: System Environment/Daemons
+%description libipsec
+The kernel-libipsec plugin provides an IPsec backend that works entirely
+in userland, using TUN devices and its own IPsec implementation libipsec.
 
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %package charon-nm
@@ -157,7 +164,8 @@ autoreconf
     --enable-acert \
     --enable-aikgen \
     --enable-vici \
-    --enable-swanctl
+    --enable-swanctl \
+    --enable-kernel-libipsec
 
 make %{?_smp_mflags}
 
@@ -360,6 +368,11 @@ fi
 %dir %{_datadir}/regid.2004-03.org.%{name}
 %{_datadir}/regid.2004-03.org.%{name}/*.swidtag
 
+%files libipsec
+%{_libdir}/%{name}/libipsec.so.0
+%{_libdir}/%{name}/libipsec.so.0.0.0
+%{_libdir}/%{name}/plugins/libstrongswan-kernel-libipsec.so
+
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %files charon-nm
 %doc COPYING
@@ -367,6 +380,9 @@ fi
 %endif
 
 %changelog
+* Tue Aug 05 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-4
+- Resolves: #1081804 - enable Kernel IPSec support
+
 * Wed Jul 30 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-3
 - rebuilt
 
