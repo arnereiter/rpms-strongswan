@@ -8,7 +8,7 @@
 
 Name:           strongswan
 Version:        5.2.0
-Release:        5%{?prerelease:.%{prerelease}}%{?dist}
+Release:        6%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -130,6 +130,7 @@ autoreconf
     --enable-md4 \
     --enable-xauth-eap \
     --enable-xauth-pam \
+    --enable-xauth-noauth \
     --enable-eap-md5 \
     --enable-eap-gtc \
     --enable-eap-tls \
@@ -380,6 +381,9 @@ fi
 %endif
 
 %changelog
+* Thu Sep 25 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-6
+- Resolves: #1146145 - Strongswan is compiled without xauth-noauth plugin
+
 * Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
