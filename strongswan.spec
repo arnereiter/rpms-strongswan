@@ -228,7 +228,7 @@ fi
 %{_sysconfdir}/%{name}/ipsec.d/
 %config(noreplace) %{_sysconfdir}/%{name}/ipsec.conf
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
-%{_sysconfdir}/%{name}/swanctl/
+%dir %{_sysconfdir}/%{name}/swanctl/
 %config(noreplace) %{_sysconfdir}/%{name}/swanctl/swanctl.conf
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
@@ -282,6 +282,7 @@ fi
 %{_libdir}/%{name}/plugins/lib%{name}-xauth-generic.so
 %{_libdir}/%{name}/plugins/lib%{name}-xauth-eap.so
 %{_libdir}/%{name}/plugins/lib%{name}-xauth-pam.so
+%{_libdir}/%{name}/plugins/lib%{name}-xauth-noauth.so
 %{_libdir}/%{name}/plugins/lib%{name}-xcbc.so
 %{_libdir}/%{name}/plugins/lib%{name}-md4.so
 %{_libdir}/%{name}/plugins/lib%{name}-eap-md5.so
