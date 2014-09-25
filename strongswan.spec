@@ -8,7 +8,7 @@
 
 Name:           strongswan
 Version:        5.2.0
-Release:        6%{?prerelease:.%{prerelease}}%{?dist}
+Release:        7%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -382,6 +382,9 @@ fi
 %endif
 
 %changelog
+* Thu Sep 25 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-7
+- use upstream patch for json/json-c dependency
+
 * Thu Sep 25 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-6
 - Resolves: #1146145 - Strongswan is compiled without xauth-noauth plugin
 
