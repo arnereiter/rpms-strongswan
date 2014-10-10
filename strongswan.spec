@@ -4,11 +4,11 @@
 # order.
 # 2) Please use the following define (with a percent sign and the appropriate
 # prerelease tag):
-#     define prerelease dr6
+%define prerelease dr1
 
 Name:           strongswan
-Version:        5.2.0
-Release:        7%{?prerelease:.%{prerelease}}%{?dist}
+Version:        5.2.1
+Release:        0.1%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -16,7 +16,6 @@ URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
 # Initscript for epel6
 Source1:        %{name}.sysvinit
-Patch0:         strongswan-5.2.0-json.patch
 # Use RTLD_GLOBAL when loading plugins and link them to libstrongswan
 #
 # The patch hasn't been accepted upstream because of insufficient
@@ -105,7 +104,6 @@ PT-TLS to support TNC over TLS.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
-%patch0 -p1
 #%patch1 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
@@ -382,6 +380,9 @@ fi
 %endif
 
 %changelog
+* Fri Oct 10 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.1-1
+- new version 5.2.1dr1
+
 * Thu Sep 25 2014 Pavel Šimerda <psimerda@redhat.com> - 5.2.0-7
 - use upstream patch for json/json-c dependency
 
