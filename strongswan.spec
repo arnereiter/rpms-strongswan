@@ -329,8 +329,6 @@ fi
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/libimcv.so.0
 %{_libdir}/%{name}/libimcv.so.0.0.0
-%{_libdir}/%{name}/libpts.so.0
-%{_libdir}/%{name}/libpts.so.0.0.0
 %{_libdir}/%{name}/libtnccs.so.0
 %{_libdir}/%{name}/libtnccs.so.0.0.0
 %{_libdir}/%{name}/libradius.so.0
