@@ -4,11 +4,11 @@
 # order.
 # 2) Please use the following define (with a percent sign and the appropriate
 # prerelease tag):
-%define prerelease rc1
+# %%define prerelease
 
 Name:           strongswan
 Version:        5.2.1
-Release:        0.2%{?prerelease:.%{prerelease}}%{?dist}
+Release:        1%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -378,6 +378,9 @@ fi
 %endif
 
 %changelog
+* Thu Oct 30 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.1-1
+- New upstream release 5.2.1
+
 * Thu Oct 16 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.1-0.2.rc1
 - New upstream release candidate 5.2.1rc1
 
