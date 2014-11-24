@@ -8,7 +8,7 @@
 
 Name:           strongswan
 Version:        5.2.1
-Release:        1%{?prerelease:.%{prerelease}}%{?dist}
+Release:        2%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -164,7 +164,8 @@ autoreconf
     --enable-aikgen \
     --enable-vici \
     --enable-swanctl \
-    --enable-kernel-libipsec
+    --enable-kernel-libipsec \
+    --enable-systemd
 
 make %{?_smp_mflags}
 
@@ -230,6 +231,7 @@ fi
 %config(noreplace) %{_sysconfdir}/%{name}/swanctl/swanctl.conf
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
+%{_unitdir}/%{name}-swanctl.service
 %else
 %{_initddir}/%{name}
 %endif
@@ -310,6 +312,7 @@ fi
 %{_sbindir}/charon-cmd
 %{_sbindir}/%{name}
 %{_sbindir}/swanctl
+%{_sbindir}/charon-systemd
 %{_mandir}/man1/%{name}_pki*.1.gz
 %{_mandir}/man5/%{name}.conf.5.gz
 %{_mandir}/man5/%{name}_ipsec.conf.5.gz
@@ -378,6 +381,10 @@ fi
 %endif
 
 %changelog
+* Mon Nov 24 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.1-2
+- 1167331: Enabled native systemd support.
+- Does not disable old systemd, starter, ipsec.conf support yet.
+
 * Thu Oct 30 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.1-1
 - New upstream release 5.2.1
 
