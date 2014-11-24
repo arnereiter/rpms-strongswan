@@ -56,7 +56,7 @@ BuildRequires:  json-c-devel
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
 Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
-BuildRequires:  systemd
+BuildRequires:  systemd, systemd-devel
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
