@@ -4,11 +4,11 @@
 # order.
 # 2) Please use the following define (with a percent sign and the appropriate
 # prerelease tag):
-# %%define prerelease
+%define prerelease dr1
 
 Name:           strongswan
-Version:        5.2.1
-Release:        2%{?prerelease:.%{prerelease}}%{?dist}
+Version:        5.2.2
+Release:        0.1%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -381,6 +381,9 @@ fi
 %endif
 
 %changelog
+* Mon Dec 8 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-0.1.dr1
+- New strongswan developer release 5.2.2dr1
+
 * Mon Nov 24 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.1-2
 - 1167331: Enabled native systemd support.
 - Does not disable old systemd, starter, ipsec.conf support yet.
