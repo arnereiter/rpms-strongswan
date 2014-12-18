@@ -8,7 +8,7 @@
 
 Name:           strongswan
 Version:        5.2.2
-Release:        0.1%{?prerelease:.%{prerelease}}%{?dist}
+Release:        0.2%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -125,6 +125,8 @@ autoreconf
     --enable-nm \
 %endif
     --enable-openssl \
+    --enable-ctr \
+    --enable-ccm \
     --enable-md4 \
     --enable-xauth-eap \
     --enable-xauth-pam \
@@ -250,6 +252,8 @@ fi
 %{_libdir}/%{name}/libvici.so.0.0.0
 %dir %{_libdir}/%{name}/plugins
 %{_libdir}/%{name}/plugins/lib%{name}-aes.so
+%{_libdir}/%{name}/plugins/lib%{name}-ctr.so
+%{_libdir}/%{name}/plugins/lib%{name}-ccm.so
 %{_libdir}/%{name}/plugins/lib%{name}-attr.so
 %{_libdir}/%{name}/plugins/lib%{name}-cmac.so
 %{_libdir}/%{name}/plugins/lib%{name}-constraints.so
@@ -381,6 +385,9 @@ fi
 %endif
 
 %changelog
+* Thu Dec 18 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-0.2.dr1
+- Enabled aes-ccm, and aes-ctr plugins
+
 * Mon Dec 8 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-0.1.dr1
 - New strongswan developer release 5.2.2dr1
 
