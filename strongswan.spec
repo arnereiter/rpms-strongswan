@@ -386,7 +386,8 @@ fi
 
 %changelog
 * Thu Dec 18 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-0.2.dr1
-- Enabled aes-ccm, and aes-ctr plugins
+- Enabled ccm, and ctr plugins as it seems enabling just openssl does
+  not work for using ccm and ctr algos.
 
 * Mon Dec 8 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-0.1.dr1
 - New strongswan developer release 5.2.2dr1
