@@ -4,11 +4,11 @@
 # order.
 # 2) Please use the following define (with a percent sign and the appropriate
 # prerelease tag):
-%define prerelease dr1
+#%%define prerelease dr1
 
 Name:           strongswan
 Version:        5.2.2
-Release:        0.2%{?prerelease:.%{prerelease}}%{?dist}
+Release:        1%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -385,6 +385,9 @@ fi
 %endif
 
 %changelog
+* Tue Jan 06 2015 Pavel Šimerda <psimerda@redhat.com> - 5.2.2-1
+- new version 5.2.2
+
 * Thu Dec 18 2014 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-0.2.dr1
 - Enabled ccm, and ctr plugins as it seems enabling just openssl does
   not work for using ccm and ctr algos.
