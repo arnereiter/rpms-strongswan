@@ -8,7 +8,7 @@
 
 Name:           strongswan
 Version:        5.2.2
-Release:        1%{?prerelease:.%{prerelease}}%{?dist}
+Release:        2%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -42,6 +42,7 @@ Source1:        %{name}.sysvinit
 # accepted. There's nothing Fedora specific in the patch.
 #
 #Patch1:         strongswan-5.1.1-plugins.patch
+Patch2:        strongswan-swanctl-1193106.patch
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -105,6 +106,7 @@ PT-TLS to support TNC over TLS.
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
 #%patch1 -p1
+%patch2 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -385,6 +387,9 @@ fi
 %endif
 
 %changelog
+* Fri Feb 20 2015 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-2
+- Fixes strongswan swanctl service issue rhbz#1193106
+
 * Tue Jan 06 2015 Pavel Šimerda <psimerda@redhat.com> - 5.2.2-1
 - new version 5.2.2
 
