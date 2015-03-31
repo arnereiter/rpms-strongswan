@@ -125,6 +125,7 @@ autoreconf
     --with-tss=trousers \
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
     --enable-nm \
+    --enable-systemd \
 %endif
     --enable-openssl \
     --enable-ctr \
@@ -168,8 +169,7 @@ autoreconf
     --enable-aikgen \
     --enable-vici \
     --enable-swanctl \
-    --enable-kernel-libipsec \
-    --enable-systemd
+    --enable-kernel-libipsec
 
 make %{?_smp_mflags}
 
