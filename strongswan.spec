@@ -7,8 +7,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.2.2
-Release:        2%{?prerelease:.%{prerelease}}%{?dist}
+Version:        5.3.0
+Release:        1%{?prerelease:.%{prerelease}}%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -387,6 +387,9 @@ fi
 %endif
 
 %changelog
+* Tue Mar 31 2015 Pavel Šimerda <psimerda@redhat.com>
+- new version 5.3.0
+
 * Fri Feb 20 2015 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-2
 - Fixes strongswan swanctl service issue rhbz#1193106
 
