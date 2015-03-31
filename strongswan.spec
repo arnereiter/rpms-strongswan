@@ -236,6 +236,7 @@ fi
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}-swanctl.service
+%{_sbindir}/charon-systemd
 %else
 %{_initddir}/%{name}
 %endif
@@ -317,7 +318,6 @@ fi
 %{_sbindir}/charon-cmd
 %{_sbindir}/%{name}
 %{_sbindir}/swanctl
-%{_sbindir}/charon-systemd
 %{_mandir}/man1/%{name}_pki*.1.gz
 %{_mandir}/man5/%{name}.conf.5.gz
 %{_mandir}/man5/%{name}_ipsec.conf.5.gz
