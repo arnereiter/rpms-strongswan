@@ -306,7 +306,6 @@ fi
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/_copyright
 %{_libexecdir}/%{name}/_updown
-%{_libexecdir}/%{name}/_updown_espmark
 %{_libexecdir}/%{name}/charon
 %{_libexecdir}/%{name}/scepclient
 %{_libexecdir}/%{name}/starter
@@ -325,8 +324,6 @@ fi
 %{_mandir}/man5/%{name}_ipsec.secrets.5.gz
 %{_mandir}/man5/%{name}_swanctl.conf.5.gz
 %{_mandir}/man8/%{name}.8.gz
-%{_mandir}/man8/%{name}__updown.8.gz
-%{_mandir}/man8/%{name}__updown_espmark.8.gz
 %{_mandir}/man8/%{name}_scepclient.8.gz
 %{_mandir}/man8/%{name}_charon-cmd.8.gz
 %{_mandir}/man8/%{name}_swanctl.8.gz
