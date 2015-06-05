@@ -7,8 +7,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.3.0
 Release:        1%{?prerelease:.%{prerelease}}%{?dist}
+Version:        5.3.1
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -384,6 +384,9 @@ fi
 %endif
 
 %changelog
+* Fri Jun 05 2015 Pavel Šimerda <psimerda@redhat.com>
+- new version 5.3.1
+
 * Tue Mar 31 2015 Pavel Šimerda <psimerda@redhat.com>
 - new version 5.3.0
 
