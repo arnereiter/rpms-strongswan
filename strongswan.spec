@@ -7,7 +7,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        2%{?prerelease:.%{prerelease}}%{?dist}
+Release:        3%{?prerelease:.%{prerelease}}%{?dist}
 Version:        5.3.2
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
@@ -227,12 +227,8 @@ fi
 
 %files
 %doc README README.Fedora COPYING NEWS TODO
-%dir %{_sysconfdir}/%{name}
+%config(noreplace) %{_sysconfdir}/%{name}
 %{_sysconfdir}/%{name}/ipsec.d/
-%config(noreplace) %{_sysconfdir}/%{name}/ipsec.conf
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
-%dir %{_sysconfdir}/%{name}/swanctl/
-%config(noreplace) %{_sysconfdir}/%{name}/swanctl/swanctl.conf
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}-swanctl.service
@@ -327,7 +323,6 @@ fi
 %{_mandir}/man8/%{name}_scepclient.8.gz
 %{_mandir}/man8/%{name}_charon-cmd.8.gz
 %{_mandir}/man8/%{name}_swanctl.8.gz
-%{_sysconfdir}/%{name}/%{name}.d/
 %{_datadir}/%{name}/templates/config/
 %{_datadir}/%{name}/templates/database/
 
@@ -384,6 +379,9 @@ fi
 %endif
 
 %changelog
+* Thu Sep 24 2015 Pavel Šimerda <psimerda@redhat.com> - 5.3.2-3
+- Resolves: #1264598 - strongswan: many configuration files are not protected
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
