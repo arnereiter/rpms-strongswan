@@ -7,8 +7,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        3%{?prerelease:.%{prerelease}}%{?dist}
-Version:        5.3.2
+Release:        1%{?dist}
+Version:        5.3.3
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -379,6 +379,9 @@ fi
 %endif
 
 %changelog
+* Tue Sep 29 2015 Pavel Šimerda <psimerda@redhat.com> - 5.3.3-1
+- new version 5.3.3
+
 * Thu Sep 24 2015 Pavel Šimerda <psimerda@redhat.com> - 5.3.2-3
 - Resolves: #1264598 - strongswan: many configuration files are not protected
 
