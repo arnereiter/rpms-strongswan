@@ -7,7 +7,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        1%{?prerelease:.%{prerelease}}%{?dist}
+Release:        2%{?prerelease:.%{prerelease}}%{?dist}
 Version:        5.3.2
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
@@ -53,6 +53,7 @@ BuildRequires:  trousers-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  pam-devel
 BuildRequires:  json-c-devel
+BuildRequires:  libgcrypt-devel
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
@@ -130,7 +131,9 @@ autoreconf
     --enable-openssl \
     --enable-ctr \
     --enable-ccm \
+    --enable-gcm \
     --enable-md4 \
+    --enable-gcrypt \
     --enable-xauth-eap \
     --enable-xauth-pam \
     --enable-xauth-noauth \
@@ -257,6 +260,8 @@ fi
 %{_libdir}/%{name}/plugins/lib%{name}-aes.so
 %{_libdir}/%{name}/plugins/lib%{name}-ctr.so
 %{_libdir}/%{name}/plugins/lib%{name}-ccm.so
+%{_libdir}/%{name}/plugins/lib%{name}-gcm.so
+%{_libdir}/%{name}/plugins/lib%{name}-gcrypt.so
 %{_libdir}/%{name}/plugins/lib%{name}-attr.so
 %{_libdir}/%{name}/plugins/lib%{name}-cmac.so
 %{_libdir}/%{name}/plugins/lib%{name}-constraints.so
@@ -384,13 +389,16 @@ fi
 %endif
 
 %changelog
-* Tue Jun 09 2015 Pavel Šimerda <psimerda@redhat.com>
+* Fri Jan 15 2016 Paul Wouters <pwouters@redhat.com> - 5.3.2-2
+- Enable IKEv2 GCM (requires gcrypt module as well)
+
+* Tue Jun 09 2015 Pavel Šimerda <psimerda@redhat.com> - 5.3.2-1
 - new version 5.3.2
 
-* Fri Jun 05 2015 Pavel Šimerda <psimerda@redhat.com>
+* Fri Jun 05 2015 Pavel Šimerda <psimerda@redhat.com> - 5.3.1-1
 - new version 5.3.1
 
-* Tue Mar 31 2015 Pavel Šimerda <psimerda@redhat.com>
+* Tue Mar 31 2015 Pavel Šimerda <psimerda@redhat.com> - 5.3.0-1
 - new version 5.3.0
 
 * Fri Feb 20 2015 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-2
