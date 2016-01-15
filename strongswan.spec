@@ -7,7 +7,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        2%{?prerelease:.%{prerelease}}%{?dist}
+Release:        3%{?prerelease:.%{prerelease}}%{?dist}
 Version:        5.3.2
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
@@ -53,6 +53,7 @@ BuildRequires:  trousers-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  pam-devel
 BuildRequires:  json-c-devel
+BuildRequires:  libgcrypt-devel
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
@@ -130,7 +131,9 @@ autoreconf
     --enable-openssl \
     --enable-ctr \
     --enable-ccm \
+    --enable-gcm \
     --enable-md4 \
+    --enable-gcrypt \
     --enable-xauth-eap \
     --enable-xauth-pam \
     --enable-xauth-noauth \
@@ -257,6 +260,8 @@ fi
 %{_libdir}/%{name}/plugins/lib%{name}-aes.so
 %{_libdir}/%{name}/plugins/lib%{name}-ctr.so
 %{_libdir}/%{name}/plugins/lib%{name}-ccm.so
+%{_libdir}/%{name}/plugins/lib%{name}-gcm.so
+%{_libdir}/%{name}/plugins/lib%{name}-gcrypt.so
 %{_libdir}/%{name}/plugins/lib%{name}-attr.so
 %{_libdir}/%{name}/plugins/lib%{name}-cmac.so
 %{_libdir}/%{name}/plugins/lib%{name}-constraints.so
@@ -384,6 +389,9 @@ fi
 %endif
 
 %changelog
+* Fri Jan 15 2016 Paul Wouters <pwouters@redhat.com> - 5.3.2-3
+- Enable IKEv2 GCM (requires gcrypt module as well)
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
