@@ -133,7 +133,7 @@ autoreconf
     --enable-ccm \
     --enable-gcm \
     --enable-md4 \
-    --ebable-gcrypt \
+    --enable-gcrypt \
     --enable-xauth-eap \
     --enable-xauth-pam \
     --enable-xauth-noauth \
