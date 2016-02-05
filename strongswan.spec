@@ -7,7 +7,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        2%{?dist}
+Release:        3%{?dist}
 Version:        5.3.3
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
@@ -384,6 +384,9 @@ fi
 %endif
 
 %changelog
+* Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 5.3.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Fri Jan 15 2016 Paul Wouters <pwouters@redhat.com> - 5.3.3-2
 - Enable IKEv2 GCM (requires gcrypt module as well)
 
