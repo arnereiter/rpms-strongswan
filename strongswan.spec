@@ -7,8 +7,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        3%{?dist}
-Version:        5.3.3
+Release:        1%{?dist}
+Version:        5.4.0
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -42,7 +42,6 @@ Source1:        %{name}.sysvinit
 # accepted. There's nothing Fedora specific in the patch.
 #
 #Patch1:         strongswan-5.1.1-plugins.patch
-Patch2:        strongswan-swanctl-1193106.patch
 BuildRequires:  gmp-devel autoconf automake
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
@@ -106,8 +105,6 @@ PT-TLS to support TNC over TLS.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
-#%patch1 -p1
-%patch2 -p1
 
 echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
 
@@ -242,8 +239,6 @@ fi
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/libcharon.so.0
 %{_libdir}/%{name}/libcharon.so.0.0.0
-%{_libdir}/%{name}/libhydra.so.0
-%{_libdir}/%{name}/libhydra.so.0.0.0
 %{_libdir}/%{name}/libtls.so.0
 %{_libdir}/%{name}/libtls.so.0.0.0
 %{_libdir}/%{name}/libpttls.so.0
@@ -384,6 +379,12 @@ fi
 %endif
 
 %changelog
+* Wed Jun 22 2016 Pavel Šimerda <psimerda@redhat.com> - 5.4.0-1
+- New version 5.4.0
+
+* Thu Mar 03 2016 Pavel Šimerda <psimerda@redhat.com> - 5.3.5-1
+- New version 5.3.5
+
 * Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 5.3.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
