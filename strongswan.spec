@@ -7,7 +7,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        1%{?dist}
+Release:        2%{?dist}
 Version:        5.4.0
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
@@ -379,6 +379,9 @@ fi
 %endif
 
 %changelog
+* Wed Jun 22 2016 Pavel Šimerda <psimerda@redhat.com>
+- Enable IKEv2 GCM (requires gcrypt module as well) - merged from f22 by Paul Wouters
+
 * Wed Jun 22 2016 Pavel Šimerda <psimerda@redhat.com> - 5.4.0-1
 - New version 5.4.0
 
@@ -403,10 +406,10 @@ fi
 * Tue Jun 09 2015 Pavel Šimerda <psimerda@redhat.com>
 - new version 5.3.2
 
-* Fri Jun 05 2015 Pavel Šimerda <psimerda@redhat.com>
+* Fri Jun 05 2015 Pavel Šimerda <psimerda@redhat.com> - 5.3.1-1
 - new version 5.3.1
 
-* Tue Mar 31 2015 Pavel Šimerda <psimerda@redhat.com>
+* Tue Mar 31 2015 Pavel Šimerda <psimerda@redhat.com> - 5.3.0-1
 - new version 5.3.0
 
 * Fri Feb 20 2015 Avesh Agarwal <avagarwa@redhat.com> - 5.2.2-2
