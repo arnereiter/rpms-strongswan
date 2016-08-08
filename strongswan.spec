@@ -7,8 +7,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        2%{?dist}
-Version:        5.4.0
+Release:        1%{?dist}
+Version:        5.5.0
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -228,7 +228,6 @@ fi
 %files
 %doc README README.Fedora COPYING NEWS TODO
 %config(noreplace) %{_sysconfdir}/%{name}
-%{_sysconfdir}/%{name}/ipsec.d/
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}-swanctl.service
@@ -247,6 +246,8 @@ fi
 %{_libdir}/%{name}/lib%{name}.so.0.0.0
 %{_libdir}/%{name}/libvici.so.0
 %{_libdir}/%{name}/libvici.so.0.0.0
+%{_libdir}/%{name}/libtpmtss.so.0
+%{_libdir}/%{name}/libtpmtss.so.0.0.0
 %dir %{_libdir}/%{name}/plugins
 %{_libdir}/%{name}/plugins/lib%{name}-aes.so
 %{_libdir}/%{name}/plugins/lib%{name}-ctr.so
@@ -379,6 +380,9 @@ fi
 %endif
 
 %changelog
+* Mon Aug 08 2016 Pavel Šimerda <psimerda@redhat.com> - 5.5.0-1
+- New version 5.5.0
+
 * Wed Jun 22 2016 Pavel Šimerda <psimerda@redhat.com>
 - Enable IKEv2 GCM (requires gcrypt module as well) - merged from f22 by Paul Wouters
 
