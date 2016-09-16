@@ -53,6 +53,7 @@ BuildRequires:  libxml2-devel
 BuildRequires:  pam-devel
 BuildRequires:  json-c-devel
 BuildRequires:  libgcrypt-devel
+BuildRequires:  systemd-devel
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
