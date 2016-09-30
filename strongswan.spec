@@ -7,7 +7,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        1%{?dist}
+Release:        2%{?dist}
 Version:        5.5.0
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
@@ -127,6 +127,7 @@ autoreconf
     --enable-systemd \
 %endif
     --enable-openssl \
+    --enable-unity \
     --enable-ctr \
     --enable-ccm \
     --enable-gcm \
@@ -252,6 +253,7 @@ fi
 %dir %{_libdir}/%{name}/plugins
 %{_libdir}/%{name}/plugins/lib%{name}-aes.so
 %{_libdir}/%{name}/plugins/lib%{name}-ctr.so
+%{_libdir}/%{name}/plugins/lib%{name}-unity.so
 %{_libdir}/%{name}/plugins/lib%{name}-ccm.so
 %{_libdir}/%{name}/plugins/lib%{name}-gcm.so
 %{_libdir}/%{name}/plugins/lib%{name}-gcrypt.so
@@ -381,6 +383,9 @@ fi
 %endif
 
 %changelog
+* Thu Sep 15 2016 Pavel Šimerda <psimerda@redhat.com> - 5.5.0-2
+- Resolves: #1367796 - Enable the unity plugin
+
 * Mon Aug 08 2016 Pavel Šimerda <psimerda@redhat.com> - 5.5.0-1
 - New version 5.5.0
 
