@@ -7,7 +7,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        2%{?dist}
+Release:        3%{?dist}
 Version:        5.5.0
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
@@ -383,6 +383,9 @@ fi
 %endif
 
 %changelog
+* Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.5.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Thu Sep 15 2016 Pavel Šimerda <psimerda@redhat.com> - 5.5.0-2
 - Resolves: #1367796 - Enable the unity plugin
 
