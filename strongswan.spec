@@ -7,8 +7,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        3%{?dist}
-Version:        5.5.0
+Release:        1%{?dist}
+Version:        5.5.2
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -304,6 +304,7 @@ fi
 %{_libdir}/%{name}/plugins/lib%{name}-eap-identity.so
 %{_libdir}/%{name}/plugins/lib%{name}-acert.so
 %{_libdir}/%{name}/plugins/lib%{name}-vici.so
+%{_libdir}/%{name}/plugins/lib%{name}-curve25519.so
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/_copyright
 %{_libexecdir}/%{name}/_updown
@@ -383,6 +384,9 @@ fi
 %endif
 
 %changelog
+* Sat May 27 2017 Paul Wouters <pwouters@redhat.com> - 5.5.2-1
+- Updated to 5.5.2
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.5.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
