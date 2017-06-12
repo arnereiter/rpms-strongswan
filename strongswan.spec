@@ -8,7 +8,7 @@
 
 Name:           strongswan
 Release:        1%{?dist}
-Version:        5.5.2
+Version:        5.5.3
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
 License:        GPLv2+
@@ -384,6 +384,9 @@ fi
 %endif
 
 %changelog
+* Mon Jun 12 2017 Paul Wouters <pwouters@redhat.com> - 5.5.3-1
+- Updated to 5.5.3
+
 * Sat May 27 2017 Paul Wouters <pwouters@redhat.com> - 5.5.2-1
 - Updated to 5.5.2
 
