@@ -7,7 +7,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        1%{?dist}
+Release:        2%{?dist}
 Version:        5.5.3
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Group:          System Environment/Daemons
@@ -384,6 +384,9 @@ fi
 %endif
 
 %changelog
+* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.5.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Mon Jun 12 2017 Paul Wouters <pwouters@redhat.com> - 5.5.3-1
 - Updated to 5.5.3
 
