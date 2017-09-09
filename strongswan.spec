@@ -1,48 +1,19 @@
 %global _hardened_build 1
-# When packaging pre-release snapshots:
-# 1) Please use 0.x in the release to maintain the correct package version
-# order.
-# 2) Please use the following define (with a percent sign and the appropriate
-# prerelease tag):
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        3%{?dist}
-Version:        5.5.3
+Release:        1%{?dist}
+Version:        5.6.0
 Summary:        An OpenSource IPsec-based VPN and TNC solution
-Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
-# Initscript for epel6
-Source1:        %{name}.sysvinit
-# Use RTLD_GLOBAL when loading plugins and link them to libstrongswan
-#
-# The patch hasn't been accepted upstream because of insufficient
-# information from the author. This situation needs to be fixed or
-# the patch needs to be removed to avoid diverging from upstream
-# permanently.
-#
-# http://wiki.strongswan.org/issues/538
-#
-# Removing the patch from the build as I repeatedly requested that it should be
-# upstreamed. No comment has been added to the upstream bug report. Nothing
-# has been done towards the goal of upstreaming the patch.
-#
-# See also:
-#
-#  * https://bugzilla.redhat.com/show_bug.cgi?id=1087437
-#  * http://fedoraproject.org/wiki/Packaging:Guidelines#All_patches_should_have_an_upstream_bug_link_or_comment
-#  * https://fedoraproject.org/wiki/Staying_close_to_upstream_projects
-#
-# The patches violated the packaging guidelines from the beginning so I took
-# the initiative to merge them and submit them upstream. But I couldn't work
-# with the upstream developers on the fix as I didn't have enough information
-# about the use cases. Please cooperate with usptream and get the patch
-# accepted. There's nothing Fedora specific in the patch.
-#
-#Patch1:         strongswan-5.1.1-plugins.patch
-BuildRequires:  gmp-devel autoconf automake
+
+# only needed for pre-release versions
+#BuildRequires:  autoconf automake
+
+BuildRequires:  systemd-devel
+BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openldap-devel
 BuildRequires:  openssl-devel
@@ -54,20 +25,14 @@ BuildRequires:  pam-devel
 BuildRequires:  json-c-devel
 BuildRequires:  libgcrypt-devel
 BuildRequires:  systemd-devel
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+BuildRequires:  gprbuild
+BuildRequires:  iptables-devel
+
 BuildRequires:  NetworkManager-devel
 BuildRequires:  NetworkManager-glib-devel
-Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
-BuildRequires:  systemd, systemd-devel
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-%else
-Obsoletes:      %{name}-NetworkManager < 0:5.0.0-3.git20120619
-Requires(post): chkconfig
-Requires(preun): chkconfig
-Requires(preun): initscripts
-%endif
 
 %description
 The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key
@@ -76,23 +41,20 @@ Linux kernel.
 
 %package libipsec
 Summary: Strongswan's libipsec backend
-Group: System Environment/Daemons
 %description libipsec
 The kernel-libipsec plugin provides an IPsec backend that works entirely
 in userland, using TUN devices and its own IPsec implementation libipsec.
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %package charon-nm
 Summary:        NetworkManager plugin for Strongswan
-Group:          System Environment/Daemons
+Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
+Conflicts: %{name}-NetworkManger < 0:5.0.4-5
 %description charon-nm
 NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
-%endif
 
 %package tnc-imcvs
 Summary: Trusted network connect (TNC)'s IMC/IMV functionality
-Group: Applications/System
 Requires: %{name} = %{version}
 %description tnc-imcvs
 This package provides Trusted Network Connect's (TNC) architecture support.
@@ -107,46 +69,69 @@ PT-TLS to support TNC over TLS.
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
 
-echo "For migration from 4.6 to 5.0 see http://wiki.strongswan.org/projects/strongswan/wiki/CharonPlutoIKEv1" > README.Fedora
-
 %build
-autoreconf
+# only for snapshots
+#autoreconf
+
 # --with-ipsecdir moves internal commands to /usr/libexec/strongswan
 # --bindir moves 'pki' command to /usr/libexec/strongswan
 # See: http://wiki.strongswan.org/issues/552
 %configure --disable-static \
-    --with-ipsec-script=%{name} \
-    --sysconfdir=%{_sysconfdir}/%{name} \
-    --with-ipsecdir=%{_libexecdir}/%{name} \
-    --bindir=%{_libexecdir}/%{name} \
-    --with-ipseclibdir=%{_libdir}/%{name} \
+    --with-ipsec-script=strongswan \
+    --sysconfdir=%{_sysconfdir}/strongswan \
+    --with-ipsecdir=%{_libexecdir}/strongswan \
+    --bindir=%{_libexecdir}/strongswan \
+    --with-ipseclibdir=%{_libdir}/strongswan \
     --with-fips-mode=2 \
-    --with-tss=trousers \
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+    --enable-tss-trousers \
     --enable-nm \
     --enable-systemd \
-%endif
     --enable-openssl \
     --enable-unity \
     --enable-ctr \
     --enable-ccm \
     --enable-gcm \
+    --enable-chapoly \
     --enable-md4 \
     --enable-gcrypt \
+    --enable-newhope \
+    --enable-aesni \
+    --enable-rdrand \
+    --enable-sha3 \
     --enable-xauth-eap \
     --enable-xauth-pam \
     --enable-xauth-noauth \
+    --enable-eap-identity \
     --enable-eap-md5 \
     --enable-eap-gtc \
     --enable-eap-tls \
     --enable-eap-ttls \
     --enable-eap-peap \
     --enable-eap-mschapv2 \
+    --enable-eap-tnc \
+    --enable-eap-sim \
+    --enable-eap-sim-file \
+    --enable-eap-aka \
+    --enable-eap-aka-3gpp \
+    --enable-eap-aka-3gpp2 \
+    --enable-eap-dynamic \
+    --enable-eap-radius \
+    --enable-ext-auth \
+    --enable-ipseckey \
+    --enable-pkcs11 \
+    --enable-tpm \
     --enable-farp \
     --enable-dhcp \
+    --enable-ha \
+    --enable-led \
     --enable-sqlite \
     --enable-tnc-ifmap \
     --enable-tnc-pdp \
+    --enable-tnc-imc \
+    --enable-tnc-imv \
+    --enable-tnccs-20 \
+    --enable-tnccs-11 \
+    --enable-tnccs-dynamic \
     --enable-imc-test \
     --enable-imv-test \
     --enable-imc-scanner \
@@ -157,20 +142,19 @@ autoreconf
     --enable-imc-os \
     --enable-imc-swid \
     --enable-imv-swid \
-    --enable-eap-tnc \
-    --enable-tnccs-20 \
-    --enable-tnccs-11 \
-    --enable-tnccs-dynamic \
-    --enable-tnc-imc \
-    --enable-tnc-imv \
-    --enable-eap-radius \
+    --enable-imc-swima \
+    --enable-imv-swima \
+    --enable-imc-hcd \
+    --enable-imv-hcd \
     --enable-curl \
-    --enable-eap-identity \
     --enable-cmd \
     --enable-acert \
     --enable-aikgen \
     --enable-vici \
     --enable-swanctl \
+    --enable-connmark \
+    --enable-forecast \
+    --enable-duplicheck \
     --enable-kernel-libipsec
 
 make %{?_smp_mflags}
@@ -179,211 +163,102 @@ make %{?_smp_mflags}
 make install DESTDIR=%{buildroot}
 # prefix man pages
 for i in %{buildroot}%{_mandir}/*/*; do
-    if echo "$i" | grep -vq '/%{name}[^\/]*$'; then
-        mv "$i" "`echo "$i" | sed -re 's|/([^/]+)$|/%{name}_\1|'`"
+    if echo "$i" | grep -vq '/strongswan[^\/]*$'; then
+        mv "$i" "`echo "$i" | sed -re 's|/([^/]+)$|/strongswan_\1|'`"
     fi
 done
-# delete unwanted library files
-rm %{buildroot}%{_libdir}/%{name}/*.so
 find %{buildroot} -type f -name '*.la' -delete
+# delete unwanted library files - no consumers, so no -devel package
+rm %{buildroot}%{_libdir}/strongswan/*.so
 # fix config permissions
 chmod 644 %{buildroot}%{_sysconfdir}/%{name}/%{name}.conf
-# protect configuration from ordinary user's eyes
-chmod 700 %{buildroot}%{_sysconfdir}/%{name}
+
 # Create ipsec.d directory tree.
 install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
 for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d/${i}
 done
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-%else
-install -D -m 755 %{SOURCE1} %{buildroot}/%{_initddir}/%{name}
-%endif
-
 %post
-/sbin/ldconfig
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %systemd_post %{name}.service
-%else
-/sbin/chkconfig --add %{name}
-%endif
 
 %preun
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %systemd_preun %{name}.service
-%else
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /sbin/service %{name} stop >/dev/null 2>&1
-    /sbin/chkconfig --del %{name}
-fi
-%endif
 
 %postun
-/sbin/ldconfig
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %systemd_postun_with_restart %{name}.service
-%else
-%endif
 
 %files
-%doc README README.Fedora COPYING NEWS TODO
-%config(noreplace) %{_sysconfdir}/%{name}
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-%{_unitdir}/%{name}.service
-%{_unitdir}/%{name}-swanctl.service
-%{_sbindir}/charon-systemd
-%else
-%{_initddir}/%{name}
-%endif
-%dir %{_libdir}/%{name}
-%{_libdir}/%{name}/libcharon.so.0
-%{_libdir}/%{name}/libcharon.so.0.0.0
-%{_libdir}/%{name}/libtls.so.0
-%{_libdir}/%{name}/libtls.so.0.0.0
-%{_libdir}/%{name}/libpttls.so.0
-%{_libdir}/%{name}/libpttls.so.0.0.0
-%{_libdir}/%{name}/lib%{name}.so.0
-%{_libdir}/%{name}/lib%{name}.so.0.0.0
-%{_libdir}/%{name}/libvici.so.0
-%{_libdir}/%{name}/libvici.so.0.0.0
-%{_libdir}/%{name}/libtpmtss.so.0
-%{_libdir}/%{name}/libtpmtss.so.0.0.0
-%dir %{_libdir}/%{name}/plugins
-%{_libdir}/%{name}/plugins/lib%{name}-aes.so
-%{_libdir}/%{name}/plugins/lib%{name}-ctr.so
-%{_libdir}/%{name}/plugins/lib%{name}-unity.so
-%{_libdir}/%{name}/plugins/lib%{name}-ccm.so
-%{_libdir}/%{name}/plugins/lib%{name}-gcm.so
-%{_libdir}/%{name}/plugins/lib%{name}-gcrypt.so
-%{_libdir}/%{name}/plugins/lib%{name}-attr.so
-%{_libdir}/%{name}/plugins/lib%{name}-cmac.so
-%{_libdir}/%{name}/plugins/lib%{name}-constraints.so
-%{_libdir}/%{name}/plugins/lib%{name}-des.so
-%{_libdir}/%{name}/plugins/lib%{name}-dnskey.so
-%{_libdir}/%{name}/plugins/lib%{name}-fips-prf.so
-%{_libdir}/%{name}/plugins/lib%{name}-gmp.so
-%{_libdir}/%{name}/plugins/lib%{name}-hmac.so
-%{_libdir}/%{name}/plugins/lib%{name}-kernel-netlink.so
-%{_libdir}/%{name}/plugins/lib%{name}-md5.so
-%{_libdir}/%{name}/plugins/lib%{name}-nonce.so
-%{_libdir}/%{name}/plugins/lib%{name}-openssl.so
-%{_libdir}/%{name}/plugins/lib%{name}-pem.so
-%{_libdir}/%{name}/plugins/lib%{name}-pgp.so
-%{_libdir}/%{name}/plugins/lib%{name}-pkcs1.so
-%{_libdir}/%{name}/plugins/lib%{name}-pkcs8.so
-%{_libdir}/%{name}/plugins/lib%{name}-pkcs12.so
-%{_libdir}/%{name}/plugins/lib%{name}-rc2.so
-%{_libdir}/%{name}/plugins/lib%{name}-sshkey.so
-%{_libdir}/%{name}/plugins/lib%{name}-pubkey.so
-%{_libdir}/%{name}/plugins/lib%{name}-random.so
-%{_libdir}/%{name}/plugins/lib%{name}-resolve.so
-%{_libdir}/%{name}/plugins/lib%{name}-revocation.so
-%{_libdir}/%{name}/plugins/lib%{name}-sha1.so
-%{_libdir}/%{name}/plugins/lib%{name}-sha2.so
-%{_libdir}/%{name}/plugins/lib%{name}-socket-default.so
-%{_libdir}/%{name}/plugins/lib%{name}-stroke.so
-%{_libdir}/%{name}/plugins/lib%{name}-updown.so
-%{_libdir}/%{name}/plugins/lib%{name}-x509.so
-%{_libdir}/%{name}/plugins/lib%{name}-xauth-generic.so
-%{_libdir}/%{name}/plugins/lib%{name}-xauth-eap.so
-%{_libdir}/%{name}/plugins/lib%{name}-xauth-pam.so
-%{_libdir}/%{name}/plugins/lib%{name}-xauth-noauth.so
-%{_libdir}/%{name}/plugins/lib%{name}-xcbc.so
-%{_libdir}/%{name}/plugins/lib%{name}-md4.so
-%{_libdir}/%{name}/plugins/lib%{name}-eap-md5.so
-%{_libdir}/%{name}/plugins/lib%{name}-eap-gtc.so
-%{_libdir}/%{name}/plugins/lib%{name}-eap-tls.so
-%{_libdir}/%{name}/plugins/lib%{name}-eap-ttls.so
-%{_libdir}/%{name}/plugins/lib%{name}-eap-peap.so
-%{_libdir}/%{name}/plugins/lib%{name}-eap-mschapv2.so
-%{_libdir}/%{name}/plugins/lib%{name}-farp.so
-%{_libdir}/%{name}/plugins/lib%{name}-dhcp.so
-%{_libdir}/%{name}/plugins/lib%{name}-curl.so
-%{_libdir}/%{name}/plugins/lib%{name}-eap-identity.so
-%{_libdir}/%{name}/plugins/lib%{name}-acert.so
-%{_libdir}/%{name}/plugins/lib%{name}-vici.so
-%{_libdir}/%{name}/plugins/lib%{name}-curve25519.so
-%dir %{_libexecdir}/%{name}
-%{_libexecdir}/%{name}/_copyright
-%{_libexecdir}/%{name}/_updown
-%{_libexecdir}/%{name}/charon
-%{_libexecdir}/%{name}/scepclient
-%{_libexecdir}/%{name}/starter
-%{_libexecdir}/%{name}/stroke
-%{_libexecdir}/%{name}/_imv_policy
-%{_libexecdir}/%{name}/imv_policy_manager
-%{_libexecdir}/%{name}/pki
-%{_libexecdir}/%{name}/aikgen
+%doc README NEWS TODO ChangeLog
+%license COPYING
+%dir %attr(0700,root,root) %{_sysconfdir}/strongswan
+%config(noreplace) %{_sysconfdir}/strongswan/*
+%dir %{_libdir}/strongswan
+%exclude %{_libdir}/strongswan/imcvs
+%dir %{_libdir}/strongswan/plugins
+%dir %{_libexecdir}/strongswan
+%{_unitdir}/strongswan.service
+%{_unitdir}/strongswan-swanctl.service
 %{_sbindir}/charon-cmd
-%{_sbindir}/%{name}
+%{_sbindir}/charon-systemd
+%{_sbindir}/strongswan
 %{_sbindir}/swanctl
-%{_mandir}/man1/%{name}_pki*.1.gz
-%{_mandir}/man5/%{name}.conf.5.gz
-%{_mandir}/man5/%{name}_ipsec.conf.5.gz
-%{_mandir}/man5/%{name}_ipsec.secrets.5.gz
-%{_mandir}/man5/%{name}_swanctl.conf.5.gz
-%{_mandir}/man8/%{name}.8.gz
-%{_mandir}/man8/%{name}_scepclient.8.gz
-%{_mandir}/man8/%{name}_charon-cmd.8.gz
-%{_mandir}/man8/%{name}_swanctl.8.gz
-%{_datadir}/%{name}/templates/config/
-%{_datadir}/%{name}/templates/database/
+%{_libdir}/strongswan/*.so.*
+%exclude %{_libdir}/strongswan/libimcv.so.*
+%exclude %{_libdir}/strongswan/libtnccs.so.*
+%exclude %{_libdir}/strongswan/libradius.so.*
+%exclude %{_libdir}/strongswan/libipsec.so.*
+%{_libdir}/strongswan/plugins/*.so
+%exclude %{_libdir}/strongswan/plugins/libstrongswan-pkcs7.so
+%exclude %{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
+%exclude %{_libdir}/strongswan/plugins/libstrongswan-*tnc*.so
+%exclude %{_libdir}/strongswan/plugins/libstrongswan-eap-radius.so
+%exclude %{_libdir}/strongswan/plugins/libstrongswan-kernel-libipsec.so
+%{_libexecdir}/strongswan/*
+%exclude %{_libexecdir}/strongswan/attest
+%exclude %{_libexecdir}/strongswan/pacman
+%exclude %{_libexecdir}/strongswan/pt-tls-client
+%exclude %dir %{_datadir}/strongswan/swidtag
+%{_mandir}/man?/*.gz
+%{_datadir}/strongswan/templates/config/
+%{_datadir}/strongswan/templates/database/
 
 %files tnc-imcvs
-%dir %{_libdir}/%{name}
-%{_libdir}/%{name}/libimcv.so.0
-%{_libdir}/%{name}/libimcv.so.0.0.0
-%{_libdir}/%{name}/libtnccs.so.0
-%{_libdir}/%{name}/libtnccs.so.0.0.0
-%{_libdir}/%{name}/libradius.so.0
-%{_libdir}/%{name}/libradius.so.0.0.0
-%dir %{_libdir}/%{name}/imcvs
-%{_libdir}/%{name}/imcvs/imc-attestation.so
-%{_libdir}/%{name}/imcvs/imc-scanner.so
-%{_libdir}/%{name}/imcvs/imc-test.so
-%{_libdir}/%{name}/imcvs/imc-os.so
-%{_libdir}/%{name}/imcvs/imc-swid.so
-%{_libdir}/%{name}/imcvs/imv-attestation.so
-%{_libdir}/%{name}/imcvs/imv-scanner.so
-%{_libdir}/%{name}/imcvs/imv-test.so
-%{_libdir}/%{name}/imcvs/imv-os.so
-%{_libdir}/%{name}/imcvs/imv-swid.so
-%dir %{_libdir}/%{name}/plugins
-%{_libdir}/%{name}/plugins/lib%{name}-pkcs7.so
-%{_libdir}/%{name}/plugins/lib%{name}-sqlite.so
-%{_libdir}/%{name}/plugins/lib%{name}-eap-tnc.so
-%{_libdir}/%{name}/plugins/lib%{name}-tnc-imc.so
-%{_libdir}/%{name}/plugins/lib%{name}-tnc-imv.so
-%{_libdir}/%{name}/plugins/lib%{name}-tnc-tnccs.so
-%{_libdir}/%{name}/plugins/lib%{name}-tnccs-20.so
-%{_libdir}/%{name}/plugins/lib%{name}-tnccs-11.so
-%{_libdir}/%{name}/plugins/lib%{name}-tnccs-dynamic.so
-%{_libdir}/%{name}/plugins/lib%{name}-eap-radius.so
-%{_libdir}/%{name}/plugins/lib%{name}-tnc-ifmap.so
-%{_libdir}/%{name}/plugins/lib%{name}-tnc-pdp.so
-%dir %{_libexecdir}/%{name}
-%{_libexecdir}/%{name}/attest
-%{_libexecdir}/%{name}/pacman
-%{_libexecdir}/%{name}/pt-tls-client
-#swid files
-%{_libexecdir}/%{name}/*.swidtag
-%dir %{_datadir}/regid.2004-03.org.%{name}
-%{_datadir}/regid.2004-03.org.%{name}/*.swidtag
+%{_sbindir}/sw-collector
+%dir %{_libdir}/strongswan
+%dir %{_libdir}/strongswan/imcvs
+%dir %{_libdir}/strongswan/plugins
+%{_libdir}/strongswan/libimcv.so.*
+%{_libdir}/strongswan/libtnccs.so.*
+%{_libdir}/strongswan/libradius.so.*
+%{_libdir}/strongswan/plugins/libstrongswan-pkcs7.so
+%{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
+%{_libdir}/strongswan/plugins/libstrongswan-*tnc*.so
+%{_libdir}/strongswan/plugins/libstrongswan-eap-radius.so
+%{_libexecdir}/strongswan/attest
+%{_libexecdir}/strongswan/pacman
+%{_libexecdir}/strongswan/pt-tls-client
+%dir %{_datadir}/strongswan/swidtag
+%{_datadir}/strongswan/swidtag/*.swidtag
 
 %files libipsec
-%{_libdir}/%{name}/libipsec.so.0
-%{_libdir}/%{name}/libipsec.so.0.0.0
-%{_libdir}/%{name}/plugins/libstrongswan-kernel-libipsec.so
+%{_libdir}/strongswan/libipsec.so.*
+%{_libdir}/strongswan/plugins/libstrongswan-kernel-libipsec.so
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %files charon-nm
 %doc COPYING
 %{_libexecdir}/%{name}/charon-nm
-%endif
 
 %changelog
+* Sat Sep 09 2017 Paul Wouters <pwouters@redhat.com> - 5.6.0-1
+- Updated to 5.6.0
+- Fixup configure arguments, enabled a bunch of new features
+- Added new BuildRequires:
+- Fixup Obsolete/Conflicts, use license macro
+- Don't require autoconf/autotools for non-snapshots
+- Remove macro overuse, remove fedora/rhel checks and sysvinit support
+- Make listings/grouping of all plugins/libs to reduce file listing
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.5.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
