@@ -218,6 +218,7 @@ done
 %exclude %{_libexecdir}/strongswan/attest
 %exclude %{_libexecdir}/strongswan/pacman
 %exclude %{_libexecdir}/strongswan/pt-tls-client
+%exclude %{_libexecdir}/strongswan/charon-nm
 %exclude %dir %{_datadir}/strongswan/swidtag
 %{_mandir}/man?/*.gz
 %{_datadir}/strongswan/templates/config/
@@ -247,7 +248,7 @@ done
 
 %files charon-nm
 %doc COPYING
-%{_libexecdir}/%{name}/charon-nm
+%{_libexecdir}/strongswan/charon-nm
 
 %changelog
 * Sat Sep 09 2017 Paul Wouters <pwouters@redhat.com> - 5.6.0-1
