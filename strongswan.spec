@@ -8,6 +8,7 @@ Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
+Patch1:         strongswan-5.6.0-uintptr_t.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
@@ -25,7 +26,6 @@ BuildRequires:  pam-devel
 BuildRequires:  json-c-devel
 BuildRequires:  libgcrypt-devel
 BuildRequires:  systemd-devel
-BuildRequires:  gprbuild
 BuildRequires:  iptables-devel
 
 BuildRequires:  NetworkManager-devel
@@ -68,6 +68,7 @@ PT-TLS to support TNC over TLS.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
+%patch1 -p1
 
 %build
 # only for snapshots
@@ -76,6 +77,7 @@ PT-TLS to support TNC over TLS.
 # --with-ipsecdir moves internal commands to /usr/libexec/strongswan
 # --bindir moves 'pki' command to /usr/libexec/strongswan
 # See: http://wiki.strongswan.org/issues/552
+# too broken to enable:    --enable-sha3 --enable-rdrand --enable-connmark --enable-forecast
 %configure --disable-static \
     --with-ipsec-script=strongswan \
     --sysconfdir=%{_sysconfdir}/strongswan \
@@ -95,9 +97,6 @@ PT-TLS to support TNC over TLS.
     --enable-md4 \
     --enable-gcrypt \
     --enable-newhope \
-    --enable-aesni \
-    --enable-rdrand \
-    --enable-sha3 \
     --enable-xauth-eap \
     --enable-xauth-pam \
     --enable-xauth-noauth \
@@ -152,9 +151,10 @@ PT-TLS to support TNC over TLS.
     --enable-aikgen \
     --enable-vici \
     --enable-swanctl \
-    --enable-connmark \
-    --enable-forecast \
     --enable-duplicheck \
+%ifarch x86_64 %{ix86}
+    --enable-aesni \
+%endif
     --enable-kernel-libipsec
 
 make %{?_smp_mflags}
