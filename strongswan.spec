@@ -2,7 +2,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        1%{?dist}
+Release:        2%{?dist}
 Version:        5.6.0
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
@@ -47,6 +47,7 @@ in userland, using TUN devices and its own IPsec implementation libipsec.
 
 %package charon-nm
 Summary:        NetworkManager plugin for Strongswan
+Requires:       dbus
 Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
 Conflicts: %{name}-NetworkManger < 0:5.0.4-5
 %description charon-nm
@@ -161,6 +162,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
+mv %{buildroot}%{_sysconfdir}/strongswan/dbus-1 %{buildroot}%{_sysconfdir}/
 # prefix man pages
 for i in %{buildroot}%{_mandir}/*/*; do
     if echo "$i" | grep -vq '/strongswan[^\/]*$'; then
@@ -248,9 +250,13 @@ done
 
 %files charon-nm
 %doc COPYING
+%{_sysconfdir}/dbus-1/system.d/nm-strongswan-service.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Fri Dec 01 2017 Lubomir Rintel <lkundrak@v3.sk> - 5.6.0-2
+- Fix the placement of charon-nm D-Bus policy
+
 * Sat Sep 09 2017 Paul Wouters <pwouters@redhat.com> - 5.6.0-1
 - Updated to 5.6.0
 - Fixup configure arguments, enabled a bunch of new features
