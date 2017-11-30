@@ -47,6 +47,7 @@ in userland, using TUN devices and its own IPsec implementation libipsec.
 
 %package charon-nm
 Summary:        NetworkManager plugin for Strongswan
+Requires:       dbus
 Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
 Conflicts: %{name}-NetworkManger < 0:5.0.4-5
 %description charon-nm
@@ -161,6 +162,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
+mv %{buildroot}%{_sysconfdir}/strongswan/dbus-1 %{buildroot}%{_sysconfdir}/
 # prefix man pages
 for i in %{buildroot}%{_mandir}/*/*; do
     if echo "$i" | grep -vq '/strongswan[^\/]*$'; then
@@ -248,6 +250,7 @@ done
 
 %files charon-nm
 %doc COPYING
+%{_sysconfdir}/dbus-1/system.d/nm-strongswan-service.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
