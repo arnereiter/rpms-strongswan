@@ -2,7 +2,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        2%{?dist}
+Release:        3%{?dist}
 Version:        5.6.0
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
@@ -254,6 +254,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Sun Dec 10 2017 Björn Esser <besser82@fedoraproject.org> - 5.6.0-3
+- Rebuilt for libjson-c.so.3
+
 * Fri Dec 01 2017 Lubomir Rintel <lkundrak@v3.sk> - 5.6.0-2
 - Fix the placement of charon-nm D-Bus policy
 
