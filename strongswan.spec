@@ -2,8 +2,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        3%{?dist}
-Version:        5.6.0
+Version:        5.6.1
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -218,7 +218,6 @@ done
 %exclude %{_libdir}/strongswan/plugins/libstrongswan-kernel-libipsec.so
 %{_libexecdir}/strongswan/*
 %exclude %{_libexecdir}/strongswan/attest
-%exclude %{_libexecdir}/strongswan/pacman
 %exclude %{_libexecdir}/strongswan/pt-tls-client
 %exclude %{_libexecdir}/strongswan/charon-nm
 %exclude %dir %{_datadir}/strongswan/swidtag
@@ -228,7 +227,7 @@ done
 
 %files tnc-imcvs
 %{_sbindir}/sw-collector
-%dir %{_libdir}/strongswan
+%{_sbindir}/sec-updater
 %dir %{_libdir}/strongswan/imcvs
 %dir %{_libdir}/strongswan/plugins
 %{_libdir}/strongswan/libimcv.so.*
@@ -239,7 +238,6 @@ done
 %{_libdir}/strongswan/plugins/libstrongswan-*tnc*.so
 %{_libdir}/strongswan/plugins/libstrongswan-eap-radius.so
 %{_libexecdir}/strongswan/attest
-%{_libexecdir}/strongswan/pacman
 %{_libexecdir}/strongswan/pt-tls-client
 %dir %{_datadir}/strongswan/swidtag
 %{_datadir}/strongswan/swidtag/*.swidtag
@@ -254,6 +252,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Fri Dec 22 2017 Paul Wouters <pwouters@redhat.com> - 5.6.1-1
+- Updated to 5.6.1 (RSA-PSS support)
+
 * Sun Dec 10 2017 Björn Esser <besser82@fedoraproject.org> - 5.6.0-3
 - Rebuilt for libjson-c.so.3
 
