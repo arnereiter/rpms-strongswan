@@ -2,8 +2,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.6.1
-Release:        2%{?dist}
+Version:        5.6.2
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -28,8 +28,7 @@ BuildRequires:  libgcrypt-devel
 BuildRequires:  systemd-devel
 BuildRequires:  iptables-devel
 
-BuildRequires:  NetworkManager-devel
-BuildRequires:  NetworkManager-glib-devel
+BuildRequires:  NetworkManager-libnm-devel
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
@@ -49,7 +48,7 @@ in userland, using TUN devices and its own IPsec implementation libipsec.
 Summary:        NetworkManager plugin for Strongswan
 Requires:       dbus
 Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
-Conflicts: %{name}-NetworkManger < 0:5.0.4-5
+Conflicts:      %{name}-NetworkManger < 0:5.0.4-5
 %description charon-nm
 NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
@@ -252,6 +251,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Wed Feb 21 2018 Lubomir Rintel <lkundrak@v3.sk> - 5.6.2-1
+- Updated to 5.6.2 (Dropped libnm-glib use in charon-nm)
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 5.6.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
