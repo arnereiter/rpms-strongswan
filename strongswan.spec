@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.6.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -86,6 +86,7 @@ PT-TLS to support TNC over TLS.
     --with-ipseclibdir=%{_libdir}/strongswan \
     --with-fips-mode=2 \
     --enable-tss-trousers \
+    --enable-bypass-lan \
     --enable-nm \
     --enable-systemd \
     --enable-openssl \
@@ -251,6 +252,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Fri Mar 02 2018 Martin Strigl <martin.strigl@catalysts.cc> - 5.6.2-2
+- added bypass-lan
+
 * Wed Feb 21 2018 Lubomir Rintel <lkundrak@v3.sk> - 5.6.2-1
 - Updated to 5.6.2 (Dropped libnm-glib use in charon-nm)
 
