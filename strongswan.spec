@@ -95,6 +95,7 @@ PT-TLS to support TNC over TLS.
     --bindir=%{_libexecdir}/strongswan \
     --with-ipseclibdir=%{_libdir}/strongswan \
     --with-fips-mode=2 \
+    --enable-bypass-lan \
     --enable-tss-trousers \
     --enable-nm \
     --enable-systemd \
