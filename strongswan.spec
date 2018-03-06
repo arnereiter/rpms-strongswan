@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.6.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -251,6 +251,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Tue Mar 06 2018 Björn Esser <besser82@fedoraproject.org> - 5.6.2-2
+- Rebuilt for libjson-c.so.4 (json-c v0.13.1)
+
 * Wed Feb 21 2018 Lubomir Rintel <lkundrak@v3.sk> - 5.6.2-1
 - Updated to 5.6.2 (Dropped libnm-glib use in charon-nm)
 
