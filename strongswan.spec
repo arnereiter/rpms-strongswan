@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.6.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -32,6 +32,7 @@ BuildRequires:  NetworkManager-libnm-devel
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
+Conflicts: %{name}-tnc-imcvs < 5.6.2-3
 
 %description
 The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key
@@ -53,9 +54,15 @@ Conflicts:      %{name}-NetworkManger < 0:5.0.4-5
 NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
 
+%package sqlite
+Summary: SQLite support for strongSwan
+%description sqlite
+The sqlite plugin adds an SQLite database backend to strongSwan.
+
 %package tnc-imcvs
 Summary: Trusted network connect (TNC)'s IMC/IMV functionality
-Requires: %{name} = %{version}
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-sqlite = %{version}-%{release}
 %description tnc-imcvs
 This package provides Trusted Network Connect's (TNC) architecture support.
 It includes support for TNC client and server (IF-TNCCS), IMC and IMV message
@@ -207,13 +214,10 @@ done
 %{_libdir}/strongswan/*.so.*
 %exclude %{_libdir}/strongswan/libimcv.so.*
 %exclude %{_libdir}/strongswan/libtnccs.so.*
-%exclude %{_libdir}/strongswan/libradius.so.*
 %exclude %{_libdir}/strongswan/libipsec.so.*
 %{_libdir}/strongswan/plugins/*.so
-%exclude %{_libdir}/strongswan/plugins/libstrongswan-pkcs7.so
 %exclude %{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
 %exclude %{_libdir}/strongswan/plugins/libstrongswan-*tnc*.so
-%exclude %{_libdir}/strongswan/plugins/libstrongswan-eap-radius.so
 %exclude %{_libdir}/strongswan/plugins/libstrongswan-kernel-libipsec.so
 %{_libexecdir}/strongswan/*
 %exclude %{_libexecdir}/strongswan/attest
@@ -224,6 +228,9 @@ done
 %{_datadir}/strongswan/templates/config/
 %{_datadir}/strongswan/templates/database/
 
+%files sqlite
+%{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
+
 %files tnc-imcvs
 %{_sbindir}/sw-collector
 %{_sbindir}/sec-updater
@@ -231,11 +238,7 @@ done
 %dir %{_libdir}/strongswan/plugins
 %{_libdir}/strongswan/libimcv.so.*
 %{_libdir}/strongswan/libtnccs.so.*
-%{_libdir}/strongswan/libradius.so.*
-%{_libdir}/strongswan/plugins/libstrongswan-pkcs7.so
-%{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
 %{_libdir}/strongswan/plugins/libstrongswan-*tnc*.so
-%{_libdir}/strongswan/plugins/libstrongswan-eap-radius.so
 %{_libexecdir}/strongswan/attest
 %{_libexecdir}/strongswan/pt-tls-client
 %dir %{_datadir}/strongswan/swidtag
@@ -251,6 +254,10 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Sun May 20 2018 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.6.2-3
+- Move eap-radius, sqlite, and pkcs7 plugins out of tnc-imcvs, added package
+  sqlite (#1579945)
+
 * Tue Mar 06 2018 Björn Esser <besser82@fedoraproject.org> - 5.6.2-2
 - Rebuilt for libjson-c.so.4 (json-c v0.13.1)
 
