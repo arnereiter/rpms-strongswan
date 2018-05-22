@@ -56,6 +56,7 @@ to NetworkManager.
 
 %package sqlite
 Summary: SQLite support for strongSwan
+Requires: %{name} = %{version}-%{release}
 %description sqlite
 The sqlite plugin adds an SQLite database backend to strongSwan.
 
