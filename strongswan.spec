@@ -3,13 +3,14 @@
 
 Name:           strongswan
 Version:        5.6.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
 Patch1:         strongswan-5.6.0-uintptr_t.patch
 Patch2:         strongswan-5.6.2-1574939-VPN-DNS.patch
+Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
@@ -78,6 +79,7 @@ PT-TLS to support TNC over TLS.
 %setup -q -n %{name}-%{version}%{?prerelease}
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 # only for snapshots
@@ -257,6 +259,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Thu May 24 2018 Paul Wouters <pwouters@redhat.com> - 5.6.2-6
+- Resolves rhbz#1581868 CVE-2018-5388 strongswan: buffer underflow in stroke_socket.c
+
 * Thu May 24 2018 Paul Wouters <pwouters@redhat.com> - 5.6.2-5
 - Resolves rhbz#1574939 IKEv2 VPN connections fail to use DNS servers provided by the server
 - Resolves rhbz#1449875 Strongswan on epel built without the sql plugin but with the sqlite plugin
