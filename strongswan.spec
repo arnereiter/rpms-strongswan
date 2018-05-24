@@ -3,12 +3,13 @@
 
 Name:           strongswan
 Version:        5.6.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
 Patch1:         strongswan-5.6.0-uintptr_t.patch
+Patch2:         strongswan-5.6.2-1574939-VPN-DNS.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
@@ -76,6 +77,7 @@ PT-TLS to support TNC over TLS.
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
 %patch1 -p1
+%patch2 -p1
 
 %build
 # only for snapshots
@@ -254,6 +256,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Thu May 24 2018 Paul Wouters <pwouters@redhat.com> - 5.6.2-4
+- Resolves rhbz#1574939 IKEv2 VPN connections fail to use DNS servers provided by the server
+
 * Sun May 20 2018 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.6.2-3
 - Move eap-radius, sqlite, and pkcs7 plugins out of tnc-imcvs, added package
   sqlite (#1579945)
