@@ -2,14 +2,13 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.6.2
-Release:        6%{?dist}
+Version:        5.6.3
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
 Patch1:         strongswan-5.6.0-uintptr_t.patch
-Patch2:         strongswan-5.6.2-1574939-VPN-DNS.patch
 Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
 
 # only needed for pre-release versions
@@ -78,7 +77,6 @@ PT-TLS to support TNC over TLS.
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
 %patch1 -p1
-%patch2 -p1
 %patch3 -p1
 
 %build
@@ -259,6 +257,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Tue May 29 2018 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.6.3-1
+- New version 5.6.3
+
 * Thu May 24 2018 Paul Wouters <pwouters@redhat.com> - 5.6.2-6
 - Resolves rhbz#1581868 CVE-2018-5388 strongswan: buffer underflow in stroke_socket.c
 
