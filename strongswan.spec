@@ -184,12 +184,12 @@ find %{buildroot} -type f -name '*.la' -delete
 # delete unwanted library files - no consumers, so no -devel package
 rm %{buildroot}%{_libdir}/strongswan/*.so
 # fix config permissions
-chmod 644 %{buildroot}%{_sysconfdir}/%{name}/%{name}.conf
+chmod 644 %{buildroot}%{_sysconfdir}/strongswan/strongswan.conf
 
 # Create ipsec.d directory tree.
-install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d
+install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d
 for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
-    install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d/${i}
+    install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d/${i}
 done
 
 %post
