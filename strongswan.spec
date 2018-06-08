@@ -169,6 +169,11 @@ PT-TLS to support TNC over TLS.
 %endif
     --enable-kernel-libipsec
 
+# disable certain plugins in the daemon configuration by default
+for p in bypass-lan; do
+    echo -e "\ncharon.plugins.${p}.load := no" >> conf/plugins/${p}.opt
+done
+
 make %{?_smp_mflags}
 
 %install
