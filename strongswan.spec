@@ -50,7 +50,8 @@ in userland, using TUN devices and its own IPsec implementation libipsec.
 Summary:        NetworkManager plugin for Strongswan
 Requires:       dbus
 Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
-Conflicts:      %{name}-NetworkManger < 0:5.0.4-5
+Conflicts:      %{name}-NetworkManager < 0:5.0.4-5
+Conflicts:      NetworkManager-strongswan < 1.4.2-1
 %description charon-nm
 NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
