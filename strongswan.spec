@@ -2,8 +2,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.6.3
-Release:        3%{?dist}
+Version:        5.7.1
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -265,6 +265,11 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Thu Oct 04 2018 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.7.1-1
+- Updated to 5.7.1
+- Resolves rhbz#1635872 CVE-2018-16152
+- Resolves rhbz#1635875 CVE-2018-16151
+
 * Thu Aug 23 2018 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.6.3-3
 - Add plugin bypass-lan, disabled by default
 - Resolves rhbz#1554479 Update to strongswan-charon-nm fails
