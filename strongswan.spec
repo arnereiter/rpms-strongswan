@@ -2,7 +2,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.7.1
+Version:        5.7.2
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
@@ -265,6 +265,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Wed Jan 09 2019 Paul Wouters <pwouters@redhat.com> - 5.7.2-1
+- Updated to 5.7.2
+
 * Thu Oct 04 2018 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.7.1-1
 - Updated to 5.7.1
 - Resolves rhbz#1635872 CVE-2018-16152
