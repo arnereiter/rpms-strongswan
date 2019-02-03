@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.7.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -265,6 +265,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Sun Feb 03 2019 Fedora Release Engineering <releng@fedoraproject.org> - 5.7.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Wed Jan 09 2019 Paul Wouters <pwouters@redhat.com> - 5.7.2-1
 - Updated to 5.7.2
 
