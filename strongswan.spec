@@ -2,7 +2,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.7.2
+Version:        5.8.1
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
@@ -217,7 +217,7 @@ done
 %dir %{_libdir}/strongswan/plugins
 %dir %{_libexecdir}/strongswan
 %{_unitdir}/strongswan.service
-%{_unitdir}/strongswan-swanctl.service
+%{_unitdir}/strongswan-starter.service
 %{_sbindir}/charon-cmd
 %{_sbindir}/charon-systemd
 %{_sbindir}/strongswan
@@ -265,6 +265,17 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Mon Sep 02 2019 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 5.8.1-1
+- Update to 5.8.1 (#1711920)
+- No more separate strongswan-swanctl.service to start out of order (#1775548)
+- Added strongswan-starter.service
+
+* Sat Jul 27 2019 Fedora Release Engineering <releng@fedoraproject.org> - 5.7.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
+* Sun Feb 03 2019 Fedora Release Engineering <releng@fedoraproject.org> - 5.7.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Wed Jan 09 2019 Paul Wouters <pwouters@redhat.com> - 5.7.2-1
 - Updated to 5.7.2
 
@@ -620,10 +631,10 @@ done
 * Mon Mar 11 2013 Avesh Agarwal <avagarwa@redhat.com> - 5.0.2-1
 - Update to upstream release 5.0.2
 - Created sub package strongswan-tnc-imcvs that provides trusted network
-  connect's IMC and IMV funtionality. Specifically it includes PTS 
-  based IMC/IMV for TPM based remote attestation and scanner and test 
-  IMCs and IMVs. The Strongswan's IMC/IMV dynamic libraries can be used 
-  by any third party TNC Client/Server implementation possessing a 
+  connect's IMC and IMV funtionality. Specifically it includes PTS
+  based IMC/IMV for TPM based remote attestation and scanner and test
+  IMCs and IMVs. The Strongswan's IMC/IMV dynamic libraries can be used
+  by any third party TNC Client/Server implementation possessing a
   standard IF-IMC/IMV interface.
 
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0.1-2
