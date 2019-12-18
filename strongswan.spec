@@ -2,7 +2,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.8.1
+Version:        5.8.2
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
@@ -179,7 +179,6 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
-mv %{buildroot}%{_sysconfdir}/strongswan/dbus-1 %{buildroot}%{_sysconfdir}/
 # prefix man pages
 for i in %{buildroot}%{_mandir}/*/*; do
     if echo "$i" | grep -vq '/strongswan[^\/]*$'; then
@@ -261,11 +260,15 @@ done
 
 %files charon-nm
 %doc COPYING
-%{_sysconfdir}/dbus-1/system.d/nm-strongswan-service.conf
+%{_datadir}/dbus-1/system.d/nm-strongswan-service.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
-* Mon Sep 02 2019 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 5.8.1-1
+* Tue Dec 17 2019 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.2-1
+- Update to 5.8.2 (#1784457)
+- The D-Bus config file moved under datadir
+
+* Mon Sep 02 2019 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.1-1
 - Update to 5.8.1 (#1711920)
 - No more separate strongswan-swanctl.service to start out of order (#1775548)
 - Added strongswan-starter.service
