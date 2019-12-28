@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.8.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -95,6 +95,7 @@ PT-TLS to support TNC over TLS.
     --with-ipsecdir=%{_libexecdir}/strongswan \
     --bindir=%{_libexecdir}/strongswan \
     --with-ipseclibdir=%{_libdir}/strongswan \
+    --with-piddir=%{_rundir}/strongswan \
     --with-fips-mode=2 \
     --enable-bypass-lan \
     --enable-tss-trousers \
@@ -196,6 +197,7 @@ install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d
 for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d/${i}
 done
+install -d -m 0700 %{buildroot}%{_rundir}/strongswan
 
 %post
 %systemd_post %{name}.service
@@ -237,6 +239,7 @@ done
 %{_mandir}/man?/*.gz
 %{_datadir}/strongswan/templates/config/
 %{_datadir}/strongswan/templates/database/
+%attr(0755,root,root) %dir %{_rundir}/strongswan
 
 %files sqlite
 %{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
@@ -264,6 +267,9 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Sat Dec 28 2019 Paul Wouters <pwouters@redhat.com> - 5.8.2-2
+- Use /run/strongswan as rundir to support strongswans in namespaces
+
 * Tue Dec 17 2019 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.2-1
 - Update to 5.8.2 (#1784457)
 - The D-Bus config file moved under datadir
