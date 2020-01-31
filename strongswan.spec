@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.8.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -267,6 +267,9 @@ install -d -m 0700 %{buildroot}%{_rundir}/strongswan
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Fri Jan 31 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.8.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Sat Dec 28 2019 Paul Wouters <pwouters@redhat.com> - 5.8.2-2
 - Use /run/strongswan as rundir to support strongswans in namespaces
 
