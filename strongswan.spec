@@ -3,11 +3,12 @@
 
 Name:           strongswan
 Version:        5.8.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
+Source1:	tmpfiles-strongswan.conf
 Patch1:         strongswan-5.6.0-uintptr_t.patch
 Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
 
@@ -198,6 +199,7 @@ for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d/${i}
 done
 install -d -m 0700 %{buildroot}%{_rundir}/strongswan
+install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 
 %post
 %systemd_post %{name}.service
@@ -240,6 +242,7 @@ install -d -m 0700 %{buildroot}%{_rundir}/strongswan
 %{_datadir}/strongswan/templates/config/
 %{_datadir}/strongswan/templates/database/
 %attr(0755,root,root) %dir %{_rundir}/strongswan
+%attr(0644,root,root) %{_tmpfilesdir}/strongswan.conf
 
 %files sqlite
 %{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
@@ -267,6 +270,9 @@ install -d -m 0700 %{buildroot}%{_rundir}/strongswan
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Mon Feb 10 2020 Paul Wouters <pwouters@redhat.com> - 5.8.2-4
+- use tmpfile to ensure rundir is present
+
 * Fri Jan 31 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.8.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
