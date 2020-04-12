@@ -2,8 +2,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.8.2
-Release:        5%{?dist}
+Version:        5.8.4
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -11,7 +11,6 @@ Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.
 Source1:	tmpfiles-strongswan.conf
 Patch1:         strongswan-5.6.0-uintptr_t.patch
 Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
-Patch4:         strongswan-5.8.2-extern-global.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
@@ -82,7 +81,6 @@ PT-TLS to support TNC over TLS.
 %setup -q -n %{name}-%{version}%{?prerelease}
 %patch1 -p1
 %patch3 -p1
-%patch4 -p1
 
 %build
 # only for snapshots
@@ -272,6 +270,10 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Sun Apr 12 2020 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.4-1
+- Updated to 5.8.4
+- Patch4 has been applied upstream
+
 * Sat Feb 22 2020 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.2-5
 - Patch to declare a global variable with extern (#1800117)
 
