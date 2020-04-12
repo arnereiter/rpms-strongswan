@@ -3,12 +3,13 @@
 
 Name:           strongswan
 Version:        5.8.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
-Source1:	tmpfiles-strongswan.conf
+Source1:        tmpfiles-strongswan.conf
+Patch0:         strongswan-5.8.4-runtime-dir.patch
 Patch1:         strongswan-5.6.0-uintptr_t.patch
 Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
 
@@ -79,6 +80,7 @@ PT-TLS to support TNC over TLS.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
+%patch0 -p1
 %patch1 -p1
 %patch3 -p1
 
@@ -270,6 +272,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Sun Apr 12 2020 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.4-2
+- Patch0: Add RuntimeDirectory options to service files (#1789263)
+
 * Sun Apr 12 2020 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.4-1
 - Updated to 5.8.4
 - Patch4 has been applied upstream
