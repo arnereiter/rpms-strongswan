@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.8.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -272,6 +272,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Tue Apr 21 2020 Björn Esser <besser82@fedoraproject.org> - 5.8.4-3
+- Rebuild (json-c)
+
 * Sun Apr 12 2020 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.4-2
 - Patch0: Add RuntimeDirectory options to service files (#1789263)
 
