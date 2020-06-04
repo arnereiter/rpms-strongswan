@@ -1,0 +1,11 @@
+--- strongswan-5.8.2/src/swanctl/swanctl.h.orig	2020-02-23 00:35:39.051000000 +0200
++++ strongswan-5.8.2/src/swanctl/swanctl.h	2020-02-23 00:35:51.930355656 +0200
+@@ -30,7 +30,7 @@
+ /**
+  * Base directory for credentials and config
+  */
+-char *swanctl_dir;
++extern char *swanctl_dir;
+ 
+ /**
+  * Configuration file for connections, etc.

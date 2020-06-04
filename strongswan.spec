@@ -3,13 +3,15 @@
 
 Name:           strongswan
 Version:        5.8.2
-Release:        1%{?dist}
+Release:        5%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
+Source1:	tmpfiles-strongswan.conf
 Patch1:         strongswan-5.6.0-uintptr_t.patch
 Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
+Patch4:         strongswan-5.8.2-extern-global.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
@@ -80,6 +82,7 @@ PT-TLS to support TNC over TLS.
 %setup -q -n %{name}-%{version}%{?prerelease}
 %patch1 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 # only for snapshots
@@ -95,6 +98,7 @@ PT-TLS to support TNC over TLS.
     --with-ipsecdir=%{_libexecdir}/strongswan \
     --bindir=%{_libexecdir}/strongswan \
     --with-ipseclibdir=%{_libdir}/strongswan \
+    --with-piddir=%{_rundir}/strongswan \
     --with-fips-mode=2 \
     --enable-bypass-lan \
     --enable-tss-trousers \
@@ -196,6 +200,8 @@ install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d
 for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d/${i}
 done
+install -d -m 0700 %{buildroot}%{_rundir}/strongswan
+install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 
 %post
 %systemd_post %{name}.service
@@ -237,6 +243,8 @@ done
 %{_mandir}/man?/*.gz
 %{_datadir}/strongswan/templates/config/
 %{_datadir}/strongswan/templates/database/
+%attr(0755,root,root) %dir %{_rundir}/strongswan
+%attr(0644,root,root) %{_tmpfilesdir}/strongswan.conf
 
 %files sqlite
 %{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
@@ -264,6 +272,18 @@ done
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Sat Feb 22 2020 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.2-5
+- Patch to declare a global variable with extern (#1800117)
+
+* Mon Feb 10 2020 Paul Wouters <pwouters@redhat.com> - 5.8.2-4
+- use tmpfile to ensure rundir is present
+
+* Fri Jan 31 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.8.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
+* Sat Dec 28 2019 Paul Wouters <pwouters@redhat.com> - 5.8.2-2
+- Use /run/strongswan as rundir to support strongswans in namespaces
+
 * Tue Dec 17 2019 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.2-1
 - Update to 5.8.2 (#1784457)
 - The D-Bus config file moved under datadir
