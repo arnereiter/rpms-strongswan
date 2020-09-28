@@ -2,8 +2,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.8.4
-Release:        5%{?dist}
+Version:        5.9.0
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -99,7 +99,6 @@ PT-TLS to support TNC over TLS.
     --bindir=%{_libexecdir}/strongswan \
     --with-ipseclibdir=%{_libdir}/strongswan \
     --with-piddir=%{_rundir}/strongswan \
-    --with-fips-mode=2 \
     --enable-bypass-lan \
     --enable-tss-trousers \
     --enable-nm \
@@ -272,6 +271,11 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Mon Sep 28 12:36:45 EDT 2020 Paul Wouters <pwouters@redhat.com> - 5.9.0-1
+- Resolves: rhbz#1861747 strongswan-5.9.0 is available
+- Remove --enable-fips-mode=2, which defaults strongswan to FIPS only.
+  (use fips_mode = 2 in plugins {} openssl {} in strongswan.conf to enable FIPS)
+
 * Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.8.4-5
 - Second attempt - Rebuilt for
   https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
