@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.9.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -99,6 +99,7 @@ PT-TLS to support TNC over TLS.
     --bindir=%{_libexecdir}/strongswan \
     --with-ipseclibdir=%{_libdir}/strongswan \
     --with-piddir=%{_rundir}/strongswan \
+    --with-nm-ca-dir=%{_sysconfdir}/strongswan/ipsec.d/cacerts/ \
     --enable-bypass-lan \
     --enable-tss-trousers \
     --enable-nm \
@@ -271,6 +272,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Thu Oct 22 12:43:48 EDT 2020 Paul Wouters <pwouters@redhat.com> - 5.9.0-2
+- Resolves: rhbz#1886759 charon looking for certificates in the wrong place
+
 * Mon Sep 28 12:36:45 EDT 2020 Paul Wouters <pwouters@redhat.com> - 5.9.0-1
 - Resolves: rhbz#1861747 strongswan-5.9.0 is available
 - Remove --enable-fips-mode=2, which defaults strongswan to FIPS only.
