@@ -169,6 +169,7 @@ PT-TLS to support TNC over TLS.
     --enable-vici \
     --enable-swanctl \
     --enable-duplicheck \
+    --with-capabilities=libcap \
 %ifarch x86_64 %{ix86}
     --enable-aesni \
 %endif
