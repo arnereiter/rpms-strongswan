@@ -16,6 +16,7 @@ Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
 
+BuildRequires: make
 BuildRequires:  gcc
 BuildRequires:  systemd-devel
 BuildRequires:  gmp-devel
