@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.9.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -273,6 +273,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Thu Oct 22 12:43:48 EDT 2020 Paul Wouters <pwouters@redhat.com> - 5.9.0-2
 - Resolves: rhbz#1886759 charon looking for certificates in the wrong place
 
