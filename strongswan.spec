@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.9.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -32,6 +32,7 @@ BuildRequires:  json-c-devel
 BuildRequires:  libgcrypt-devel
 BuildRequires:  systemd-devel
 BuildRequires:  iptables-devel
+BuildRequires:  libcap-devel
 
 BuildRequires:  NetworkManager-libnm-devel
 Requires(post): systemd
@@ -173,7 +174,9 @@ PT-TLS to support TNC over TLS.
 %ifarch x86_64 %{ix86}
     --enable-aesni \
 %endif
-    --enable-kernel-libipsec
+    --enable-kernel-libipsec \
+    --with-capabilities=libcap \
+    CPPFLAGS="-DSTARTER_ALLOW_NON_ROOT"
 
 # disable certain plugins in the daemon configuration by default
 for p in bypass-lan; do
@@ -273,6 +276,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Thu Feb 11 2021 Davide Cavalca <dcavalca@fedoraproject.org> - 5.9.0-4
+- Build with with capabilities support
+
 * Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
