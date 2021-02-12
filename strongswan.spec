@@ -9,7 +9,7 @@ License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
 Source1:        tmpfiles-strongswan.conf
-Patch0:         strongswan-5.8.4-runtime-dir.patch
+Patch0:         strongswan-5.9.1-runtime-dir.patch
 Patch1:         strongswan-5.6.0-uintptr_t.patch
 Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
 

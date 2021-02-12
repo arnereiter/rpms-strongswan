@@ -1,0 +1,12 @@
+diff -Naur strongswan-5.9.1-orig/init/systemd-starter/strongswan-starter.service.in strongswan-5.9.1/init/systemd-starter/strongswan-starter.service.in
+--- strongswan-5.9.1-orig/init/systemd-starter/strongswan-starter.service.in	2020-10-16 08:36:37.000000000 -0400
++++ strongswan-5.9.1/init/systemd-starter/strongswan-starter.service.in	2021-02-12 14:06:09.985042362 -0500
+@@ -5,6 +5,8 @@
+ [Service]
+ ExecStart=@SBINDIR@/@IPSEC_SCRIPT@ start --nofork
+ Restart=on-abnormal
++RuntimeDirectory=strongswan
++RuntimeDirectoryMode=0755
+ 
+ [Install]
+ WantedBy=multi-user.target
