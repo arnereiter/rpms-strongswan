@@ -278,6 +278,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %changelog
 * Thu Feb 11 2021 Davide Cavalca <dcavalca@fedoraproject.org> - 5.9.0-4
 - Build with with capabilities support
+- Resolves: rhbz#1911572 StrongSwan not configured with libcap support
 
 * Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
