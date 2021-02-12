@@ -2,8 +2,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.9.0
-Release:        4%{?dist}
+Version:        5.9.1
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -276,6 +276,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Fri Feb 12 2021 Paul Wouters <pwouters@redhat.com> - 5.9.1-1
+- Resolves: rhbz# 1896545 strongswan-5.9.1 is available
+
 * Thu Feb 11 2021 Davide Cavalca <dcavalca@fedoraproject.org> - 5.9.0-4
 - Build with with capabilities support
 - Resolves: rhbz#1911572 StrongSwan not configured with libcap support
