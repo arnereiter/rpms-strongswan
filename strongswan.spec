@@ -2,20 +2,21 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.8.2
-Release:        5%{?dist}
+Version:        5.9.1
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
-Source1:	tmpfiles-strongswan.conf
+Source1:        tmpfiles-strongswan.conf
+Patch0:         strongswan-5.9.1-runtime-dir.patch
 Patch1:         strongswan-5.6.0-uintptr_t.patch
 Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
-Patch4:         strongswan-5.8.2-extern-global.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
 
+BuildRequires: make
 BuildRequires:  gcc
 BuildRequires:  systemd-devel
 BuildRequires:  gmp-devel
@@ -31,6 +32,7 @@ BuildRequires:  json-c-devel
 BuildRequires:  libgcrypt-devel
 BuildRequires:  systemd-devel
 BuildRequires:  iptables-devel
+BuildRequires:  libcap-devel
 
 BuildRequires:  NetworkManager-libnm-devel
 Requires(post): systemd
@@ -80,9 +82,9 @@ PT-TLS to support TNC over TLS.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
+%patch0 -p1
 %patch1 -p1
 %patch3 -p1
-%patch4 -p1
 
 %build
 # only for snapshots
@@ -99,7 +101,7 @@ PT-TLS to support TNC over TLS.
     --bindir=%{_libexecdir}/strongswan \
     --with-ipseclibdir=%{_libdir}/strongswan \
     --with-piddir=%{_rundir}/strongswan \
-    --with-fips-mode=2 \
+    --with-nm-ca-dir=%{_sysconfdir}/strongswan/ipsec.d/cacerts/ \
     --enable-bypass-lan \
     --enable-tss-trousers \
     --enable-nm \
@@ -172,7 +174,9 @@ PT-TLS to support TNC over TLS.
 %ifarch x86_64 %{ix86}
     --enable-aesni \
 %endif
-    --enable-kernel-libipsec
+    --enable-kernel-libipsec \
+    --with-capabilities=libcap \
+    CPPFLAGS="-DSTARTER_ALLOW_NON_ROOT"
 
 # disable certain plugins in the daemon configuration by default
 for p in bypass-lan; do
@@ -272,6 +276,41 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Fri Feb 12 2021 Paul Wouters <pwouters@redhat.com> - 5.9.1-1
+- Resolves: rhbz# 1896545 strongswan-5.9.1 is available
+
+* Thu Feb 11 2021 Davide Cavalca <dcavalca@fedoraproject.org> - 5.9.0-4
+- Build with with capabilities support
+- Resolves: rhbz#1911572 StrongSwan not configured with libcap support
+
+* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
+* Thu Oct 22 12:43:48 EDT 2020 Paul Wouters <pwouters@redhat.com> - 5.9.0-2
+- Resolves: rhbz#1886759 charon looking for certificates in the wrong place
+
+* Mon Sep 28 12:36:45 EDT 2020 Paul Wouters <pwouters@redhat.com> - 5.9.0-1
+- Resolves: rhbz#1861747 strongswan-5.9.0 is available
+- Remove --enable-fips-mode=2, which defaults strongswan to FIPS only.
+  (use fips_mode = 2 in plugins {} openssl {} in strongswan.conf to enable FIPS)
+
+* Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.8.4-5
+- Second attempt - Rebuilt for
+  https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
+* Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.8.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
+* Tue Apr 21 2020 Björn Esser <besser82@fedoraproject.org> - 5.8.4-3
+- Rebuild (json-c)
+
+* Sun Apr 12 2020 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.4-2
+- Patch0: Add RuntimeDirectory options to service files (#1789263)
+
+* Sun Apr 12 2020 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.4-1
+- Updated to 5.8.4
+- Patch4 has been applied upstream
+
 * Sat Feb 22 2020 Mikhail Zabaluev <mikhail.zabaluev@gmail.com> - 5.8.2-5
 - Patch to declare a global variable with extern (#1800117)
 

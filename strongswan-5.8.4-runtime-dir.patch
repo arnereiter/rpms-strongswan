@@ -1,0 +1,24 @@
+diff -ur strongswan-5.8.4.orig/init/systemd/strongswan.service.in strongswan-5.8.4/init/systemd/strongswan.service.in
+--- strongswan-5.8.4.orig/init/systemd/strongswan.service.in	2019-08-27 16:26:53.000000000 +0300
++++ strongswan-5.8.4/init/systemd/strongswan.service.in	2020-04-12 12:05:57.383596844 +0300
+@@ -9,6 +9,8 @@
+ ExecReload=@SBINDIR@/swanctl --reload
+ ExecReload=@SBINDIR@/swanctl --load-all --noprompt
+ Restart=on-abnormal
++RuntimeDirectory=strongswan
++RuntimeDirectoryMode=0755
+ 
+ [Install]
+ WantedBy=multi-user.target
+diff -ur strongswan-5.8.4.orig/init/systemd-starter/strongswan-starter.service.in strongswan-5.8.4/init/systemd-starter/strongswan-starter.service.in
+--- strongswan-5.8.4.orig/init/systemd-starter/strongswan-starter.service.in	2019-08-27 16:26:53.000000000 +0300
++++ strongswan-5.8.4/init/systemd-starter/strongswan-starter.service.in	2020-04-12 12:05:51.810559482 +0300
+@@ -6,6 +6,8 @@
+ ExecStart=@SBINDIR@/@IPSEC_SCRIPT@ start --nofork
+ StandardOutput=syslog
+ Restart=on-abnormal
++RuntimeDirectory=strongswan
++RuntimeDirectoryMode=0755
+ 
+ [Install]
+ WantedBy=multi-user.target
