@@ -3,7 +3,7 @@
 
 Name:           strongswan
 Version:        5.9.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -276,6 +276,10 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Tue Mar 02 2021 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 5.9.1-2
+- Rebuilt for updated systemd-rpm-macros
+  See https://pagure.io/fesco/issue/2583.
+
 * Fri Feb 12 2021 Paul Wouters <pwouters@redhat.com> - 5.9.1-1
 - Resolves: rhbz# 1896545 strongswan-5.9.1 is available
 
