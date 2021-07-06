@@ -2,7 +2,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.9.2
+Version:        5.9.3
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
@@ -219,7 +219,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %files
 %doc README NEWS TODO ChangeLog
 %license COPYING
-%dir %attr(0700,root,root) %{_sysconfdir}/strongswan
+%dir %attr(0755,root,root) %{_sysconfdir}/strongswan
 %config(noreplace) %{_sysconfdir}/strongswan/*
 %dir %{_libdir}/strongswan
 %exclude %{_libdir}/strongswan/imcvs
@@ -276,6 +276,10 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Tue Jul 06 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.3-1
+- Resolves: rhbz#1979574 strongswan-5.9.3 is available
+- Make strongswan main dir world readable so apps can find strongswan.conf
+
 * Thu Jun 03 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.2-1
 - Resolves: rhbz#1896545 strongswan-5.9.2 is available
 
