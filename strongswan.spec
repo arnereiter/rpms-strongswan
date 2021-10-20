@@ -2,8 +2,8 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.9.3
-Release:        4%{?dist}
+Version:        5.9.4
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -33,6 +33,8 @@ BuildRequires:  libgcrypt-devel
 BuildRequires:  systemd-devel
 BuildRequires:  iptables-devel
 BuildRequires:  libcap-devel
+BuildRequires:  tpm2-tss-devel
+Recommends:     tpm2-tools
 
 BuildRequires:  NetworkManager-libnm-devel
 Requires(post): systemd
@@ -276,6 +278,12 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Wed Oct 20 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.4-1
+- Resolves: rhbz#2015165 strongswan-5.9.4 is available
+- Resolves: rhbz#2015611 CVE-2021-41990 strongswan: gmp plugin: integer overflow via a crafted certificate with an RSASSA-PSS signature
+- Resolves: rhbz#2015614 CVE-2021-41991 strongswan: integer overflow when replacing certificates in cache
+- Add BuildRequire for tpm2-tss-devel and weak dependency for tpm2-tools
+
 * Tue Sep 14 2021 Sahana Prasad <sahana@redhat.com> - 5.9.3-4
 - Rebuilt with OpenSSL 3.0.0
 
