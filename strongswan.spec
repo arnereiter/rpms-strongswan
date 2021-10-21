@@ -2,18 +2,22 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.7.2
+Version:        5.9.4
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
+Source1:        tmpfiles-strongswan.conf
+Patch0:         strongswan-5.9.1-runtime-dir.patch
 Patch1:         strongswan-5.6.0-uintptr_t.patch
 Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
 
+BuildRequires: make
+BuildRequires:  gcc
 BuildRequires:  systemd-devel
 BuildRequires:  gmp-devel
 BuildRequires:  libcurl-devel
@@ -28,6 +32,8 @@ BuildRequires:  json-c-devel
 BuildRequires:  libgcrypt-devel
 BuildRequires:  systemd-devel
 BuildRequires:  iptables-devel
+BuildRequires:  libcap-devel
+BuildRequires:  tpm2-tss-devel
 
 BuildRequires:  NetworkManager-libnm-devel
 Requires(post): systemd
@@ -77,6 +83,7 @@ PT-TLS to support TNC over TLS.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
+%patch0 -p1
 %patch1 -p1
 %patch3 -p1
 
@@ -94,7 +101,9 @@ PT-TLS to support TNC over TLS.
     --with-ipsecdir=%{_libexecdir}/strongswan \
     --bindir=%{_libexecdir}/strongswan \
     --with-ipseclibdir=%{_libdir}/strongswan \
-    --with-fips-mode=2 \
+    --with-piddir=%{_rundir}/strongswan \
+    --with-nm-ca-dir=%{_sysconfdir}/strongswan/ipsec.d/cacerts/ \
+    --enable-bypass-lan \
     --enable-tss-trousers \
     --enable-nm \
     --enable-systemd \
@@ -166,13 +175,19 @@ PT-TLS to support TNC over TLS.
 %ifarch x86_64 %{ix86}
     --enable-aesni \
 %endif
-    --enable-kernel-libipsec
+    --enable-kernel-libipsec \
+    --with-capabilities=libcap \
+    CPPFLAGS="-DSTARTER_ALLOW_NON_ROOT"
+
+# disable certain plugins in the daemon configuration by default
+for p in bypass-lan; do
+    echo -e "\ncharon.plugins.${p}.load := no" >> conf/plugins/${p}.opt
+done
 
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
-mv %{buildroot}%{_sysconfdir}/strongswan/dbus-1 %{buildroot}%{_sysconfdir}/
 # prefix man pages
 for i in %{buildroot}%{_mandir}/*/*; do
     if echo "$i" | grep -vq '/strongswan[^\/]*$'; then
@@ -190,6 +205,8 @@ install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d
 for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d/${i}
 done
+install -d -m 0700 %{buildroot}%{_rundir}/strongswan
+install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 
 %post
 %systemd_post %{name}.service
@@ -203,14 +220,14 @@ done
 %files
 %doc README NEWS TODO ChangeLog
 %license COPYING
-%dir %attr(0700,root,root) %{_sysconfdir}/strongswan
+%dir %attr(0755,root,root) %{_sysconfdir}/strongswan
 %config(noreplace) %{_sysconfdir}/strongswan/*
 %dir %{_libdir}/strongswan
 %exclude %{_libdir}/strongswan/imcvs
 %dir %{_libdir}/strongswan/plugins
 %dir %{_libexecdir}/strongswan
 %{_unitdir}/strongswan.service
-%{_unitdir}/strongswan-swanctl.service
+%{_unitdir}/strongswan-starter.service
 %{_sbindir}/charon-cmd
 %{_sbindir}/charon-systemd
 %{_sbindir}/strongswan
@@ -231,6 +248,8 @@ done
 %{_mandir}/man?/*.gz
 %{_datadir}/strongswan/templates/config/
 %{_datadir}/strongswan/templates/database/
+%attr(0755,root,root) %dir %{_rundir}/strongswan
+%attr(0644,root,root) %{_tmpfilesdir}/strongswan.conf
 
 %files sqlite
 %{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
@@ -254,10 +273,16 @@ done
 
 %files charon-nm
 %doc COPYING
-%{_sysconfdir}/dbus-1/system.d/nm-strongswan-service.conf
+%{_datadir}/dbus-1/system.d/nm-strongswan-service.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Wed Oct 20 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.4-1
+- Resolves: rhbz#2015165 strongswan-5.9.4 is available
+- Resolves: rhbz#2015612 CVE-2021-41990 strongswan: gmp plugin: integer overflow via a crafted certificate with an RSASSA-PSS signature
+- Resolves: rhbz#2015615 CVE-2021-41991 strongswan: integer overflow when replacing certificates in cache
+- Add BuildRequire for tpm2-tss-devel
+
 * Wed Jan 09 2019 Paul Wouters <pwouters@redhat.com> - 5.7.2-1
 - Updated to 5.7.2
 
