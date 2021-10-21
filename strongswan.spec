@@ -2,7 +2,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Version:        5.9.1
+Version:        5.9.4
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
@@ -33,6 +33,8 @@ BuildRequires:  libgcrypt-devel
 BuildRequires:  systemd-devel
 BuildRequires:  iptables-devel
 BuildRequires:  libcap-devel
+BuildRequires:  tpm2-tss-devel
+Recommends:     tpm2-tools
 
 BuildRequires:  NetworkManager-libnm-devel
 Requires(post): systemd
@@ -219,7 +221,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %files
 %doc README NEWS TODO ChangeLog
 %license COPYING
-%dir %attr(0700,root,root) %{_sysconfdir}/strongswan
+%dir %attr(0755,root,root) %{_sysconfdir}/strongswan
 %config(noreplace) %{_sysconfdir}/strongswan/*
 %dir %{_libdir}/strongswan
 %exclude %{_libdir}/strongswan/imcvs
@@ -276,8 +278,34 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Wed Oct 20 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.4-1
+- Resolves: rhbz#2015165 strongswan-5.9.4 is available
+- Resolves: rhbz#2015612 CVE-2021-41990 strongswan: gmp plugin: integer overflow via a crafted certificate with an RSASSA-PSS signature
+- Resolves: rhbz#2015615 CVE-2021-41991 strongswan: integer overflow when replacing certificates in cache
+- Add BuildRequire for tpm2-tss-devel and weak dependency for tpm2-tools
+
+* Tue Sep 14 2021 Sahana Prasad <sahana@redhat.com> - 5.9.3-4
+- Rebuilt with OpenSSL 3.0.0
+
+* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
+* Sat Jul 10 2021 Björn Esser <besser82@fedoraproject.org> - 5.9.3-2
+- Rebuild for versioned symbols in json-c
+
+* Tue Jul 06 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.3-1
+- Resolves: rhbz#1979574 strongswan-5.9.3 is available
+- Make strongswan main dir world readable so apps can find strongswan.conf
+
+* Thu Jun 03 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.2-1
+- Resolves: rhbz#1896545 strongswan-5.9.2 is available
+
+* Tue Mar 02 2021 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 5.9.1-2
+- Rebuilt for updated systemd-rpm-macros
+  See https://pagure.io/fesco/issue/2583.
+
 * Fri Feb 12 2021 Paul Wouters <pwouters@redhat.com> - 5.9.1-1
-- Resolves: rhbz# 1896545 strongswan-5.9.1 is available
+- Resolves: rhbz#1896545 strongswan-5.9.1 is available
 
 * Thu Feb 11 2021 Davide Cavalca <dcavalca@fedoraproject.org> - 5.9.0-4
 - Build with with capabilities support
