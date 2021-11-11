@@ -3,6 +3,7 @@
 
 %bcond_without python3
 %bcond_without perl
+%bcond_with    check
 
 Name:           strongswan
 Version:        5.9.4
@@ -13,6 +14,8 @@ URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2
 Source1:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
+# https://github.com/strongswan/strongswan/issues/752
+Patch1:         strongswan-5.9.4-test-socket.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
@@ -289,6 +292,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 
 
 %check
+%if %{with check}
+  %make_build -j1 check
+%endif
 %if %{with python}
   pushd src/libcharon/plugins/vici
     %pytest
@@ -382,6 +388,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %changelog
 * Thu Nov 11 2021 Petr Menšík <pemensik@redhat.com> - 5.9.4-3
 - Resolves rhbz#1419441 Add python and perl vici bindings
+- Adds optional tests run
 
 * Tue Nov 09 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.4-2
 - Resolves rhbz#2018547 'strongswan restart' breaks ipsec started with strongswan-starter
