@@ -224,6 +224,9 @@ for Strongswan runtime configuration from perl applications.
 %if %{with perl}
     --enable-perl-cpan \
 %endif
+%if %{with check}
+    --enable-test-vectors \
+%endif
     --enable-kernel-libipsec \
     --with-capabilities=libcap \
     CPPFLAGS="-DSTARTER_ALLOW_NON_ROOT"
