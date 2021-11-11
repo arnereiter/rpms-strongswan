@@ -1,9 +1,12 @@
 %global _hardened_build 1
 #%%define prerelease dr1
 
+%bcond_without python3
+%bcond_without perl
+
 Name:           strongswan
 Version:        5.9.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -33,6 +36,16 @@ BuildRequires:  iptables-devel
 BuildRequires:  libcap-devel
 BuildRequires:  tpm2-tss-devel
 Recommends:     tpm2-tools
+
+%if %{with python3}
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+%endif
+
+%if %{with perl}
+BuildRequires:  perl-devel perl-macros
+BuildRequires:  perl(ExtUtils::MakeMaker)
+%endif
 
 BuildRequires:  NetworkManager-libnm-devel
 Requires(post): systemd
@@ -80,9 +93,38 @@ modules can be used by any third party TNC Client/Server implementation
 possessing a standard IF-IMC/IMV interface. In addition, it implements
 PT-TLS to support TNC over TLS.
 
+%if %{with python3}
+%package -n python3-vici
+Summary: Strongswan Versatile IKE Configuration Interface python bindings
+BuildArch: noarch
+%description -n python3-vici
+VICI is an attempt to improve the situation for system integrators by providing
+a stable IPC interface, allowing external tools to query, configure
+and control the IKE daemon.
+
+The Versatile IKE Configuration Interface (VICI) python bindings provides module
+for Strongswan runtime configuration from python applications.
+
+%endif
+
+%if %{with perl}
+%package -n perl-vici
+Summary: Strongswan Versatile IKE Configuration Interface perl bindings
+BuildArch: noarch
+%description -n perl-vici
+VICI is an attempt to improve the situation for system integrators by providing
+a stable IPC interface, allowing external tools to query, configure
+and control the IKE daemon.
+
+The Versatile IKE Configuration Interface (VICI) perl bindings provides module
+for Strongswan runtime configuration from perl applications.
+%endif
+
+# TODO: make also ruby-vici
+
+
 %prep
-%setup -q -n %{name}-%{version}%{?prerelease}
-%patch0 -p1
+%autosetup -n %{name}-%{version}%{?prerelease} -p1
 
 %build
 # only for snapshots
@@ -172,19 +214,57 @@ PT-TLS to support TNC over TLS.
 %ifarch x86_64 %{ix86}
     --enable-aesni \
 %endif
+%if %{with python3}
+    --enable-python-eggs \
+%endif
+%if %{with perl}
+    --enable-perl-cpan \
+%endif
     --enable-kernel-libipsec \
     --with-capabilities=libcap \
     CPPFLAGS="-DSTARTER_ALLOW_NON_ROOT"
+# TODO: --enable-python-eggs-install not python3 ready
 
 # disable certain plugins in the daemon configuration by default
 for p in bypass-lan; do
     echo -e "\ncharon.plugins.${p}.load := no" >> conf/plugins/${p}.opt
 done
 
-make %{?_smp_mflags}
+%make_build
+
+pushd src/libcharon/plugins/vici
+
+%if %{with python3}
+  pushd python
+    sed -e "s,/var/run/charon.vici,%{_rundir}/strongswan/charon.vici," -i vici/session.py
+    %py3_build
+  popd
+%endif
+
+%if %{with perl}
+  pushd perl/Vici-Session/
+    perl Makefile.PL INSTALLDIRS=vendor
+    %make_build
+  popd
+%endif
+
+popd
 
 %install
-make install DESTDIR=%{buildroot}
+%make_install
+
+
+pushd src/libcharon/plugins/vici
+%if %{with python3}
+  pushd python
+    %py3_install
+  popd
+%endif
+%if %{with perl}
+  %make_install -C perl/Vici-Session
+  rm -f %{buildroot}{%{perl_archlib}/perllocal.pod,%{perl_vendorarch}/auto/Vici/Session/.packlist}
+%endif
+popd
 # prefix man pages
 for i in %{buildroot}%{_mandir}/*/*; do
     if echo "$i" | grep -vq '/strongswan[^\/]*$'; then
@@ -275,7 +355,24 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %{_datadir}/dbus-1/system.d/nm-strongswan-service.conf
 %{_libexecdir}/strongswan/charon-nm
 
+%if %{with python3}
+%files -n python3-vici
+%license COPYING
+%doc src/libcharon/plugins/vici/python/README.rst
+%{python3_sitelib}/vici
+%{python3_sitelib}/vici-%{version}-py*.egg-info
+%endif
+
+%if %{with perl}
+%license COPYING
+%files -n perl-vici
+%{perl_vendorlib}/Vici
+%endif
+
 %changelog
+* Thu Nov 11 2021 Petr Menšík <pemensik@redhat.com> - 5.9.4-3
+- Resolves rhbz#1419441 Add python and perl vici bindings
+
 * Tue Nov 09 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.4-2
 - Resolves rhbz#2018547 'strongswan restart' breaks ipsec started with strongswan-starter
 - Return to using tmpfiles, but extend to cover strongswan-starter service too
