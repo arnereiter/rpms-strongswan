@@ -219,7 +219,7 @@ for Strongswan runtime configuration from perl applications.
     --enable-aesni \
 %endif
 %if %{with python3}
-    --enable-python-eggs \
+    PYTHON=%{python3} --enable-python-eggs \
 %endif
 %if %{with perl}
     --enable-perl-cpan \
@@ -240,8 +240,9 @@ pushd src/libcharon/plugins/vici
 
 %if %{with python3}
   pushd python
+    %make_build
     sed -e "s,/var/run/charon.vici,%{_rundir}/strongswan/charon.vici," -i vici/session.py
-    %py3_build
+    #py3_build
   popd
 %endif
 
@@ -261,6 +262,9 @@ popd
 pushd src/libcharon/plugins/vici
 %if %{with python3}
   pushd python
+    # TODO: --enable-python-eggs breaks our previous build. Do it now
+    # propose better way to upstream
+    %py3_build
     %py3_install
   popd
 %endif
