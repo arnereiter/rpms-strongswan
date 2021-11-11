@@ -40,6 +40,7 @@ Recommends:     tpm2-tools
 %if %{with python3}
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
+BuildRequires:  python3-pytest
 %endif
 
 %if %{with perl}
@@ -285,6 +286,15 @@ done
 install -d -m 0700 %{buildroot}%{_rundir}/strongswan
 install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.conf
+
+
+%check
+%if %{with python}
+  pushd src/libcharon/plugins/vici
+    %pytest
+  popd
+%endif
+:
 
 %post
 %systemd_post strongswan.service strongswan-starter.service
