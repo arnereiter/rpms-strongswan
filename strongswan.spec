@@ -3,15 +3,13 @@
 
 Name:           strongswan
 Version:        5.9.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
-Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
+Source0:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2
 Source1:        tmpfiles-strongswan.conf
-Patch0:         strongswan-5.9.1-runtime-dir.patch
-Patch1:         strongswan-5.6.0-uintptr_t.patch
-Patch3:         strongswan-5.6.2-CVE-2018-5388.patch
+Patch0:         strongswan-5.6.0-uintptr_t.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
@@ -55,8 +53,8 @@ in userland, using TUN devices and its own IPsec implementation libipsec.
 %package charon-nm
 Summary:        NetworkManager plugin for Strongswan
 Requires:       dbus
-Obsoletes:      %{name}-NetworkManager < 0:5.0.4-5
-Conflicts:      %{name}-NetworkManager < 0:5.0.4-5
+Obsoletes:      strongswan-NetworkManager < 0:5.0.4-5
+Conflicts:      strongswan-NetworkManager < 0:5.0.4-5
 Conflicts:      NetworkManager-strongswan < 1.4.2-1
 %description charon-nm
 NetworkManager plugin integrates a subset of Strongswan capabilities
@@ -64,14 +62,14 @@ to NetworkManager.
 
 %package sqlite
 Summary: SQLite support for strongSwan
-Requires: %{name} = %{version}-%{release}
+Requires: strongswan = %{version}-%{release}
 %description sqlite
 The sqlite plugin adds an SQLite database backend to strongSwan.
 
 %package tnc-imcvs
 Summary: Trusted network connect (TNC)'s IMC/IMV functionality
-Requires: %{name} = %{version}-%{release}
-Requires: %{name}-sqlite = %{version}-%{release}
+Requires: strongswan = %{version}-%{release}
+Requires: strongswan-sqlite = %{version}-%{release}
 %description tnc-imcvs
 This package provides Trusted Network Connect's (TNC) architecture support.
 It includes support for TNC client and server (IF-TNCCS), IMC and IMV message
@@ -85,8 +83,6 @@ PT-TLS to support TNC over TLS.
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
 %patch0 -p1
-%patch1 -p1
-%patch3 -p1
 
 %build
 # only for snapshots
@@ -208,15 +204,16 @@ for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
 done
 install -d -m 0700 %{buildroot}%{_rundir}/strongswan
 install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
+install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.conf
 
 %post
-%systemd_post %{name}.service
+%systemd_post strongswan.service strongswan-starter.service
 
 %preun
-%systemd_preun %{name}.service
+%systemd_preun strongswan.service strongswan-starter.service
 
 %postun
-%systemd_postun_with_restart %{name}.service
+%systemd_postun_with_restart strongswan.service strongswan-starter.service
 
 %files
 %doc README NEWS TODO ChangeLog
@@ -251,6 +248,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_datadir}/strongswan/templates/database/
 %attr(0755,root,root) %dir %{_rundir}/strongswan
 %attr(0644,root,root) %{_tmpfilesdir}/strongswan.conf
+%attr(0644,root,root) %{_tmpfilesdir}/strongswan-starter.conf
 
 %files sqlite
 %{_libdir}/strongswan/plugins/libstrongswan-sqlite.so
@@ -278,6 +276,11 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_libexecdir}/strongswan/charon-nm
 
 %changelog
+* Tue Nov 09 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.4-2
+- Resolves rhbz#2018547 'strongswan restart' breaks ipsec started with strongswan-starter
+- Return to using tmpfiles, but extend to cover strongswan-starter service too
+- Cleanup old patches
+
 * Wed Oct 20 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.4-1
 - Resolves: rhbz#2015165 strongswan-5.9.4 is available
 - Resolves: rhbz#2015612 CVE-2021-41990 strongswan: gmp plugin: integer overflow via a crafted certificate with an RSASSA-PSS signature
