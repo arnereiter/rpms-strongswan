@@ -300,7 +300,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 
 %check
 %if %{with check}
-  %make_build -j1 check
+  # Seen some tests hang. Ensure we do not block builder forever
+  export TESTS_VERBOSITY=1
+  timeout 600 %make_build check
 %endif
 %if %{with python}
   pushd src/libcharon/plugins/vici
