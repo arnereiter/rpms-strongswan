@@ -5,9 +5,16 @@
 %bcond_without perl
 %bcond_with    check
 
+%if (0%{?fedora} && 0%{?fedora} < 36) || (0%{?rhel} && 0%{?rhel} < 9)
+# trousers was retired for F36+ and no longer available in RHEL with 9+
+%bcond_without tss_trousers
+%else
+%bcond_with tss_trousers
+%endif
+
 Name:           strongswan
 Version:        5.9.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -29,7 +36,6 @@ BuildRequires:  openldap-devel
 BuildRequires:  openssl-devel
 BuildRequires:  sqlite-devel
 BuildRequires:  gettext-devel
-BuildRequires:  trousers-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  pam-devel
 BuildRequires:  json-c-devel
@@ -49,6 +55,10 @@ BuildRequires:  python3-pytest
 %if %{with perl}
 BuildRequires:  perl-devel perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
+%endif
+
+%if %{with tss_trousers}
+BuildRequires:  trousers-devel
 %endif
 
 BuildRequires:  NetworkManager-libnm-devel
@@ -147,7 +157,7 @@ for Strongswan runtime configuration from perl applications.
     --with-piddir=%{_rundir}/strongswan \
     --with-nm-ca-dir=%{_sysconfdir}/strongswan/ipsec.d/cacerts/ \
     --enable-bypass-lan \
-    --enable-tss-trousers \
+    --enable-tss-tss2 \
     --enable-nm \
     --enable-systemd \
     --enable-openssl \
@@ -211,7 +221,6 @@ for Strongswan runtime configuration from perl applications.
     --enable-curl \
     --enable-cmd \
     --enable-acert \
-    --enable-aikgen \
     --enable-vici \
     --enable-swanctl \
     --enable-duplicheck \
@@ -226,6 +235,10 @@ for Strongswan runtime configuration from perl applications.
 %endif
 %if %{with check}
     --enable-test-vectors \
+%endif
+%if %{with tss_trousers}
+    --enable-tss-trousers \
+    --enable-aikgen \
 %endif
     --enable-kernel-libipsec \
     --with-capabilities=libcap \
@@ -395,6 +408,10 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Thu Dec 16 2021 Neal Gompa <ngompa@datto.com> - 5.9.4-4
+- Disable TPM/TSS 1.2 support for F36+ / RHEL9+
+- Resolves: rhbz#2033299 Drop TPM/TSS 1.2 support (trousers)
+
 * Thu Nov 11 2021 Petr Menšík <pemensik@redhat.com> - 5.9.4-3
 - Resolves rhbz#1419441 Add python and perl vici bindings
 - Adds optional tests run
