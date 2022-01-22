@@ -14,7 +14,7 @@
 
 Name:           strongswan
 Version:        5.9.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -408,6 +408,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Sat Jan 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Thu Dec 16 2021 Neal Gompa <ngompa@datto.com> - 5.9.4-4
 - Disable TPM/TSS 1.2 support for F36+ / RHEL9+
 - Resolves: rhbz#2033299 Drop TPM/TSS 1.2 support (trousers)
