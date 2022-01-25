@@ -14,13 +14,13 @@
 
 Name:           strongswan
 Version:        5.9.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2
 Source1:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2.sig
-Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/948F158A4E76A27BF3D07532DF42C170B34DBA77
+Source2:        https://download.strongswan.org/STRONGSWAN-RELEASE-PGP-KEY
 Source3:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
 
@@ -139,8 +139,7 @@ for Strongswan runtime configuration from perl applications.
 
 
 %prep
-# key is failing - investigating
-#{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %autosetup -n %{name}-%{version}%{?prerelease} -p1
 
 %build
@@ -411,6 +410,9 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Tue Jan 25 2022 Paul Wouters <paul.wouters@aiven.io> - 5.9.5-2
+- Use newly published/cleaned strongswan gpg key
+
 * Mon Jan 24 2022 Paul Wouters <paul.wouters@aiven.io> - 5.9.5-1
 - Resolves rhbz#2044361 strongswan-5.9.5 is available (CVE-2021-45079)
 
