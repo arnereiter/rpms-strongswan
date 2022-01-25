@@ -13,21 +13,22 @@
 %endif
 
 Name:           strongswan
-Version:        5.9.4
-Release:        5%{?dist}
+Version:        5.9.5
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2
-Source1:        tmpfiles-strongswan.conf
+Source1:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2.sig
+Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/948F158A4E76A27BF3D07532DF42C170B34DBA77
+Source3:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
-# https://github.com/strongswan/strongswan/issues/752
-Patch1:         strongswan-5.9.4-test-socket.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
 
-BuildRequires: make
+BuildRequires:  gnupg2
+BuildRequires:  make
 BuildRequires:  gcc
 BuildRequires:  systemd-devel
 BuildRequires:  gmp-devel
@@ -138,6 +139,8 @@ for Strongswan runtime configuration from perl applications.
 
 
 %prep
+# key is failing - investigating
+#{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %autosetup -n %{name}-%{version}%{?prerelease} -p1
 
 %build
@@ -307,8 +310,8 @@ for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d/${i}
 done
 install -d -m 0700 %{buildroot}%{_rundir}/strongswan
-install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
-install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.conf
+install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
+install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.conf
 
 
 %check
@@ -408,6 +411,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Mon Jan 24 2022 Paul Wouters <paul.wouters@aiven.io> - 5.9.5-1
+- Resolves rhbz#2044361 strongswan-5.9.5 is available (CVE-2021-45079)
+
 * Sat Jan 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.4-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
