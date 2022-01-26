@@ -1,20 +1,34 @@
 %global _hardened_build 1
 #%%define prerelease dr1
 
+%bcond_without python3
+%bcond_without perl
+%bcond_with    check
+
+%if (0%{?fedora} && 0%{?fedora} < 36) || (0%{?rhel} && 0%{?rhel} < 9)
+# trousers was retired for F36+ and no longer available in RHEL with 9+
+%bcond_without tss_trousers
+%else
+%bcond_with tss_trousers
+%endif
+
 Name:           strongswan
-Version:        5.9.4
+Version:        5.9.5
 Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2
-Source1:        tmpfiles-strongswan.conf
+Source1:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2.sig
+Source2:        https://download.strongswan.org/STRONGSWAN-RELEASE-PGP-KEY
+Source3:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
 
-BuildRequires: make
+BuildRequires:  gnupg2
+BuildRequires:  make
 BuildRequires:  gcc
 BuildRequires:  systemd-devel
 BuildRequires:  gmp-devel
@@ -23,7 +37,6 @@ BuildRequires:  openldap-devel
 BuildRequires:  openssl-devel
 BuildRequires:  sqlite-devel
 BuildRequires:  gettext-devel
-BuildRequires:  trousers-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  pam-devel
 BuildRequires:  json-c-devel
@@ -33,6 +46,21 @@ BuildRequires:  iptables-devel
 BuildRequires:  libcap-devel
 BuildRequires:  tpm2-tss-devel
 Recommends:     tpm2-tools
+
+%if %{with python3}
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-pytest
+%endif
+
+%if %{with perl}
+BuildRequires:  perl-devel perl-macros
+BuildRequires:  perl(ExtUtils::MakeMaker)
+%endif
+
+%if %{with tss_trousers}
+BuildRequires:  trousers-devel
+%endif
 
 BuildRequires:  NetworkManager-libnm-devel
 Requires(post): systemd
@@ -80,9 +108,39 @@ modules can be used by any third party TNC Client/Server implementation
 possessing a standard IF-IMC/IMV interface. In addition, it implements
 PT-TLS to support TNC over TLS.
 
+%if %{with python3}
+%package -n python3-vici
+Summary: Strongswan Versatile IKE Configuration Interface python bindings
+BuildArch: noarch
+%description -n python3-vici
+VICI is an attempt to improve the situation for system integrators by providing
+a stable IPC interface, allowing external tools to query, configure
+and control the IKE daemon.
+
+The Versatile IKE Configuration Interface (VICI) python bindings provides module
+for Strongswan runtime configuration from python applications.
+
+%endif
+
+%if %{with perl}
+%package -n perl-vici
+Summary: Strongswan Versatile IKE Configuration Interface perl bindings
+BuildArch: noarch
+%description -n perl-vici
+VICI is an attempt to improve the situation for system integrators by providing
+a stable IPC interface, allowing external tools to query, configure
+and control the IKE daemon.
+
+The Versatile IKE Configuration Interface (VICI) perl bindings provides module
+for Strongswan runtime configuration from perl applications.
+%endif
+
+# TODO: make also ruby-vici
+
+
 %prep
-%setup -q -n %{name}-%{version}%{?prerelease}
-%patch0 -p1
+%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+%autosetup -n %{name}-%{version}%{?prerelease} -p1
 
 %build
 # only for snapshots
@@ -101,7 +159,7 @@ PT-TLS to support TNC over TLS.
     --with-piddir=%{_rundir}/strongswan \
     --with-nm-ca-dir=%{_sysconfdir}/strongswan/ipsec.d/cacerts/ \
     --enable-bypass-lan \
-    --enable-tss-trousers \
+    --enable-tss-tss2 \
     --enable-nm \
     --enable-systemd \
     --enable-openssl \
@@ -165,26 +223,74 @@ PT-TLS to support TNC over TLS.
     --enable-curl \
     --enable-cmd \
     --enable-acert \
-    --enable-aikgen \
     --enable-vici \
     --enable-swanctl \
     --enable-duplicheck \
 %ifarch x86_64 %{ix86}
     --enable-aesni \
 %endif
+%if %{with python3}
+    PYTHON=%{python3} --enable-python-eggs \
+%endif
+%if %{with perl}
+    --enable-perl-cpan \
+%endif
+%if %{with check}
+    --enable-test-vectors \
+%endif
+%if %{with tss_trousers}
+    --enable-tss-trousers \
+    --enable-aikgen \
+%endif
     --enable-kernel-libipsec \
     --with-capabilities=libcap \
     CPPFLAGS="-DSTARTER_ALLOW_NON_ROOT"
+# TODO: --enable-python-eggs-install not python3 ready
 
 # disable certain plugins in the daemon configuration by default
 for p in bypass-lan; do
     echo -e "\ncharon.plugins.${p}.load := no" >> conf/plugins/${p}.opt
 done
 
-make %{?_smp_mflags}
+%make_build
+
+pushd src/libcharon/plugins/vici
+
+%if %{with python3}
+  pushd python
+    %make_build
+    sed -e "s,/var/run/charon.vici,%{_rundir}/strongswan/charon.vici," -i vici/session.py
+    #py3_build
+  popd
+%endif
+
+%if %{with perl}
+  pushd perl/Vici-Session/
+    perl Makefile.PL INSTALLDIRS=vendor
+    %make_build
+  popd
+%endif
+
+popd
 
 %install
-make install DESTDIR=%{buildroot}
+%make_install
+
+
+pushd src/libcharon/plugins/vici
+%if %{with python3}
+  pushd python
+    # TODO: --enable-python-eggs breaks our previous build. Do it now
+    # propose better way to upstream
+    %py3_build
+    %py3_install
+  popd
+%endif
+%if %{with perl}
+  %make_install -C perl/Vici-Session
+  rm -f %{buildroot}{%{perl_archlib}/perllocal.pod,%{perl_vendorarch}/auto/Vici/Session/.packlist}
+%endif
+popd
 # prefix man pages
 for i in %{buildroot}%{_mandir}/*/*; do
     if echo "$i" | grep -vq '/strongswan[^\/]*$'; then
@@ -203,8 +309,22 @@ for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/strongswan/ipsec.d/${i}
 done
 install -d -m 0700 %{buildroot}%{_rundir}/strongswan
-install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
-install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.conf
+install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
+install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.conf
+
+
+%check
+%if %{with check}
+  # Seen some tests hang. Ensure we do not block builder forever
+  export TESTS_VERBOSITY=1
+  timeout 600 %make_build check
+%endif
+%if %{with python}
+  pushd src/libcharon/plugins/vici
+    %pytest
+  popd
+%endif
+:
 
 %post
 %systemd_post strongswan.service strongswan-starter.service
@@ -275,7 +395,38 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %{_datadir}/dbus-1/system.d/nm-strongswan-service.conf
 %{_libexecdir}/strongswan/charon-nm
 
+%if %{with python3}
+%files -n python3-vici
+%license COPYING
+%doc src/libcharon/plugins/vici/python/README.rst
+%{python3_sitelib}/vici
+%{python3_sitelib}/vici-%{version}-py*.egg-info
+%endif
+
+%if %{with perl}
+%license COPYING
+%files -n perl-vici
+%{perl_vendorlib}/Vici
+%endif
+
 %changelog
+* Tue Jan 25 2022 Paul Wouters <paul.wouters@aiven.io> - 5.9.5-2
+- Use newly published/cleaned strongswan gpg key
+
+* Mon Jan 24 2022 Paul Wouters <paul.wouters@aiven.io> - 5.9.5-1
+- Resolves rhbz#2044361 strongswan-5.9.5 is available (CVE-2021-45079)
+
+* Sat Jan 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
+* Thu Dec 16 2021 Neal Gompa <ngompa@datto.com> - 5.9.4-4
+- Disable TPM/TSS 1.2 support for F36+ / RHEL9+
+- Resolves: rhbz#2033299 Drop TPM/TSS 1.2 support (trousers)
+
+* Thu Nov 11 2021 Petr Menšík <pemensik@redhat.com> - 5.9.4-3
+- Resolves rhbz#1419441 Add python and perl vici bindings
+- Adds optional tests run
+
 * Tue Nov 09 2021 Paul Wouters <paul.wouters@aiven.io> - 5.9.4-2
 - Resolves rhbz#2018547 'strongswan restart' breaks ipsec started with strongswan-starter
 - Return to using tmpfiles, but extend to cover strongswan-starter service too
