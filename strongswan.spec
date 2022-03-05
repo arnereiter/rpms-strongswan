@@ -411,8 +411,8 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
-* Sat Feb 25 2022 Arne Reiter <redhat@arnereiter.de> - 5.9.5-3
-- Resolves: rhbz#048108 - segfault at 18 ip 00007f4c7c0d841c sp 00007ffe49f61b70 error 4 in libc.so.6
+* Fri Feb 25 2022 Arne Reiter <redhat@arnereiter.de> - 5.9.5-3
+- Resolves: rhbz#2048108 - segfault at 18 ip 00007f4c7c0d841c sp 00007ffe49f61b70 error 4 in libc.so.6
 
 * Tue Jan 25 2022 Paul Wouters <paul.wouters@aiven.io> - 5.9.5-2
 - Use newly published/cleaned strongswan gpg key
