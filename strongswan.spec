@@ -14,7 +14,7 @@
 
 Name:           strongswan
 Version:        5.9.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -411,6 +411,9 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Mon Jun 13 2022 Python Maint <python-maint@redhat.com> - 5.9.5-4
+- Rebuilt for Python 3.11
+
 * Fri Feb 25 2022 Arne Reiter <redhat@arnereiter.de> - 5.9.5-3
 - Resolves: rhbz#2048108 - segfault at 18 ip 00007f4c7c0d841c sp 00007ffe49f61b70 error 4 in libc.so.6
 
