@@ -23,6 +23,7 @@ Source1:        http://download.strongswan.org/strongswan-%{version}%{?prereleas
 Source2:        https://download.strongswan.org/STRONGSWAN-RELEASE-PGP-KEY
 Source3:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
+# https://github.com/strongswan/strongswan/issues/1025
 Patch1:         strongswan-5.9.6-error-format-security.patch
 
 # only needed for pre-release versions
