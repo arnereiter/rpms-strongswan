@@ -1,0 +1,11 @@
+--- strongswan-5.9.6-orig/src/libstrongswan/utils/enum.c	2022-04-16 10:08:07.000000000 +0200
++++ strongswan-5.9.6/src/libstrongswan/utils/enum.c	2022-06-20 23:21:47.408857710 +0200
+@@ -97,7 +97,7 @@
+ 		return buf;
+ 	}
+ 
+-	if (snprintf(buf, len, e->names[0]) >= len)
++	if (snprintf(buf, len, "%s", e->names[0]) >= len)
+ 	{
+ 		return NULL;
+ 	}

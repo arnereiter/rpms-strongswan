@@ -13,8 +13,8 @@
 %endif
 
 Name:           strongswan
-Version:        5.9.5
-Release:        2%{?dist}
+Version:        5.9.6
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -23,6 +23,8 @@ Source1:        http://download.strongswan.org/strongswan-%{version}%{?prereleas
 Source2:        https://download.strongswan.org/STRONGSWAN-RELEASE-PGP-KEY
 Source3:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
+# https://github.com/strongswan/strongswan/issues/1025
+Patch1:         strongswan-5.9.6-error-format-security.patch
 
 # only needed for pre-release versions
 #BuildRequires:  autoconf automake
@@ -410,6 +412,13 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Wed Jun 22 2022 Arne Reiter <redhat@arnereiter.de> - 5.9.6-1
+- Resolves rhbz#2080070 strongswan-5.9.6 is available
+- Fixed missing format string in enum_flags_to_string()
+
+* Fri Feb 25 2022 Arne Reiter <redhat@arnereiter.de> - 5.9.5-3
+- Resolves: rhbz#2048108 - segfault at 18 ip 00007f4c7c0d841c sp 00007ffe49f61b70 error 4 in libc.so.6
+
 * Tue Jan 25 2022 Paul Wouters <paul.wouters@aiven.io> - 5.9.5-2
 - Use newly published/cleaned strongswan gpg key
 
