@@ -14,7 +14,7 @@
 
 Name:           strongswan
 Version:        5.9.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            http://www.strongswan.org/
@@ -412,6 +412,9 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Sat Jul 23 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Wed Jun 22 2022 Arne Reiter <redhat@arnereiter.de> - 5.9.6-1
 - Resolves rhbz#2080070 strongswan-5.9.6 is available
 - Fixed missing format string in enum_flags_to_string()
