@@ -215,8 +215,6 @@ for Strongswan runtime configuration from perl applications.
     --enable-imv-attestation \
     --enable-imv-os \
     --enable-imc-os \
-    --enable-imc-swid \
-    --enable-imv-swid \
     --enable-imc-swima \
     --enable-imv-swima \
     --enable-imc-hcd \
