@@ -13,7 +13,7 @@
 %endif
 
 Name:           strongswan
-Version:        5.9.8
+Version:        5.9.9
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
@@ -410,6 +410,9 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Sun Jan 15 2023 Petr Menšík <pemensik@redhat.com> - 5.9.9-1
+- Update to 5.9.9 (#2157850)
+
 * Sun Oct 16 2022 Arne Reiter <redhat@arnereiter.de> - 5.9.8-1
 - Resolves rhbz#2112274 strongswan-5.9.8 is available
 - Patch1 removes CFLAGS -Wno-format which interferes with -Werror=format-security
