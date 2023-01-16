@@ -16,7 +16,7 @@
 
 Name:           strongswan
 Version:        5.9.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            https://www.strongswan.org/
@@ -28,6 +28,9 @@ Source3:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
 # https://github.com/strongswan/strongswan/issues/1198
 Patch1:         strongswan-5.9.7-error-no-format.patch
+# https://github.com/strongswan/strongswan/pull/1511
+# https://github.com/strongswan/strongswan/commit/e99de2aee9f26e3ab97d88902308107d9f048acd
+Patch2:         strongswan-5.9.9-man-paths.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -255,6 +258,9 @@ for p in bypass-lan; do
     echo -e "\ncharon.plugins.${p}.load := no" >> conf/plugins/${p}.opt
 done
 
+# ensure manual page is regenerated with local configuration
+rm -f src/ipsec/_ipsec.8
+
 %make_build
 
 pushd src/libcharon/plugins/vici
@@ -413,6 +419,9 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Mon Jan 16 2023 Petr Menšík <pemensik@redhat.com> - 5.9.9-2
+- Use configure paths in manual pages (#2106120)
+
 * Sun Jan 15 2023 Petr Menšík <pemensik@redhat.com> - 5.9.9-1
 - Update to 5.9.9 (#2157850)
 
