@@ -12,14 +12,17 @@
 %bcond_with tss_trousers
 %endif
 
+%global forgeurl0 https://github.com/strongswan/strongswan
+
 Name:           strongswan
 Version:        5.9.9
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
-URL:            http://www.strongswan.org/
-Source0:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2
-Source1:        http://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2.sig
+URL:            https://www.strongswan.org/
+VCS:            git:%{forgeurl0}
+Source0:        https://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2
+Source1:        https://download.strongswan.org/strongswan-%{version}%{?prerelease}.tar.bz2.sig
 Source2:        https://download.strongswan.org/STRONGSWAN-RELEASE-PGP-KEY
 Source3:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
