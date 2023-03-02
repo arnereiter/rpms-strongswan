@@ -28,10 +28,6 @@ Source3:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
 # https://github.com/strongswan/strongswan/issues/1198
 Patch1:         strongswan-5.9.7-error-no-format.patch
-# https://github.com/strongswan/strongswan/pull/1511
-# https://github.com/strongswan/strongswan/commit/e99de2aee9f26e3ab97d88902308107d9f048acd
-Patch2:         strongswan-5.9.9-man-paths.patch
-Patch3:         strongswan-5.9.8-5.9.9_tls_auth_bypass_exp_pointer.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
