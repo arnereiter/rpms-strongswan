@@ -15,8 +15,8 @@
 %global forgeurl0 https://github.com/strongswan/strongswan
 
 Name:           strongswan
-Version:        5.9.9
-Release:        3%{?dist}
+Version:        5.9.10
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            https://www.strongswan.org/
@@ -420,6 +420,9 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Thu Mar 02 2023 Paul Wouters <paul.wouters@aiven.io - 5.9.10-1
+- Update to 5.9.10
+
 * Tue Feb 28 2023 Paul Wouters <paul.wouters@aiven.io - 5.9.9-3
 - Resolves: CVE-2023-26463 authorization bypass in TLS-based EAP methods
 
