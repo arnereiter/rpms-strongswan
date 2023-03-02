@@ -15,8 +15,8 @@
 %global forgeurl0 https://github.com/strongswan/strongswan
 
 Name:           strongswan
-Version:        5.9.9
-Release:        2%{?dist}
+Version:        5.9.10
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            https://www.strongswan.org/
@@ -28,9 +28,6 @@ Source3:        tmpfiles-strongswan.conf
 Patch0:         strongswan-5.6.0-uintptr_t.patch
 # https://github.com/strongswan/strongswan/issues/1198
 Patch1:         strongswan-5.9.7-error-no-format.patch
-# https://github.com/strongswan/strongswan/pull/1511
-# https://github.com/strongswan/strongswan/commit/e99de2aee9f26e3ab97d88902308107d9f048acd
-Patch2:         strongswan-5.9.9-man-paths.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -419,6 +416,9 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Thu Mar 02 2023 Paul Wouters <paul.wouters@aiven.io - 5.9.10-1
+- Update to 5.9.10 that fixes CVE-2023-26463
+
 * Mon Jan 16 2023 Petr Menšík <pemensik@redhat.com> - 5.9.9-2
 - Use configure paths in manual pages (#2106120)
 
