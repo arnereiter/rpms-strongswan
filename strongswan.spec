@@ -15,7 +15,7 @@
 %global forgeurl0 https://github.com/strongswan/strongswan
 
 Name:           strongswan
-Version:        5.9.10
+Version:        5.9.11
 Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
@@ -416,6 +416,12 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Fri Jul 14 2023 Paul Wouters <paul.wouters@aiven.io - 5.9.11-1
+- Resolves: rhbz#2214186 strongswan-5.9.11 is available
+
+* Tue Jun 13 2023 Python Maint <python-maint@redhat.com> - 5.9.10-2
+- Rebuilt for Python 3.12
+
 * Thu Mar 02 2023 Paul Wouters <paul.wouters@aiven.io - 5.9.10-1
 - Update to 5.9.10
 
