@@ -16,7 +16,7 @@
 
 Name:           strongswan
 Version:        5.9.11
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            https://www.strongswan.org/
@@ -317,6 +317,8 @@ done
 install -d -m 0700 %{buildroot}%{_rundir}/strongswan
 install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.conf
+ln -s ../../pki/ca-trust/extracted/pem/tls-ca-bundle.pem \
+      %{buildroot}%{_sysconfdir}/strongswan/ipsec.d/cacerts/tls-ca-bundle.pem
 
 
 %check
@@ -416,6 +418,9 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Wed Nov 08 2023 Petr Menšík <pemensik@redhat.com> - 5.9.11-3
+- Include link to system trusted CAs by default (#2246360)
+
 * Sat Jul 22 2023 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.11-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
 
