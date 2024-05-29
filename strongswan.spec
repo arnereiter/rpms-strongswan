@@ -15,8 +15,8 @@
 %global forgeurl0 https://github.com/strongswan/strongswan
 
 Name:           strongswan
-Version:        5.9.11
-Release:        3%{?dist}
+Version:        5.9.14
+Release:        1%{?dist}
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPLv2+
 URL:            https://www.strongswan.org/
@@ -416,6 +416,10 @@ install -D -m 0644 %{SOURCE3} %{buildroot}/%{_tmpfilesdir}/strongswan-starter.co
 %endif
 
 %changelog
+* Wed May 29 2024 Arne Reiter <redhat@arnereiter.de> - 5.9.14-1
+- Resolves: rhbz#2250666 strongswan-5.9.14 is available
+- Resolves: rhbz#2254561 CVE-2023-41913 buffer overflow and possible unauthenticated remote code execution
+
 * Sat Jan 27 2024 Fedora Release Engineering <releng@fedoraproject.org> - 5.9.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
 
